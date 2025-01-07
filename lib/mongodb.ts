@@ -1,15 +1,16 @@
 import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
-
-const uri = process.env.MONGODB_URI;
-
-if (!uri) {
-  throw new Error("Please add your MongoDB URI to your environment variables");
+// Ensure the MONGODB_URI environment variable is defined
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please define the MONGODB_URI environment variable in your .env.local file");
 }
 
+const uri = process.env.MONGODB_URI;
+let client: MongoClient | null = null;
+let clientPromise: Promise<MongoClient>;
+
+// MongoDB connection handling
 if (process.env.NODE_ENV === "development") {
   if (!global._mongoClient) {
     client = new MongoClient(uri);
@@ -23,13 +24,56 @@ if (process.env.NODE_ENV === "development") {
   clientPromise = client.connect();
 }
 
+// Export the promise to be used for database connections
+export default clientPromise;
+
+// Connect to the database
 export async function connectToDatabase() {
   const client = await clientPromise;
-  return client.db("ecoshift");
+  return client.db("ecoshift"); // Return the 'ecoshift' database
+}
+
+// Register a new user
+export async function registerUser({
+  name,
+  email,
+  password,
+}: {
+  name: string;
+  email: string;
+  password: string;
+}) {
+  const db = await connectToDatabase();
+  const usersCollection = db.collection("users");
+
+  // Check if the email already exists in the database
+  const existingUser = await usersCollection.findOne({ email });
+  if (existingUser) {
+    return { success: false, message: "Email already in use" };
+  }
+
+  // Hash the password before saving it to the database
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Insert the new user into the collection
+  await usersCollection.insertOne({
+    name,
+    email,
+    password: hashedPassword,
+    createdAt: new Date(),
+  });
+
+  return { success: true };
 }
 
 // Validate user credentials
-export async function validateUser({ email, password }: { email: string, password: string }) {
+export async function validateUser({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
   const db = await connectToDatabase();
   const usersCollection = db.collection("users");
 
