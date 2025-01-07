@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 // Ensure the MONGODB_URI environment variable is defined
 if (!process.env.MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable in your .env.local file");
+  throw new Error("Please define the MONGODB_URI environment variable");
 }
 
 const uri = process.env.MONGODB_URI;
