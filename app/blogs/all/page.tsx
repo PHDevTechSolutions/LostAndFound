@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
@@ -7,6 +7,18 @@ import AddPostForm from "../../../components/AddPostForm";
 
 const BlogPage: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        // Fetch blog posts from the API
+        const fetchPosts = async () => {
+            const response = await fetch("/api/fetchPosts");
+            const data = await response.json();
+            setPosts(data);
+        };
+
+        fetchPosts();
+    }, []);
 
     return (
         <SessionChecker>
@@ -26,26 +38,32 @@ const BlogPage: React.FC = () => {
                                         <button className="bg-blue-500 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>Add Post</button>
                                     </div>
                                     <h2 className="text-lg font-bold mb-2">Blog Posts</h2>
-                                    <table className="min-w-full bg-white border">
+                                    <table className="min-w-full bg-white border text-xs">
                                         <thead>
                                             <tr>
                                                 <th className="py-2 px-4 border">Title</th>
                                                 <th className="py-2 px-4 border">Author</th>
+                                                <th className="py-2 px-4 border">Categories</th>
+                                                <th className="py-2 px-4 border">Tags</th>
                                                 <th className="py-2 px-4 border">Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* Empty rows for now */}
-                                            <tr>
-                                                <td className="py-2 px-4 border">Sample Title 1</td>
-                                                <td className="py-2 px-4 border">Sample Author 1</td>
-                                                <td className="py-2 px-4 border">Sample Date 1</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="py-2 px-4 border">Sample Title 2</td>
-                                                <td className="py-2 px-4 border">Sample Author 2</td>
-                                                <td className="py-2 px-4 border">Sample Date 2</td>
-                                            </tr>
+                                            {posts.length > 0 ? (
+                                                posts.map((post: any) => (
+                                                    <tr key={post._id}>
+                                                        <td className="py-2 px-4 border">{post.title}</td>
+                                                        <td className="py-2 px-4 border">{post.author}</td>
+                                                        <td className="py-2 px-4 border">{post.categories}</td>
+                                                        <td className="py-2 px-4 border">{post.tags}</td>
+                                                        <td className="py-2 px-4 border">{new Date(post.createdAt).toLocaleDateString()}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan={5} className="py-2 px-4 border text-center">No posts available</td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </>

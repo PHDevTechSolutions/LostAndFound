@@ -78,6 +78,7 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onCancel, userName }) => {
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="description">Description</label>
+
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="status">Status</label>
