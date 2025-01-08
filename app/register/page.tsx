@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 
 const Register: React.FC = () => {
   const [name, setName] = useState("");
@@ -44,74 +47,41 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <ToastContainer /> {/* This makes sure toasts show up */}
-      <div className="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your name"
-            />
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <ToastContainer className="text-xs"/>
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-md">
+        <div className="hidden md:block md:w-1/2 p-8">
+          <Image src="/images/illustration/illustration.svg" alt="Illustration" width={350} height={350} className="object-cover h-full w-full rounded-l-lg" />
+        </div>
+        <div className="w-full md:w-1/2 p-8">
+          <h2 className="text-2xl font-bold text-center mb-6">Sign Up to Eco-React</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+              <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
+              <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
+              <input type="password" placeholder="6+ Characters, 1 Capital letter" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div className="mb-4">
+              <button type="submit" className="w-full text-xs py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 shadow-lg">Create Account</button>
+            </div>
+          </form>
+          <div className="flex justify-center mb-4">
+            <button className="w-full py-3 bg-red-700 text-xs text-white font-medium rounded-md hover:bg-red-800 shadow-lg flex items-center justify-center">
+              <FcGoogle className="mr-2" /> Sign in with Google
+            </button>
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your email"
-            />
+          <div className="text-center text-xs">
+            Don’t have an account?{" "}
+            <Link href="/login" className="text-blue-600 hover:underline">Sign In</Link>
           </div>
-          <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your password"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-          >
-            Register
-          </button>
-          <div className="mt-4 text-center">
-            <p className="text-gray-600 text-sm">
-              Already have an account?{" "}
-              <a href="/login" className="text-blue-500 hover:underline">
-                Login here
-              </a>
-            </p>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );

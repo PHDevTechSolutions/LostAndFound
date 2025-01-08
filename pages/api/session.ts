@@ -1,3 +1,5 @@
+//pages/api/session.ts
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "@/lib/session";
 

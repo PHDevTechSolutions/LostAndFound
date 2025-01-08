@@ -1,3 +1,5 @@
+//pages/api/logout.ts
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { destroySession } from "@/lib/session";
 

@@ -1,23 +1,30 @@
+//app/components/navbar.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { IoIosMenu } from 'react-icons/io';
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) => {
   const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Get email from query parameters using URLSearchParams
+    // Get id from query parameters using URLSearchParams
     const params = new URLSearchParams(window.location.search);
-    const email = params.get("email");
+    const userId = params.get("id");
 
-    if (email) {
+    if (userId) {
       // Fetch user data from the server using the query parameter
-      fetch(`/api/user?email=${encodeURIComponent(email)}`)
+      fetch(`/api/user?id=${encodeURIComponent(userId)}`)
         .then(response => response.json())
-        .then(data => setUserName(data.name))
+        .then(data => {
+          setUserName(data.name);
+          setUserEmail(data.email);
+        })
         .catch(error => console.error("Error fetching user data:", error));
     }
   }, []);
@@ -31,19 +38,23 @@ const Navbar: React.FC = () => {
       },
     });
 
+    sessionStorage.clear();
+
     // Redirect to the login page
     router.push("/login");
   };
 
   return (
-    <div className="flex justify-between items-center p-4 m-2 bg-gray-800 text-white rounded">
-      <h1 className="text-xl">Dashboard</h1>
+    <div className="flex justify-between items-center p-4 bg-gray-100 text-dark shadow-md">
       <div className="flex items-center">
-        <span className="mr-4">Hello, {userName}</span>
-        <button
-          className="bg-red-500 px-4 py-2 rounded"
-          onClick={() => setShowLogoutModal(true)}
-        >
+        <button onClick={onToggleSidebar} className="p-2">
+          <IoIosMenu size={24} />
+        </button>
+        <h1 className="ml-4 text-xs">Dashboard</h1>
+      </div>
+      <div className="flex items-center text-xs">
+        <span className="mr-4 capitalize">Hello, {userName}</span>
+        <button className="bg-red-500 px-2 py-2 text-white rounded" onClick={() => setShowLogoutModal(true)}>
           Logout
         </button>
       </div>
@@ -53,16 +64,10 @@ const Navbar: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800">
             <p className="mb-4">Are you sure you want to logout?</p>
             <div className="flex justify-center space-x-4">
-              <button
-                className="bg-gray-300 px-4 py-2 rounded text-gray-800"
-                onClick={() => setShowLogoutModal(false)}
-              >
+              <button className="bg-gray-300 px-4 py-2 rounded text-gray-800" onClick={() => setShowLogoutModal(false)}>
                 Cancel
               </button>
-              <button
-                className="bg-red-500 px-4 py-2 text-white rounded"
-                onClick={handleLogout}
-              >
+              <button className="bg-red-500 px-4 py-2 text-white rounded" onClick={handleLogout}>
                 Logout
               </button>
             </div>

@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 // Ensure the MONGODB_URI environment variable is defined
 if (!process.env.MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable in your .env.local file");
+  throw new Error("Please define the MONGODB_URI environment variable");
 }
 
 const uri = process.env.MONGODB_URI;
@@ -34,15 +34,7 @@ export async function connectToDatabase() {
 }
 
 // Register a new user
-export async function registerUser({
-  name,
-  email,
-  password,
-}: {
-  name: string;
-  email: string;
-  password: string;
-}) {
+export async function registerUser({ name, email,password,}: { name: string; email: string; password: string; }) {
   const db = await connectToDatabase();
   const usersCollection = db.collection("users");
 
@@ -67,13 +59,7 @@ export async function registerUser({
 }
 
 // Validate user credentials
-export async function validateUser({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) {
+export async function validateUser({ email, password, }: { email: string; password: string; }) {
   const db = await connectToDatabase();
   const usersCollection = db.collection("users");
 
@@ -89,5 +75,23 @@ export async function validateUser({
     return { success: false, message: "Invalid email or password" };
   }
 
-  return { success: true };
+  return { success: true, user }; // Return the user object along with success status
+}
+
+//Insert Post Data to MongoDB
+export async function addPost({ title, description, status, link, author, categories, tags, featureImage, }: { 
+  title: string; 
+  description: string; 
+  status: string; 
+  link: string; 
+  author: string; 
+  categories: string; 
+  tags: string; 
+  featureImage: File | null; 
+}) { 
+  const db = await connectToDatabase(); 
+  const postsCollection = db.collection("posts"); 
+  const newPost = { title, description, status, link, author, categories, tags, featureImage, createdAt: new Date(), }; 
+  await postsCollection.insertOne(newPost); 
+  return { success: true }; 
 }

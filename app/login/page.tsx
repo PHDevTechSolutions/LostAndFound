@@ -1,13 +1,19 @@
+//app/login/page.tsx
+
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,6 +23,8 @@ const Login: React.FC = () => {
       toast.error("All fields are required!"); // Show error toast if fields are empty
       return;
     }
+
+    setLoading(true); // Set loading state
 
     try {
       const response = await fetch("/api/login", {
@@ -33,72 +41,68 @@ const Login: React.FC = () => {
         toast.success("Login successful!"); // Show success toast
         // Delay the redirect to allow the toast to be displayed
         setTimeout(() => {
-          router.push(`/dashboard?email=${encodeURIComponent(email)}`);
+          router.push(`/dashboard?id=${encodeURIComponent(result.userId)}`);
         }, 1500); // 1.5 seconds delay
       } else {
         toast.error(result.message || "Login failed!"); // Show error toast
       }
     } catch (error) {
       toast.error("An error occurred while logging in!"); // Show general error toast
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <ToastContainer /> {/* This makes sure toasts show up */}
-      <div className="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your email"
-            />
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <ToastContainer className="text-xs" />
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-md">
+        <div className="hidden md:block md:w-1/2 p-8">
+          <Image src="/images/illustration/illustration.svg" alt="Illustration" width={350} height={350} className="object-cover h-full w-full rounded-l-lg" />
+        </div>
+        <div className="w-full md:w-1/2 p-8">
+          <h2 className="text-2xl font-bold text-center mb-6">Sign In to Eco-React</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                placeholder="6+ Characters, 1 Capital letter"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="mb-4">
+              <button type="submit" className="w-full text-xs py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 shadow-lg" disabled={loading}>
+                {loading ? "Signing In..." : "Sign In"}
+              </button>
+            </div>
+          </form>
+          <div className="flex justify-center mb-4">
+            <button className="w-full py-3 bg-gray-200 text-xs text-dark font-medium rounded-md hover:bg-gray-100 shadow-lg flex items-center justify-center" disabled={loading}>
+              <FcGoogle className="mr-2" /> Sign in with Google
+            </button>
           </div>
-          <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your password"
-            />
+          <div className="text-center text-xs">
+            Don’t have an account?{" "}
+            <Link href="/register" className="text-blue-600 hover:underline">Sign Up</Link>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-          >
-            Login
-          </button>
-          <div className="mt-4 text-center">
-            <p className="text-gray-600 text-sm">
-              Don't have an account?{" "}
-              <a href="/register" className="text-blue-500 hover:underline">
-                Register here
-              </a>
-            </p>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
+
