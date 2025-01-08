@@ -8,30 +8,17 @@ const SessionChecker: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   useEffect(() => {
     const checkSession = async () => {
-      const cachedSession = sessionStorage.getItem("isLoggedIn");
-      if (cachedSession) {
-        // Use cached session status for faster response
-        if (cachedSession === "true") {
+      try {
+        const response = await fetch("/api/session");
+        const data = await response.json();
+        if (data.isLoggedIn) {
           setLoading(false);
         } else {
           router.push("/login");
         }
-      } else {
-        // Check for an active session
-        try {
-          const response = await fetch("/api/session");
-          const data = await response.json();
-          if (data.isLoggedIn) {
-            sessionStorage.setItem("isLoggedIn", "true");
-            setLoading(false);
-          } else {
-            sessionStorage.setItem("isLoggedIn", "false");
-            router.push("/login");
-          }
-        } catch (error) {
-          console.error("Error checking session:", error);
-          router.push("/login");
-        }
+      } catch (error) {
+        console.error("Error checking session:", error);
+        router.push("/login");
       }
     };
 

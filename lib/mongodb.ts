@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 
 // Ensure the MONGODB_URI environment variable is defined
@@ -34,7 +34,7 @@ export async function connectToDatabase() {
 }
 
 // Register a new user
-export async function registerUser({ name, email,password,}: { name: string; email: string; password: string; }) {
+export async function registerUser({ name, email, password, }: { name: string; email: string; password: string; }) {
   const db = await connectToDatabase();
   const usersCollection = db.collection("users");
 
@@ -78,7 +78,7 @@ export async function validateUser({ email, password, }: { email: string; passwo
   return { success: true, user }; // Return the user object along with success status
 }
 
-//Insert Post Data to MongoDB
+// Insert Post Data to MongoDB
 export async function addPost({ title, description, status, link, author, categories, tags, featureImage, }: { 
   title: string; 
   description: string; 
@@ -93,5 +93,32 @@ export async function addPost({ title, description, status, link, author, catego
   const postsCollection = db.collection("posts"); 
   const newPost = { title, description, status, link, author, categories, tags, featureImage, createdAt: new Date(), }; 
   await postsCollection.insertOne(newPost); 
+  return { success: true }; 
+}
+
+// Update Post Data in MongoDB
+export async function updatePost({ id, title, description, status, link, author, categories, tags, featureImage, }: { 
+  id: string; 
+  title: string; 
+  description: string; 
+  status: string; 
+  link: string; 
+  author: string; 
+  categories: string; 
+  tags: string; 
+  featureImage: File | null; 
+}) { 
+  const db = await connectToDatabase(); 
+  const postsCollection = db.collection("posts"); 
+  const updatedPost = { title, description, status, link, author, categories, tags, featureImage, updatedAt: new Date(), }; 
+  await postsCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedPost }); 
+  return { success: true }; 
+}
+
+// Delete Post Data from MongoDB
+export async function deletePost(id: string) { 
+  const db = await connectToDatabase(); 
+  const postsCollection = db.collection("posts"); 
+  await postsCollection.deleteOne({ _id: new ObjectId(id) }); 
   return { success: true }; 
 }

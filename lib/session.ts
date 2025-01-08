@@ -19,3 +19,15 @@ export async function getSession(req: NextApiRequest) {
 
   return session; // Return the session data
 }
+
+// Function to create session
+export async function createSession(res: NextApiResponse, sessionData: string) {
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+    path: "/",
+  };
+
+  res.setHeader("Set-Cookie", serialize("session", sessionData, cookieOptions));
+}
