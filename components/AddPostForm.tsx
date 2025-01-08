@@ -1,9 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import dynamic from 'next/dynamic';
-
-// I-dynamically import ang JoditEditor
-const JoditEditor = dynamic(() => import("./JoditEditor"), { ssr: false });
 
 interface AddPostFormProps { 
   onCancel: () => void; 
@@ -82,7 +78,6 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onCancel, userName }) => {
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="description">Description</label>
-        <JoditEditor value={description} onChange={setDescription} />
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="status">Status</label>
