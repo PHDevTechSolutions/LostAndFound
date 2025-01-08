@@ -1,6 +1,9 @@
 "use client";
+import dynamic from 'next/dynamic';
 import React, { useRef, useEffect } from "react";
-import JoditEditor from "jodit-react";
+
+// I-dynamically import ang JoditEditor
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 type JoditEditorProps = {
   value: string;

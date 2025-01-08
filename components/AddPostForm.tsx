@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import JoditEditor from "./JoditEditor";
+import dynamic from 'next/dynamic';
+
+// I-dynamically import ang JoditEditor
+const JoditEditor = dynamic(() => import("./JoditEditor"), { ssr: false });
 
 interface AddPostFormProps { 
   onCancel: () => void; 
