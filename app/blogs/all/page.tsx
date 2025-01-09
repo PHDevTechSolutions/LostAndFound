@@ -7,6 +7,8 @@ import AddPostForm from "../../../components/AddPostForm";
 import SearchFilters from "../../../components/SearchFilters";
 import PostsTable from "../../../components/Blogs/PostsTable";
 import Pagination from "../../../components/Pagination";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const BlogPage: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
@@ -18,19 +20,21 @@ const BlogPage: React.FC = () => {
     const [selectedTag, setSelectedTag] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(5);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [postToDelete, setPostToDelete] = useState<string | null>(null);
+
+    // Fetch blog posts from the API
+    const fetchPosts = async () => {
+        try {
+            const response = await fetch("/api/blog/fetchPosts");
+            const data = await response.json();
+            setPosts(data);
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+        }
+    };
 
     useEffect(() => {
-        // Fetch blog posts from the API
-        const fetchPosts = async () => {
-            try {
-                const response = await fetch("/api/blog/fetchPosts");
-                const data = await response.json();
-                setPosts(data);
-            } catch (error) {
-                console.error("Error fetching posts:", error);
-            }
-        };
-
         fetchPosts();
     }, []);
 
@@ -58,29 +62,36 @@ const BlogPage: React.FC = () => {
         setShowForm(true);
     };
 
-    // Delete post function
-    const handleDelete = async (postId: string) => {
-        const confirmDelete = confirm("Are you sure you want to delete this post?");
-        if (confirmDelete) {
-            try {
-                const response = await fetch(`/api/blog/deletePost`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ id: postId }),
-                });
+    // Show delete modal
+    const confirmDelete = (postId: string) => {
+        setPostToDelete(postId);
+        setShowDeleteModal(true);
+    };
 
-                if (response.ok) {
-                    setPosts(posts.filter((post) => post._id !== postId));
-                    alert("Post deleted successfully.");
-                } else {
-                    alert("Failed to delete post.");
-                }
-            } catch (error) {
-                console.error("Error deleting post:", error);
-                alert("Failed to delete post.");
+    // Delete post function
+    const handleDelete = async () => {
+        if (!postToDelete) return;
+        try {
+            const response = await fetch(`/api/blog/deletePost`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: postToDelete }),
+            });
+
+            if (response.ok) {
+                setPosts(posts.filter((post) => post._id !== postToDelete));
+                toast.success("Post deleted successfully.");
+            } else {
+                toast.error("Failed to delete post.");
             }
+        } catch (error) {
+            console.error("Error deleting post:", error);
+            toast.error("Failed to delete post.");
+        } finally {
+            setShowDeleteModal(false);
+            setPostToDelete(null);
         }
     };
 
@@ -96,6 +107,7 @@ const BlogPage: React.FC = () => {
                                         setShowForm(false);
                                         setEditPost(null);
                                     }}
+                                    refreshPosts={fetchPosts}  // Pass the refreshPosts callback
                                     userName={userName}
                                     editPost={editPost}
                                 />
@@ -124,7 +136,7 @@ const BlogPage: React.FC = () => {
                                     <PostsTable
                                         posts={currentPosts}
                                         handleEdit={handleEdit}
-                                        handleDelete={handleDelete}
+                                        handleDelete={confirmDelete}
                                     />
                                     <Pagination
                                         currentPage={currentPage}
@@ -136,6 +148,31 @@ const BlogPage: React.FC = () => {
                                     </div>
                                 </>
                             )}
+
+                            {showDeleteModal && (
+                                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                                    <div className="bg-white p-4 rounded shadow-lg">
+                                        <h2 className="text-xs font-bold mb-4">Confirm Deletion</h2>
+                                        <p className="text-xs">Are you sure you want to delete this post?</p>
+                                        <div className="mt-4 flex justify-end">
+                                            <button
+                                                className="bg-red-500 text-white text-xs px-4 py-2 rounded mr-2"
+                                                onClick={handleDelete}
+                                            >
+                                                Delete
+                                            </button>
+                                            <button
+                                                className="bg-gray-300 text-xs px-4 py-2 rounded"
+                                                onClick={() => setShowDeleteModal(false)}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <ToastContainer />
                         </div>
                     )}
                 </UserFetcher>

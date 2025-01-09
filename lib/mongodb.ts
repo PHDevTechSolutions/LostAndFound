@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
+import { Server } from "socket.io";
 
 // Ensure the MONGODB_URI environment variable is defined
 if (!process.env.MONGODB_URI) {
@@ -31,6 +32,12 @@ export default clientPromise;
 export async function connectToDatabase() {
   const client = await clientPromise;
   return client.db("ecoshift"); // Return the 'ecoshift' database
+}
+
+// Function to broadcast new posts
+let io: Server | null = null;
+export function setSocketServer(server: Server) {
+  io = server;
 }
 
 // Register a new user
@@ -92,7 +99,13 @@ export async function addPost({ title, description, status, link, author, catego
   const db = await connectToDatabase(); 
   const postsCollection = db.collection("posts"); 
   const newPost = { title, description, status, link, author, categories, tags, featureImage, createdAt: new Date(), }; 
-  await postsCollection.insertOne(newPost); 
+  await postsCollection.insertOne(newPost);
+
+  // Broadcast the new post to all clients
+  if (io) {
+    io.emit("newPost", newPost);
+  }
+
   return { success: true }; 
 }
 

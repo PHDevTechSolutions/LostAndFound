@@ -73,10 +73,11 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 onChange={(e) => setPostsPerPage(parseInt(e.target.value))}
                 className="border px-3 py-2 rounded text-xs w-full md:w-auto"
             >
-                <option value={5}>5</option>
+                <option value={5}>5</option>  {/* Dapat 5, hindi 1 */}
                 <option value={10}>10</option>
                 <option value={15}>15</option>
             </select>
+
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from '../../../lib/mongodb';
 
 export default async function fetchPosts(req: NextApiRequest, res: NextApiResponse) {

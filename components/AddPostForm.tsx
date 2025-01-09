@@ -1,13 +1,17 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AddPostFormProps { 
   onCancel: () => void; 
+  refreshPosts: () => void;  // Add a refreshPosts callback
   userName: string; 
   editPost?: any; // Optional prop for the post being edited
 }
 
-const AddPostForm: React.FC<AddPostFormProps> = ({ onCancel, userName, editPost }) => {
+const AddPostForm: React.FC<AddPostFormProps> = ({ onCancel, refreshPosts, userName, editPost }) => {
   const [title, setTitle] = useState(editPost ? editPost.title : "");
   const [description, setDescription] = useState(editPost ? editPost.description : "");
   const [status, setStatus] = useState(editPost ? editPost.status : "");
@@ -53,10 +57,17 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onCancel, userName, editPost 
     });
 
     if (response.ok) {
-      console.log(editPost ? "Post updated successfully" : "Post added successfully");
-      onCancel(); // Hide the form after submission
+      toast.success(editPost ? "Post updated successfully" : "Post added successfully", {
+        autoClose: 1000,
+        onClose: () => {
+          onCancel(); // Hide the form after submission
+          refreshPosts(); // Refresh posts after successful submission
+        }
+      });
     } else {
-      console.error(editPost ? "Failed to update post" : "Failed to add post");
+      toast.error(editPost ? "Failed to update post" : "Failed to add post", {
+        autoClose: 1000
+      });
     }
   };
 
@@ -77,52 +88,55 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onCancel, userName, editPost 
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
-      <h2 className="text-xs font-bold mb-4">{editPost ? "Edit Post" : "Add New Post"}</h2>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="title">Title</label>
-        <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="description">Description</label>
-        <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" rows={4}></textarea>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="status">Status</label>
-        <select id="status" value={status} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs">
-          <option value="">Select status</option>
-          {statusOptions.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="link">Link</label>
-        <input type="text" id="link" value={link} onChange={(e) => setLink(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" readOnly={!editPost}/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="author">Author</label>
-        <input type="text" id="author" value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="categories">Categories</label>
-        <input type="text" id="categories" value={categories} onChange={(e) => setCategories(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="tags">Tags</label>
-        <input type="text" id="tags" value={tags} onChange={(e) => setTags(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="featureImage">Feature Image</label>
-        <input type="file" id="featureImage" onChange={handleFileChange} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="flex justify-between">
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editPost ? "Update" : "Submit"}</button>
-        <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
-      </div>
-    </form>
+    <>
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
+        <h2 className="text-xs font-bold mb-4">{editPost ? "Edit Post" : "Add New Post"}</h2>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="title">Title</label>
+          <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
+        </div>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="description">Description</label>
+          <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" rows={4}></textarea>
+        </div>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="status">Status</label>
+          <select id="status" value={status} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs">
+            <option value="">Select status</option>
+            {statusOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="link">Link</label>
+          <input type="text" id="link" value={link} onChange={(e) => setLink(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" readOnly={!editPost}/>
+        </div>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="author">Author</label>
+          <input type="text" id="author" value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled/>
+        </div>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="categories">Categories</label>
+          <input type="text" id="categories" value={categories} onChange={(e) => setCategories(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
+        </div>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="tags">Tags</label>
+          <input type="text" id="tags" value={tags} onChange={(e) => setTags(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
+        </div>
+        <div className="mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="featureImage">Feature Image</label>
+          <input type="file" id="featureImage" onChange={handleFileChange} className="w-full px-3 py-2 border rounded text-xs"/>
+        </div>
+        <div className="flex justify-between">
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editPost ? "Update" : "Submit"}</button>
+          <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
+        </div>
+      </form>
+      <ToastContainer className="text-xs" autoClose={1000} />
+    </>
   );
 };
 

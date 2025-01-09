@@ -1,5 +1,9 @@
 "use client";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:3001");
 
 interface PostsTableProps {
     posts: any[];
@@ -8,6 +12,24 @@ interface PostsTableProps {
 }
 
 const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete }) => {
+    const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
+
+    useEffect(() => {
+        // Update local state when posts prop changes
+        setUpdatedPosts(posts);
+    }, [posts]);
+
+    useEffect(() => {
+        // Makinig sa newPost event mula sa server
+        socket.on("newPost", (newPost) => {
+            setUpdatedPosts((prevPosts) => [newPost, ...prevPosts]);
+        });
+
+        return () => {
+            socket.off("newPost");
+        };
+    }, []);
+
     return (
         <table className="min-w-full bg-white border text-xs">
             <thead>
@@ -21,8 +43,8 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete
                 </tr>
             </thead>
             <tbody>
-                {posts.length > 0 ? (
-                    posts.map((post) => (
+                {updatedPosts.length > 0 ? (
+                    updatedPosts.map((post) => (
                         <tr key={post._id}>
                             <td className="py-2 px-4 border capitalize">{post.title}</td>
                             <td className="py-2 px-4 border capitalize">{post.author}</td>
