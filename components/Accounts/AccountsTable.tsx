@@ -6,13 +6,13 @@ import { BsPlusCircle } from "react-icons/bs";
 
 const socket = io("http://localhost:3001");
 
-interface PostsTableProps {
+interface AccountsTableProps {
     posts: any[];
     handleEdit: (post: any) => void;
     handleDelete: (postId: string) => void;
 }
 
-const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete }) => {
+const AccountsTable: React.FC<AccountsTableProps> = ({ posts, handleEdit, handleDelete }) => {
     const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
@@ -47,11 +47,11 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete
             <table className="min-w-full bg-white border text-xs">
                 <thead>
                     <tr>
-                        <th className="w-1/6 text-left border px-4 py-2">Title</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Author</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Date</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Categories</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Tags</th>
+                        <th className="w-1/6 text-left border px-4 py-2">Company Name</th>
+                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Customer Name</th>
+                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gender</th>
+                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Contact Number</th>
+                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">City Address</th>
                         <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
                     </tr>
                 </thead>
@@ -63,11 +63,11 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete
                                     className="bg-gray-100 cursor-pointer"
                                     onClick={() => toggleRow(post._id)}
                                 >
-                                    <td className="px-4 py-2 border"><BsPlusCircle className="inline-block mr-2 md:hidden" /> {post.title}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{post.author}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{new Date(post.createdAt).toLocaleDateString()}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{post.categories}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{post.tags}</td>
+                                    <td className="px-4 py-2 border"><BsPlusCircle className="inline-block mr-2 md:hidden" /> {post.companyName}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{post.customerName}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{post.gender}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{post.contactNumber}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{post.cityAddress}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">
                                         <button
                                             className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
@@ -87,16 +87,19 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete
                                     <tr className="bg-gray-200 md:hidden">
                                         <td className="px-4 py-2" colSpan={6}>
                                             <div>
-                                                <strong>Author:</strong> {post.author}
+                                                <strong>Company Name:</strong> {post.companyName}
                                             </div>
                                             <div>
-                                                <strong>Date:</strong> {new Date(post.createdAt).toLocaleDateString()}
+                                                <strong>Customer Name:</strong> {post.customerName}
                                             </div>
                                             <div>
-                                                <strong>Categories:</strong> {post.categories}
+                                                <strong>Gender:</strong> {post.gender}
                                             </div>
                                             <div>
-                                                <strong>Tags:</strong> {post.tags}
+                                                <strong>Contact Number:</strong> {post.contactNumber}
+                                            </div>
+                                            <div>
+                                                <strong>City Address:</strong> {post.cityAddress}
                                             </div>
                                             <div className="mt-2">
                                                 <button
@@ -119,7 +122,7 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={6} className="py-2 px-4 border text-center">No posts available</td>
+                            <td colSpan={6} className="py-2 px-4 border text-center">No accounts available</td>
                         </tr>
                     )}
                 </tbody>
@@ -128,4 +131,4 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, handleEdit, handleDelete
     );
 };
 
-export default PostsTable;
+export default AccountsTable;

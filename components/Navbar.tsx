@@ -50,7 +50,7 @@ const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) 
         <button onClick={onToggleSidebar} className="p-2">
           <IoIosMenu size={24} />
         </button>
-        <h1 className="ml-4 text-xs">Dashboard</h1>
+        <h1 className="ml-2 text-xs">Dashboard</h1>
       </div>
       <div className="flex items-center text-xs">
         <span className="mr-4 capitalize">Hello, {userName}</span>

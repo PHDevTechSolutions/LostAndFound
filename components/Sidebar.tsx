@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FaBlog, FaBriefcase, FaCameraRetro, FaShopify, FaPhoneAlt, FaUserAlt, FaTools, PiBlueprintFill, FaBoxArchive, SiGoogleanalytics, IoSettings } from "./Sidebar/icons"; 
+import { FaBlog, PiBlueprintFill } from "./Sidebar/icons"; 
+import { FaBuildingUser } from "react-icons/fa6";
+import { FaHeadphonesSimple } from "react-icons/fa6";
+import { IoMdSettings } from "react-icons/io";
+
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 
@@ -38,11 +42,24 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
       ],
     },
     {
-      title: 'Projects',
-      icon: PiBlueprintFill,
+      title: 'Client Accounts',
+      icon: FaBuildingUser ,
       subItems: [
-        { title: 'All Projects', href: `/projects/all${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
-        { title: 'Categories', href: `/projects/categories${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+        { title: 'List of Accounts', href: `/accounts/AccountList${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+      ],
+    },
+    {
+      title: 'Call Monitoring',
+      icon: FaHeadphonesSimple,
+      subItems: [
+        { title: 'Activities', href: `/monitoring/Activities${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+      ],
+    },
+    {
+      title: 'Settings',
+      icon: IoMdSettings,
+      subItems: [
+        { title: 'Create User', href: `/setting/CreateUser${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
       ],
     },
   ];

@@ -128,10 +128,63 @@ export async function updatePost({ id, title, description, status, link, author,
   return { success: true }; 
 }
 
-// Delete Post Data from MongoDB
-export async function deletePost(id: string) { 
+
+// Insert Account Data to MongoDB
+export async function addAccount({ companyName, customerName, gender, contactNumber, cityAddress, }: { 
+  companyName: string; 
+  customerName: string; 
+  gender: string; 
+  contactNumber: string; 
+  cityAddress: string; 
+}) { 
   const db = await connectToDatabase(); 
-  const postsCollection = db.collection("posts"); 
-  await postsCollection.deleteOne({ _id: new ObjectId(id) }); 
+  const accountCollection = db.collection("accounts"); 
+  const newAccount = { companyName, customerName, gender, contactNumber, cityAddress, createdAt: new Date(), }; 
+  await accountCollection.insertOne(newAccount);
+
+  // Broadcast the new account to all clients
+  if (io) {
+    io.emit("newAccount", newAccount);
+  }
+
+  return { success: true }; 
+}
+
+// Update Account Data in MongoDB
+export async function updatedAccount({ 
+  id, 
+  companyName, 
+  customerName, 
+  gender, 
+  contactNumber, 
+  cityAddress, 
+  author, 
+  featureImage 
+}: { 
+  id: string; 
+  companyName: string; 
+  customerName: string; 
+  gender: string; 
+  contactNumber: string; 
+  cityAddress: string; 
+  author: string; 
+  featureImage: File | null; 
+}) { 
+  const db = await connectToDatabase(); 
+  const accountsCollection = db.collection("accounts"); 
+
+  const updatedAccount = { 
+    companyName, 
+    customerName, 
+    gender, 
+    contactNumber, 
+    cityAddress, 
+    author, 
+    featureImage, 
+    updatedAt: new Date(), 
+  }; 
+
+  await accountsCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedAccount }); 
+
   return { success: true }; 
 }
