@@ -52,7 +52,7 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
       title: 'Call Monitoring',
       icon: FaHeadphonesSimple,
       subItems: [
-        { title: 'Activities', href: `/monitoring/Activities${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+        { title: 'Tickets', href: `/monitoring/Activities${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
       ],
     },
     {

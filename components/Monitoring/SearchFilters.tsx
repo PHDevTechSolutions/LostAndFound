@@ -5,8 +5,8 @@ import React from "react";
 interface SearchFiltersProps {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
-    selectedCityAddress: string;
-    setSelectedCityAddress: (city: string) => void;
+    selectedChannel: string;
+    setSelectedChannel: (channel: string) => void;
     postsPerPage: number;
     setPostsPerPage: (num: number) => void;
 }
@@ -14,8 +14,8 @@ interface SearchFiltersProps {
 const SearchFilters: React.FC<SearchFiltersProps> = ({
     searchTerm,
     setSearchTerm,
-    selectedCityAddress,
-    setSelectedCityAddress,
+    selectedChannel,
+    setSelectedChannel,
     postsPerPage,
     setPostsPerPage,
 }) => {
@@ -30,9 +30,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
             />
             <input
                 type="text"
-                placeholder="Filter by City Address"
-                value={selectedCityAddress}
-                onChange={(e) => setSelectedCityAddress(e.target.value)}
+                placeholder="Filter by Channel"
+                value={selectedChannel}
+                onChange={(e) => setSelectedChannel(e.target.value)}
                 className="border px-3 py-2 rounded text-xs w-full md:w-auto flex-grow"
             />
             <select

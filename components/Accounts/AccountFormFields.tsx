@@ -11,12 +11,10 @@ interface FormFieldsProps {
   setContactNumber: (value: string) => void;
   cityAddress: string;
   setCityAddress: (value: string) => void;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   editPost?: any;
 }
 
-const AccountFormFields: React.FC<FormFieldsProps> = ({ companyName, setCompanyName, customerName, setCustomerName, gender, setGender, contactNumber, setContactNumber, cityAddress, setCityAddress, 
-  handleFileChange, editPost
+const AccountFormFields: React.FC<FormFieldsProps> = ({ companyName, setCompanyName, customerName, setCustomerName, gender, setGender, contactNumber, setContactNumber, cityAddress, setCityAddress, editPost
 }) => {
   const genderOptions = [
     { value: "Male", label: "Male" },
@@ -27,11 +25,11 @@ const AccountFormFields: React.FC<FormFieldsProps> = ({ companyName, setCompanyN
     <>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="companyname">Company Name</label>
-        <input type="text" id="companyname" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
+        <input type="text" id="companyname" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="customername">Customer Name</label>
-        <input type="text" id="customername" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
+        <input type="text" id="customername" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="gender">Gender</label>

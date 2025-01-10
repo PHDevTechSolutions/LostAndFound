@@ -4,28 +4,28 @@ import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
-import AddAccountForm from "../../../components/Accounts/AddAccountForm";
-import SearchFilters from "../../../components/Accounts/SearchFilters";
-import AccountsTable from "../../../components/Accounts/AccountsTable";
-import Pagination from "../../../components/Accounts/Pagination";
+import AddAccountForm from "../../../components/Monitoring/AddActivityForm";
+import SearchFilters from "../../../components/Monitoring/SearchFilters";
+import AccountsTable from "../../../components/Monitoring/ActivityTable";
+import Pagination from "../../../components/Monitoring/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const AccountListPage: React.FC = () => {
+const ActivityPage: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editPost, setEditPost] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCityAddress, setSelectedCityAddress] = useState("");
+    const [selectedChannel, setSelectedChannel] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(5);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState<string | null>(null);
 
     // Fetch accounts from the API
-    const fetchAccounts = async () => {
+    const fetchActivity = async () => {
         try {
-            const response = await fetch("/api/account/fetchAccounts");
+            const response = await fetch("/api/monitoring/fetchActivity");
             const data = await response.json();
             setPosts(data);
         } catch (error) {
@@ -35,7 +35,7 @@ const AccountListPage: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchAccounts();
+        fetchActivity();
     }, []);
 
     // Filter accounts based on search term and city address
@@ -44,7 +44,7 @@ const AccountListPage: React.FC = () => {
             (post.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 post.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 post.contactNumber.includes(searchTerm)) &&
-            (selectedCityAddress ? post.cityAddress.includes(selectedCityAddress) : true)
+            (selectedChannel ? post.channel.includes(selectedChannel) : true)
         );
     });
 
@@ -70,7 +70,7 @@ const AccountListPage: React.FC = () => {
     const handleDelete = async () => {
         if (!postToDelete) return;
         try {
-            const response = await fetch(`/api/account/deleteAccount`, {
+            const response = await fetch(`/api/monitoring/deleteActivity`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -106,22 +106,22 @@ const AccountListPage: React.FC = () => {
                                             setShowForm(false);
                                             setEditPost(null);
                                         }}
-                                        refreshPosts={fetchAccounts}  // Pass the refreshPosts callback
+                                        refreshPosts={fetchActivity}  // Pass the refreshPosts callback
                                         userName={userName}
                                         editPost={editPost}
                                     />
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>Add Account</button>
+                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>Create Ticket</button>
                                         </div>
-                                        <h2 className="text-lg font-bold mb-2">Client Accounts</h2>
+                                        <h2 className="text-lg font-bold mb-2">Customer's Information</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
-                                                selectedCityAddress={selectedCityAddress}
-                                                setSelectedCityAddress={setSelectedCityAddress}
+                                                selectedChannel={selectedChannel}
+                                                setSelectedChannel={setSelectedChannel}
                                                 postsPerPage={postsPerPage}
                                                 setPostsPerPage={setPostsPerPage}
                                             />
@@ -166,4 +166,4 @@ const AccountListPage: React.FC = () => {
     );
 };
 
-export default AccountListPage;
+export default ActivityPage;

@@ -6,13 +6,13 @@ import { BsPlusCircle } from "react-icons/bs";
 
 const socket = io("http://localhost:3001");
 
-interface AccountsTableProps {
+interface ActivityTableProps {
     posts: any[];
     handleEdit: (post: any) => void;
     handleDelete: (postId: string) => void;
 }
 
-const AccountsTable: React.FC<AccountsTableProps> = ({ posts, handleEdit, handleDelete }) => {
+const ActivityTable: React.FC<ActivityTableProps> = ({ posts, handleEdit, handleDelete }) => {
     const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
@@ -44,15 +44,26 @@ const AccountsTable: React.FC<AccountsTableProps> = ({ posts, handleEdit, handle
 
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border text-xs">
+            <table className="bg-white border text-xs">
                 <thead>
                     <tr>
-                        <th className="w-1/6 text-left border px-4 py-2">Company Name</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Customer Name</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gender</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Contact Number</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">City Address</th>
-                        <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
+                        <th className="w-1/6 text-left border whitespace-nowrap px-4 py-2">Company Name</th>
+                        <th className="w-1/6 text-left border whitespace-nowrap px-4 py-2 hidden md:table-cell">Customer Name</th>
+                        <th className="w-1/6 text-left border whitespace-nowrap px-4 py-2 hidden md:table-cell">Gender</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Contact Number</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">City Address</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Channel</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Wrap-Up</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Source</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Customer Type</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Customer Status</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Status</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Order #</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Amount</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">QTY Sold</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Sales Manager</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Sales Agent</th>
+                        <th className="w-1/6 text-left whitespace-nowrap border px-4 py-2 hidden md:table-cell">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,12 +74,23 @@ const AccountsTable: React.FC<AccountsTableProps> = ({ posts, handleEdit, handle
                                     className="bg-gray-10 cursor-pointer"
                                     onClick={() => toggleRow(post._id)}
                                 >
-                                    <td className="px-4 py-2 border"><BsPlusCircle className="inline-block mr-2 md:hidden " /> {post.companyName}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{post.customerName}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{post.gender}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{post.contactNumber}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{post.cityAddress}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">
+                                    <td className="px-4 py-2 border whitespace-nowrap"><BsPlusCircle className="inline-block mr-2 md:hidden" /> {post.companyName}</td>
+                                    <td className="px-4 py-2 border whitespace-nowrap hidden md:table-cell">{post.customerName}</td>
+                                    <td className="px-4 py-2 border whitespace-nowrap hidden md:table-cell">{post.gender}</td>
+                                    <td className="px-4 py-2 border whitespace-nowrap hidden md:table-cell">{post.contactNumber}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.channel}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.cityAddress}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.wrapUp}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.source}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.customerType}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.customerStatus}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.cStatus}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.orderNumber}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.amount}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.qtySold}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.salesManager}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.salesAgent}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">
                                         <button
                                             className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
                                             onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
@@ -84,7 +106,7 @@ const AccountsTable: React.FC<AccountsTableProps> = ({ posts, handleEdit, handle
                                     </td>
                                 </tr>
                                 {expandedRows.has(post._id) && (
-                                    <tr className="bg-gray-200 md:hidden">
+                                    <tr className="bg-gray-50 md:hidden">
                                         <td className="px-4 py-2" colSpan={6}>
                                             <div>
                                                 <strong>Company Name:</strong> {post.companyName}
@@ -131,4 +153,4 @@ const AccountsTable: React.FC<AccountsTableProps> = ({ posts, handleEdit, handle
     );
 };
 
-export default AccountsTable;
+export default ActivityTable;

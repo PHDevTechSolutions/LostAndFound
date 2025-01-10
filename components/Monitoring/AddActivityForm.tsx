@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import FormFields from "./AccountFormFields";
+import FormFields from "./ActivityFormFields";
 
 interface AddAccountFormProps { 
   onCancel: () => void; 
@@ -18,11 +18,22 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
   const [gender, setGender] = useState(editPost ? editPost.gender : "");
   const [contactNumber, setContactNumber] = useState(editPost ? editPost.contactNumber : "");
   const [cityAddress, setCityAddress] = useState(editPost ? editPost.cityAddress : "");
-
+  const [channel, setChannel] = useState(editPost ? editPost.channel : "");
+  const [wrapUp, setWrapUp] = useState(editPost ? editPost.wrapUp : "");
+  const [source, setSource] = useState(editPost ? editPost.source : "");
+  const [customerType, setCustomerType] = useState(editPost ? editPost.customerType : "");
+  const [customerStatus, setCustomerStatus] = useState(editPost ? editPost.customerStatus : "");
+  const [cStatus, setCstatus] = useState(editPost ? editPost.cStatus : "");
+  const [orderNumber, setOrderNumber] = useState(editPost ? editPost.orderNumber : "");
+  const [amount, setAmount] = useState(editPost ? editPost.amount : "");
+  const [qtySold, setQtySold] = useState(editPost ? editPost.qtySold : "");
+  const [salesManager, setSalesManager] = useState(editPost ? editPost.salesManager : "");
+  const [salesAgent, setSalesAgent] = useState(editPost ? editPost.salesAgent : "");
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const url = editPost ? `/api/account/editAccount` : `/api/account/posts`; // API endpoint changes based on edit or add
+    const url = editPost ? `/api/monitoring/editActivity` : `/api/monitoring/createActivity`; // API endpoint changes based on edit or add
     const method = editPost ? "PUT" : "POST"; // HTTP method changes based on edit or add
 
     const response = await fetch(url, {
@@ -31,11 +42,7 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        companyName,
-        customerName,
-        gender,
-        contactNumber,
-        cityAddress,
+        companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent,
         id: editPost ? editPost._id : undefined, // Send post ID if editing
       }),
     });
@@ -70,6 +77,28 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
           setContactNumber={setContactNumber}
           cityAddress={cityAddress}
           setCityAddress={setCityAddress}
+          channel={channel}
+          setChannel={setChannel}
+          wrapUp={wrapUp}
+          setWrapUp={setWrapUp}
+          source={source}
+          setSource={setSource}
+          customerType={customerType}
+          setCustomerType={setCustomerType}
+          customerStatus={customerStatus}
+          setCustomerStatus={setCustomerStatus}
+          cStatus={cStatus}
+          setCstatus={setCstatus}
+          orderNumber={orderNumber}
+          setOrderNumber={setOrderNumber}
+          amount={amount}
+          setAmount={setAmount}
+          qtySold={qtySold}
+          setQtySold={setQtySold}
+          salesManager={salesManager}
+          setSalesManager={setSalesManager}
+          salesAgent={salesAgent}
+          setSalesAgent={setSalesAgent}
           editPost={editPost}
         />
         <div className="flex justify-between">
