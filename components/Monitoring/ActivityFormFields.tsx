@@ -121,9 +121,9 @@ const ActivityFormFields: React.FC<FormFieldsProps> = ({
                     <label className="block text-xs font-bold mb-2" htmlFor="channel">Channel</label>
                     <select id="channel" value={channel} onChange={(e) => setChannel(e.target.value)} className="w-full px-3 py-2 border bg-gray-50 rounded text-xs">
                         <option value="">Select Channel</option>
-                        <option value="email">Email</option>
-                        <option value="shopee">Shopee</option>
-                        <option value="voice call">Voice Call</option>
+                        <option value="Email">Email</option>
+                        <option value="Shopee">Shopee</option>
+                        <option value="Voice Call">Voice Call</option>
                     </select>
                 </div>
 

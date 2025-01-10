@@ -84,7 +84,7 @@ const AccountsTable: React.FC<AccountsTableProps> = ({ posts, handleEdit, handle
                                     </td>
                                 </tr>
                                 {expandedRows.has(post._id) && (
-                                    <tr className="bg-gray-200 md:hidden">
+                                    <tr className="bg-gray-10 md:hidden">
                                         <td className="px-4 py-2" colSpan={6}>
                                             <div>
                                                 <strong>Company Name:</strong> {post.companyName}

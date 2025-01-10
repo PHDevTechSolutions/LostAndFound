@@ -78,8 +78,8 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ posts, handleEdit, handle
                                     <td className="px-4 py-2 border whitespace-nowrap hidden md:table-cell">{post.customerName}</td>
                                     <td className="px-4 py-2 border whitespace-nowrap hidden md:table-cell">{post.gender}</td>
                                     <td className="px-4 py-2 border whitespace-nowrap hidden md:table-cell">{post.contactNumber}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.channel}</td>
                                     <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.cityAddress}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.channel}</td>
                                     <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.wrapUp}</td>
                                     <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.source}</td>
                                     <td className="px-4 py-2 whitespace-nowrap border hidden md:table-cell">{post.customerType}</td>
@@ -106,7 +106,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ posts, handleEdit, handle
                                     </td>
                                 </tr>
                                 {expandedRows.has(post._id) && (
-                                    <tr className="bg-gray-50 md:hidden">
+                                    <tr className="bg-gray-30 md:hidden">
                                         <td className="px-4 py-2" colSpan={6}>
                                             <div>
                                                 <strong>Company Name:</strong> {post.companyName}
