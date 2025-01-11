@@ -16,9 +16,6 @@ const CreateUserPage: React.FC = () => {
     const [editUser, setEditUser] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedMonth, setSelectedMonth] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [selectedTag, setSelectedTag] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(5);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -44,10 +41,7 @@ const CreateUserPage: React.FC = () => {
         const postDate = new Date(post.createdAt);
         const postMonth = postDate.getMonth() + 1;
         return (
-            post.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (selectedMonth ? postMonth === parseInt(selectedMonth) : true) &&
-            (selectedCategory ? post.categories.includes(selectedCategory) : true) &&
-            (selectedTag ? post.tags.includes(selectedTag) : true)
+            post.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
     });
 
