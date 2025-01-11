@@ -9,13 +9,13 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         return;
     }
 
-    const { id, companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent } = req.body;
+    const { id, companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, tsmAcknowledgeDate, tsaAcknowledgeDate } = req.body;
 
     try {
         const db = await connectToDatabase();
         const accountCollection = db.collection('monitoring');
 
-        const updatedAccount = { companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent,
+        const updatedAccount = { companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, tsmAcknowledgeDate, tsaAcknowledgeDate,
             updatedAt: new Date(),
         };
 
