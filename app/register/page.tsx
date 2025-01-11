@@ -54,7 +54,7 @@ const Register: React.FC = () => {
           <Image src="/images/illustration/illustration.svg" alt="Illustration" width={350} height={350} className="object-cover h-full w-full rounded-l-lg" />
         </div>
         <div className="w-full md:w-1/2 p-8">
-          <h2 className="text-2xl font-bold text-center mb-6">Sign Up to Eco-React</h2>
+          <h2 className="text-2xl font-bold text-center mb-6">Sign Up to Eco-Reactssss</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
