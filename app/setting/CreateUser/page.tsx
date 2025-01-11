@@ -4,7 +4,7 @@ import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
 import AddPostForm from "../../../components/settings/AddUserForm";
-import SearchFilters from "../../../components/Blogs/SearchFilters";
+import SearchFilters from "../../../components/settings/SearchFilters";
 import UsersTable from "../../../components/settings/UsersTable";
 import Pagination from "../../../components/Blogs/Pagination";
 import { ToastContainer, toast } from "react-toastify";
@@ -121,12 +121,6 @@ const CreateUserPage: React.FC = () => {
                                     <SearchFilters
                                         searchTerm={searchTerm}
                                         setSearchTerm={setSearchTerm}
-                                        selectedMonth={selectedMonth}
-                                        setSelectedMonth={setSelectedMonth}
-                                        selectedCategory={selectedCategory}
-                                        setSelectedCategory={setSelectedCategory}
-                                        selectedTag={selectedTag}
-                                        setSelectedTag={setSelectedTag}
                                         postsPerPage={postsPerPage}
                                         setPostsPerPage={setPostsPerPage}
                                     />
