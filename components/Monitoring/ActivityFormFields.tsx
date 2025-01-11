@@ -18,6 +18,8 @@ interface FormFieldsProps {
     qtySold: string; setQtySold: (value: string) => void;
     salesManager: string; setSalesManager: (value: string) => void;
     salesAgent: string; setSalesAgent: (value: string) => void;
+    ticketReceived: string; setTicketReceived: (value: string) => void;
+    ticketEndorsed: string; setTicketEndorsed: (value: string) => void;
     editPost?: any;
 }
 
@@ -30,6 +32,7 @@ const ActivityFormFields: React.FC<FormFieldsProps> = ({
     cStatus, setCstatus, orderNumber, setOrderNumber,
     amount, setAmount, qtySold, setQtySold,
     salesManager, setSalesManager, salesAgent, setSalesAgent,
+    ticketReceived, setTicketReceived, ticketEndorsed, setTicketEndorsed,
     editPost
 }) => {
     const [companies, setCompanies] = useState<any[]>([]);
@@ -116,6 +119,29 @@ const ActivityFormFields: React.FC<FormFieldsProps> = ({
                     </div>
                 </div>
             </div>
+            <div className="flex flex-wrap -mx-4">
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="ticketreceived">Ticket Received</label>
+                    <input
+                        type="datetime-local"
+                        id="ticketreceived"
+                        value={ticketReceived}
+                        onChange={(e) => setTicketReceived(e.target.value)}
+                        className="w-full px-3 py-2 border rounded text-xs"
+                    />
+                </div>
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="ticketendorsed">Ticket Endorsed</label>
+                    <input
+                        type="datetime-local"
+                        id="ticketendorsed"
+                        value={ticketEndorsed}
+                        onChange={(e) => setTicketEndorsed(e.target.value)}
+                        className="w-full px-3 py-2 border rounded text-xs"
+                    />
+                </div>
+            </div>
+
             <div className="flex flex-wrap -mx-4">
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="channel">Channel</label>

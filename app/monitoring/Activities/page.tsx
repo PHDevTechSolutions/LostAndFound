@@ -115,7 +115,7 @@ const ActivityPage: React.FC = () => {
                                         <div className="flex justify-between items-center mb-4">
                                             <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>Create Ticket</button>
                                         </div>
-                                        <h2 className="text-lg font-bold mb-2">Customer'ss Information</h2>
+                                        <h2 className="text-lg font-bold mb-2">Customer's Information</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <SearchFilters
                                                 searchTerm={searchTerm}

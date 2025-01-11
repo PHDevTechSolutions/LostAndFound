@@ -29,6 +29,8 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
   const [qtySold, setQtySold] = useState(editPost ? editPost.qtySold : "");
   const [salesManager, setSalesManager] = useState(editPost ? editPost.salesManager : "");
   const [salesAgent, setSalesAgent] = useState(editPost ? editPost.salesAgent : "");
+  const [ticketReceived, setTicketReceived] = useState(editPost ? editPost.ticketReceived: "");
+  const [ticketEndorsed, setTicketEndorsed] = useState(editPost ? editPost.ticketEndorsed: "");
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +44,7 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent,
+        companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed,
         id: editPost ? editPost._id : undefined, // Send post ID if editing
       }),
     });
@@ -99,6 +101,10 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
           setSalesManager={setSalesManager}
           salesAgent={salesAgent}
           setSalesAgent={setSalesAgent}
+          ticketReceived={ticketReceived}
+          setTicketReceived={setTicketReceived}
+          ticketEndorsed={ticketEndorsed}
+          setTicketEndorsed={setTicketEndorsed}
           editPost={editPost}
         />
         <div className="flex justify-between">
