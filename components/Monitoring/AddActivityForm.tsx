@@ -31,6 +31,8 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
   const [salesAgent, setSalesAgent] = useState(editPost ? editPost.salesAgent : "");
   const [ticketReceived, setTicketReceived] = useState(editPost ? editPost.ticketReceived: "");
   const [ticketEndorsed, setTicketEndorsed] = useState(editPost ? editPost.ticketEndorsed: "");
+  const [tsmAcknowledgeDate, setTsmAcknowledgeDate] = useState(editPost ? editPost.tsmAcknowledgeDate: "");
+  const [tsaAcknowledgeDate, setTsaAcknowledgeDate] = useState(editPost ? editPost.tsaAcknowledgeDate: "");
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +46,7 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed,
+        companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed, tsmAcknowledgeDate, tsaAcknowledgeDate,
         id: editPost ? editPost._id : undefined, // Send post ID if editing
       }),
     });
@@ -105,6 +107,10 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onCancel, refreshPosts,
           setTicketReceived={setTicketReceived}
           ticketEndorsed={ticketEndorsed}
           setTicketEndorsed={setTicketEndorsed}
+          tsmAcknowledgeDate={tsmAcknowledgeDate}
+          setTsmAcknowledgeDate={setTsmAcknowledgeDate}
+          tsaAcknowledgeDate={tsaAcknowledgeDate}
+          setTsaAcknowledgeDate={setTsaAcknowledgeDate}
           editPost={editPost}
         />
         <div className="flex justify-between">

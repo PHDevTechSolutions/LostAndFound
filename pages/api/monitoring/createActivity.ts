@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to add an account directly in this file
-async function addMonitoring({ companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed }: {
+async function addMonitoring({ companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed, tsmAcknowledgeDate, tsaAcknowledgeDate}: {
   companyName: string;
   customerName: string;
   gender: string;
@@ -21,11 +21,13 @@ async function addMonitoring({ companyName, customerName, gender, contactNumber,
   salesAgent: string;
   ticketReceived: string;
   ticketEndorsed: string;
+  tsmAcknowledgeDate: string;
+  tsaAcknowledgeDate: string;
 
 }) {
   const db = await connectToDatabase();
   const accountsCollection = db.collection("monitoring");
-  const newMonitoring = { companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed, createdAt: new Date(), };
+  const newMonitoring = { companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed, tsmAcknowledgeDate, tsaAcknowledgeDate, createdAt: new Date(), };
   await accountsCollection.insertOne(newMonitoring);
 
   // Broadcast logic if needed
@@ -38,7 +40,7 @@ async function addMonitoring({ companyName, customerName, gender, contactNumber,
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed } = req.body;
+    const { companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed, tsmAcknowledgeDate, tsaAcknowledgeDate } = req.body;
 
     // Validate required fields
     if (!companyName || !customerName) {
@@ -48,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const result = await addMonitoring({ companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed });
+      const result = await addMonitoring({ companyName, customerName, gender, contactNumber, cityAddress, channel, wrapUp, source, customerType, customerStatus, cStatus, orderNumber, amount, qtySold, salesManager, salesAgent, ticketReceived, ticketEndorsed, tsmAcknowledgeDate, tsaAcknowledgeDate });
       res.status(200).json(result);
     } catch (error) {
       console.error("Error adding account:", error);

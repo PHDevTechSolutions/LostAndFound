@@ -20,6 +20,8 @@ interface FormFieldsProps {
     salesAgent: string; setSalesAgent: (value: string) => void;
     ticketReceived: string; setTicketReceived: (value: string) => void;
     ticketEndorsed: string; setTicketEndorsed: (value: string) => void;
+    tsmAcknowledgeDate: string; setTsmAcknowledgeDate: (value: string) => void;
+    tsaAcknowledgeDate: string; setTsaAcknowledgeDate: (value: string) => void;
     editPost?: any;
 }
 
@@ -33,6 +35,7 @@ const ActivityFormFields: React.FC<FormFieldsProps> = ({
     amount, setAmount, qtySold, setQtySold,
     salesManager, setSalesManager, salesAgent, setSalesAgent,
     ticketReceived, setTicketReceived, ticketEndorsed, setTicketEndorsed,
+    tsmAcknowledgeDate, setTsmAcknowledgeDate, tsaAcknowledgeDate, setTsaAcknowledgeDate,
     editPost
 }) => {
     const [companies, setCompanies] = useState<any[]>([]);
@@ -259,6 +262,28 @@ const ActivityFormFields: React.FC<FormFieldsProps> = ({
                 <div className="w-full sm:w-1/2 md:w-1/3 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="salesagent">Sales Agent</label>
                     <input type="text" id="salesagent" value={salesAgent} onChange={(e) => setSalesAgent(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+                </div>
+            </div>
+            <div className="flex flex-wrap -mx-4">
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="tsmacknowledgedate">TSM Acknowledge Date</label>
+                    <input
+                        type="datetime-local"
+                        id="tsmacknowledgedate"
+                        value={tsmAcknowledgeDate}
+                        onChange={(e) => setTsmAcknowledgeDate(e.target.value)}
+                        className="w-full px-3 py-2 border rounded text-xs"
+                    />
+                </div>
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="tsaacknowledgedate">TSA Acknowledge Date</label>
+                    <input
+                        type="datetime-local"
+                        id="tsaacknowledgedate"
+                        value={tsaAcknowledgeDate}
+                        onChange={(e) => setTsaAcknowledgeDate(e.target.value)}
+                        className="w-full px-3 py-2 border rounded text-xs"
+                    />
                 </div>
             </div>
         </>
