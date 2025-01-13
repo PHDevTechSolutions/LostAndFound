@@ -91,7 +91,6 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
           <input type="text" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
       </div>
-<<<<<<< HEAD
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
@@ -102,38 +101,6 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
           <label className="block text-xs font-bold mb-2" htmlFor="Remarks">Remarks</label>
           <input type="text" id="Remarks" value={Remarks} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
-=======
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="Container No">Container No.</label>
-        <input type="text" id="ContainerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="Brand">Brand</label>
-        <select id="Brand" value={Brand} onChange={(e) => setBrand(e.target.value)} className="w-full px-3 py-2 border rounded text-xs">
-          <option>  China </option> 
-          <option>  Vietnam </option>
-        </select>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="Boxes">Boxes</label>
-        <input type="text" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="Commodity">Commodity</label>
-        <input type="text" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="Size">Size</label>
-        <input type="text" id="Remarks" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Freezing</label>
-        <input type="text" id="Freezing" value={Freezing} onChange={(e) => setFreezing(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs font-bold mb-2" htmlFor="Remarks">Remarks</label>
-        <input type="text" id="Remarks" value={Remarks} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
->>>>>>> eced084fba7ad2a7d5d712dab8eab8d28dee338b
       </div>
     </>
   );
