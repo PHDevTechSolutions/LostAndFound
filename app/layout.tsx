@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ecoshift Corporation",
-  description: "Created in NextJs Developed By Leroux Y Xchire",
+  title: "JJ Venture Sources, Inc",
+  description: "Created in NextJs Developed By PH Dev-Tech Solutions",
 };
 
 export default function RootLayout({

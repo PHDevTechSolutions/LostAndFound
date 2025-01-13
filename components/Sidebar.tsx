@@ -33,15 +33,6 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
 
   const menuItems = [
     {
-      title: 'Blogs',
-      icon: FaBlog,
-      subItems: [
-        { title: 'All Blogs', href: `/blogs/all${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
-        { title: 'Categories', href: `/blogs/categories${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
-        { title: 'Tags', href: `/blogs/tags${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
-      ],
-    },
-    {
       title: 'Client Accounts',
       icon: FaBuildingUser ,
       subItems: [
@@ -65,23 +56,23 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
   ];
 
   return (
-    <div className={`fixed inset-y-0 left-0 z-50 h-screen bg-gray-800 text-white transition-all duration-300 flex flex-col ${collapsed ? "w-16" : "w-64"} ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
-      <div className="flex items-center justify-between p-4">
+    <div className={`fixed inset-y-0 left-0 z-50 h-screen bg-gray-100 text-dark border-1 shadow transition-all duration-300 flex flex-col ${collapsed ? "w-16" : "w-64"} ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
+      <div className="flex items-center justify-between p-4 border">
         <div className="flex items-center">
-          <img src="/react.svg" alt="Logo" className="h-8 mr-2"/>
+          <img src="/Next.js.svg" alt="Logo" className="h-8 mr-2"/>
           <Link href={`/dashboard${userId ? `?id=${encodeURIComponent(userId)}` : ''}`}>
             <h1 className={`text-md font-bold transition-opacity ${collapsed ? "opacity-0" : "opacity-100"}`}>
-              Eco-React
+            JJ Venture Sources, Inc
             </h1>
           </Link>
         </div>
       </div>
-      <div className="flex flex-col items-center flex-grow overflow-y-auto text-xs">
+      <div className="flex flex-col items-center flex-grow overflow-y-auto text-xs p-2">
         {menuItems.map((item, index) => (
           <div key={index} className="w-full">
             <button
               onClick={() => handleToggle(item.title)}
-              className={`flex items-center w-full p-4 hover:bg-gray-700 ${collapsed ? "justify-center" : ""}`}
+              className={`flex items-center w-full p-4 hover:bg-gray-700 hover:text-white ${collapsed ? "justify-center" : ""}`}
             >
               <item.icon size={18} />
               {!collapsed && <span className="ml-2">{item.title}</span>}
