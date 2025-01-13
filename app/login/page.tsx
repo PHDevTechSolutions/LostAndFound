@@ -98,6 +98,9 @@ const Login: React.FC = () => {
             Don’t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">Sign Up</Link>
           </div>
+          <footer className="absolute bottom-4 right-4 text-xs text-gray-600">
+          <p>JJ Venture Sources, Inc 2025 - PHDev-Tech Solutions</p>
+          </footer>
         </div>
       </div>
     </div>

@@ -79,7 +79,7 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
             {openSections[item.title] && !collapsed && (
               <div className="ml-8 space-y-2">
                 {item.subItems.map((subItem, subIndex) => (
-                  <Link key={subIndex} href={subItem.href} prefetch={true} className="block hover:bg-gray-700 p-2 rounded-md">
+                  <Link key={subIndex} href={subItem.href} prefetch={true} className="block hover:bg-gray-700 hover:text-white p-2 rounded-md">
                     {subItem.title}
                   </Link>
                 ))}
