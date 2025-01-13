@@ -70,11 +70,11 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="Boxes">Boxes</label>
-        <input type="text" id="Boxes" value={Brand} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
+        <input type="text" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="Commodity">Commodity</label>
-        <input type="text" id="Commodity" value={Brand} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
+        <input type="text" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"/>
       </div>
       <div className="mb-4">
         <label className="block text-xs font-bold mb-2" htmlFor="Size">Size</label>
