@@ -9,7 +9,7 @@ import UserFetcher from "../../../components/UserFetcher";
 // Pages
 import AddAccountForm from "../../../components/Container/AddContainerForm";
 import SearchFilters from "../../../components/Container/SearchFilters";
-import AccountsTable from "../../../components/Container/ContainerTable";
+import ContainerTable from "../../../components/Container/ContainerTable";
 import Pagination from "../../../components/Container/Pagination";
 
 // Toasts
@@ -131,7 +131,7 @@ const ContainerList: React.FC = () => {
                                                 postsPerPage={postsPerPage}
                                                 setPostsPerPage={setPostsPerPage}
                                             />
-                                            <AccountsTable
+                                            <ContainerTable
                                                 posts={currentPosts}
                                                 handleEdit={handleEdit}
                                                 handleDelete={confirmDelete}

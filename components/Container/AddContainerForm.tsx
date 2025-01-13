@@ -5,20 +5,20 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import FormFields from "./ContainerFormFields";
 
-interface AddContainerProps { 
-  onCancel: () => void; 
+interface AddContainerProps {
+  onCancel: () => void;
   refreshPosts: () => void;  // Add a refreshPosts callback
-  userName: string; 
+  userName: string;
   editData?: any; // Optional prop for the post being edited
 }
 
 const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, editData }) => {
   const [Vendor, setVendor] = useState(editData ? editData.Vendor : "");
-  const [SpsicNo, setSpsicNo] = useState(editData ? editData.SpsicNo: "");
-  const [DateArrived, setDateArrived] = useState(editData ? editData.DateArrived: "");
-  const [DateSoldout, setDateSoldout] = useState(editData ? editData.DateSoldout: "");
-  const [SupplierName, setSupplierName] = useState(editData ? editData.SupplierName: "");
-  const [ContainerNo, setContainerNo] = useState(editData ? editData.ContainerNo: "");
+  const [SpsicNo, setSpsicNo] = useState(editData ? editData.SpsicNo : "");
+  const [DateArrived, setDateArrived] = useState(editData ? editData.DateArrived : "");
+  const [DateSoldout, setDateSoldout] = useState(editData ? editData.DateSoldout : "");
+  const [SupplierName, setSupplierName] = useState(editData ? editData.SupplierName : "");
+  const [ContainerNo, setContainerNo] = useState(editData ? editData.ContainerNo : "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,28 +54,38 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
-        <h2 className="text-xs font-bold mb-4">{editData ? "Edit Container" : "Add Container"}</h2>
-        <FormFields
-          Vendor={Vendor}
-          setVendor={setVendor}
-          SpsicNo={SpsicNo}
-          setSpsicNo={setSpsicNo}
-          DateArrived={DateArrived}
-          setDateArrived={setDateArrived}
-          DateSoldout={DateSoldout}
-          setDateSoldout={setDateSoldout}
-          SupplierName={SupplierName}
-          setSupplierName={setSupplierName}
-          ContainerNo={ContainerNo}
-          setContainerNo={setContainerNo}
-          editData={editData}
-        />
-        <div className="flex justify-between">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editData ? "Update" : "Submit"}</button>
-          <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white shadow-md rounded-lg p-4">
+            <form onSubmit={handleSubmit} className="bg-white text-xs">
+              <h2 className="text-xs font-bold mb-4">{editData ? "Edit Container" : "Add Container"}</h2>
+              <FormFields
+                Vendor={Vendor}
+                setVendor={setVendor}
+                SpsicNo={SpsicNo}
+                setSpsicNo={setSpsicNo}
+                DateArrived={DateArrived}
+                setDateArrived={setDateArrived}
+                DateSoldout={DateSoldout}
+                setDateSoldout={setDateSoldout}
+                SupplierName={SupplierName}
+                setSupplierName={setSupplierName}
+                ContainerNo={ContainerNo}
+                setContainerNo={setContainerNo}
+                editData={editData}
+              />
+              <div className="flex justify-between">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editData ? "Update" : "Submit"}</button>
+                <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div className="bg-white shadow-md rounded-lg p-4">
+            <h2 className="text-lg font-bold mb-2">Card 2 Title</h2>
+            <p className="text-sm text-gray-700">This is the content of the second card. You can add more details here.</p>
+          </div>
         </div>
-      </form>
+      </div>
       <ToastContainer className="text-xs" autoClose={1000} />
     </>
   );
