@@ -6,7 +6,6 @@ import UserFetcher from "../../../components/UserFetcher";
 import AddPostForm from "../../../components/settings/AddUserForm";
 import SearchFilters from "../../../components/settings/SearchFilters";
 import UsersTable from "../../../components/settings/UsersTable";
-import Pagination from "../../../components/Blogs/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -124,11 +123,6 @@ const CreateUserPage: React.FC = () => {
                                         handleDelete={confirmDelete}
                                     />
                                     
-                                    <Pagination
-                                        currentPage={currentPage}
-                                        totalPages={totalPages}
-                                        setCurrentPage={setCurrentPage}
-                                    />
                                     <div className="text-xs mt-2">
                                         Showing {indexOfFirstPost + 1} to {Math.min(indexOfLastPost, filteredPosts.length)} of {filteredPosts.length} entries
                                     </div>

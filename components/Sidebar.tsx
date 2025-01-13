@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FaBlog, PiBlueprintFill } from "./Sidebar/icons"; 
 import { FaBuildingUser } from "react-icons/fa6";
 import { FaHeadphonesSimple } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
