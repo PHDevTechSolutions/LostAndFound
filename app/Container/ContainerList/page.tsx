@@ -1,6 +1,5 @@
 "use client";
 
-// Layout and Session
 import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
@@ -8,6 +7,7 @@ import UserFetcher from "../../../components/UserFetcher";
 
 // Pages
 import AddAccountForm from "../../../components/Container/AddContainerForm";
+import CreateDataForm from "../../../components/Container/CreateDataForm";
 import SearchFilters from "../../../components/Container/SearchFilters";
 import ContainerTable from "../../../components/Container/ContainerTable";
 import Pagination from "../../../components/Container/Pagination";
@@ -15,7 +15,6 @@ import Pagination from "../../../components/Container/Pagination";
 // Toasts
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
@@ -27,6 +26,9 @@ const ContainerList: React.FC = () => {
     const [postsPerPage, setPostsPerPage] = useState(5);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState<string | null>(null);
+
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [postForCreate, setPostForCreate] = useState<any>(null);
 
     // Fetch Data from the API
     const fetchDatabase = async () => {
@@ -49,8 +51,7 @@ const ContainerList: React.FC = () => {
         return (
             (post.SpsicNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 post.ContainerNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase())) &&
-            (selectedCityAddress ? post.cityAddress.includes(selectedCityAddress) : true)
+                post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()))
         );
     });
 
@@ -99,6 +100,13 @@ const ContainerList: React.FC = () => {
         }
     };
 
+    const handleCreateData = (postId: string) => {
+        const selectedPost = posts.find((post) => post._id === postId);
+        setPostForCreate(selectedPost); // Pass the selected post details
+        setShowCreateForm(true);
+        setShowForm(false); // Ensure other forms are closed
+    };
+
     return (
         <SessionChecker>
             <ParentLayout>
@@ -106,7 +114,12 @@ const ContainerList: React.FC = () => {
                     {(userName) => (
                         <div className="container mx-auto p-4">
                             <div className="grid grid-cols-1 md:grid-cols-1">
-                                {showForm ? (
+                                {showCreateForm ? (
+                                    <CreateDataForm
+                                        post={postForCreate} // Pass the selected post details
+                                        onCancel={() => setShowCreateForm(false)} // Close the form
+                                    />
+                                ) : showForm ? (
                                     <AddAccountForm
                                         onCancel={() => {
                                             setShowForm(false);
@@ -119,7 +132,9 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>Add Fishing Container</button>
+                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
+                                                Add Fishing Container
+                                            </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">Summary of Sales Fishing</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
@@ -135,6 +150,7 @@ const ContainerList: React.FC = () => {
                                                 posts={currentPosts}
                                                 handleEdit={handleEdit}
                                                 handleDelete={confirmDelete}
+                                                handleCreateData={handleCreateData}
                                             />
 
                                             <Pagination

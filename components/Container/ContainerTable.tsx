@@ -11,10 +11,10 @@ interface ContainerTableProps {
   posts: any[];
   handleEdit: (post: any) => void;
   handleDelete: (postId: string) => void;
-  handleInfo: (postId: string) => void; // Add handleInfo to the props
+  handleCreateData: (postId: string) => void;
 }
 
-const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, handleDelete, handleInfo }) => {
+const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, handleDelete, handleCreateData }) => {
   const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
@@ -84,10 +84,24 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                           <Menu.Item>
                             {({ active }) => (
                               <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCreateData(post._id);  // <-- This is now defined
+                                }}
+                                className={`${active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                                  } block w-full text-left px-4 py-2 text-xs`}
+                              >
+                                Create Data
+                              </button>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
                                 onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
-                                className={`${
-                                  active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                                } block w-full text-left px-4 py-2 text-xs`}
+                                className={`${active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                                  } block w-full text-left px-4 py-2 text-xs`}
                               >
                                 Edit
                               </button>
@@ -96,22 +110,9 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                           <Menu.Item>
                             {({ active }) => (
                               <button
-                                onClick={(e) => { e.stopPropagation(); handleInfo(post._id); }}
-                                className={`${
-                                  active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                                } block w-full text-left px-4 py-2 text-xs`}
-                              >
-                                Create Data
-                              </button>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
                                 onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
-                                className={`${
-                                  active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                                } block w-full text-left px-4 py-2 text-xs`}
+                                className={`${active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                                  } block w-full text-left px-4 py-2 text-xs`}
                               >
                                 Delete
                               </button>

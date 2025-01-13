@@ -9,20 +9,14 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         return;
     }
 
-    const { id, Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, } = req.body;
+    const { id, Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks} = req.body;
 
     try {
         const db = await connectToDatabase();
         const containerCollection = db.collection('container');
 
         const updatedAccount = {
-            Vendor,
-            SpsicNo,
-            DateArrived,
-            DateSoldout,
-            SupplierName,
-            ContainerNo,
-            updatedAt: new Date(),
+            Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks, updatedAt: new Date(),
         };
 
         await containerCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedAccount });
