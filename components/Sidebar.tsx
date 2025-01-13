@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FaBuildingUser } from "react-icons/fa6";
-import { FaHeadphonesSimple } from "react-icons/fa6";
-import { IoMdSettings } from "react-icons/io";
+import { PiShippingContainer } from "react-icons/pi";
+
 
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
@@ -32,24 +31,10 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
 
   const menuItems = [
     {
-      title: 'Client Accounts',
-      icon: FaBuildingUser ,
+      title: 'Containers',
+      icon: PiShippingContainer  ,
       subItems: [
-        { title: 'List of Accounts', href: `/accounts/AccountList${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
-      ],
-    },
-    {
-      title: 'Call Monitoring',
-      icon: FaHeadphonesSimple,
-      subItems: [
-        { title: 'Tickets', href: `/monitoring/Activities${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
-      ],
-    },
-    {
-      title: 'Settings',
-      icon: IoMdSettings,
-      subItems: [
-        { title: 'Create User', href: `/setting/CreateUser${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+        { title: 'Log Entries', href: `/Container/ContainerList${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
       ],
     },
   ];
