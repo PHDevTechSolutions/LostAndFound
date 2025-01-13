@@ -2,17 +2,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to add an account directly in this file
-async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, }: {
+async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks  }: {
   Vendor: string;
   SpsicNo: string;
   DateArrived: string;
   DateSoldout: string;
   SupplierName: string;
   ContainerNo: string;
+  Brand: string;
+  Boxes: string;
+  Commodity: string;
+  Size: string;
+  Freezing: string;
+  Remarks: string;
 }) {
   const db = await connectToDatabase();
   const containerCollection = db.collection("container");
-  const newData = { Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, createdAt: new Date(), };
+  const newData = { Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks, createdAt: new Date(), };
   await containerCollection.insertOne(newData);
 
   // Broadcast logic if needed
@@ -25,7 +31,7 @@ async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, Supplie
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo } = req.body;
+    const { Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks, } = req.body;
 
     // Validate required fields
     if (!Vendor || !SpsicNo) {
@@ -35,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const result = await addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, });
+      const result = await addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks, });
       res.status(200).json(result);
     } catch (error) {
       console.error("Error adding account:", error);

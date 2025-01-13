@@ -19,6 +19,12 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [DateSoldout, setDateSoldout] = useState(editData ? editData.DateSoldout: "");
   const [SupplierName, setSupplierName] = useState(editData ? editData.SupplierName: "");
   const [ContainerNo, setContainerNo] = useState(editData ? editData.ContainerNo: "");
+  const [Brand, setBrand] = useState(editData ? editData.Brand: "");
+  const [Boxes, setBoxes] = useState(editData ? editData.Boxes: "");
+  const [Commodity, setCommodity] = useState(editData ? editData.Commodity: "");
+  const [Size, setSize] = useState(editData ? editData.Size: "");
+  const [Freezing, setFreezing] = useState(editData ? editData.Freezing: "");
+  const [Remarks, setRemarks] = useState(editData ? editData.Remarks: "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +38,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo,
+        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks,
         id: editData ? editData._id : undefined, // Send post ID if editing
       }),
     });
@@ -69,6 +75,18 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           setSupplierName={setSupplierName}
           ContainerNo={ContainerNo}
           setContainerNo={setContainerNo}
+          setBrand={setBrand}
+          Brand={Brand}
+          setBoxes={setBoxes}
+          Boxes={Boxes}
+          setCommodity={setCommodity}
+          Commodity={Commodity}
+          setSize={setSize}
+          Size={Size}
+          setFreezing={setFreezing}
+          Freezing={Freezing}
+          setRemarks={setRemarks}
+          Remarks={Remarks}
           editData={editData}
         />
         <div className="flex justify-between">
