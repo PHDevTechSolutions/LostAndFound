@@ -207,6 +207,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                             <tr>
                                 <th className="w-1/6 text-left border px-4 py-2">Date</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Price</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Remaining</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gross Sales Per Day</th> 
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th> 
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Mode of Payment</th>    
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
                             </tr>
                         </thead>
@@ -215,6 +221,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                                 <tr key={data._id}>
                                     <td className="px-4 py-2 border">{data.DateOrder}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Price}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Remaining}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.GrossSales}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.PaymentMode}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell flex gap-2">
                                         <button className="mr-2" onClick={() => handleEdit(data)}><MdEdit /></button>
                                         <button onClick={() => handleDelete(data._id)}><MdDelete /></button>
