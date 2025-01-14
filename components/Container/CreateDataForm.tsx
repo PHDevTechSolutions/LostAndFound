@@ -13,6 +13,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BoxType, setBoxType] = useState("");
     const [DateOrder, setDateOrder] = useState("");
     const [BuyersName, setBuyersName] = useState("");
+    const [BoxSales, setBoxSales] = useState("");
+    const [Price, setPrice] = useState("");
+    const [Remaining, setRemaining] = useState("");
+    const [GrossSales, setGrossSales] = useState("");
+    const [PlaceSales, setPlaceSales] = useState("");
+    const [PaymentMode, setPaymentMode] = useState("");
     const [editData, setEditData] = useState<any>(null);
     const [tableData, setTableData] = useState<any[]>([]);
     const [activeTab, setActiveTab] = useState("White Box");
@@ -35,6 +41,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 BoxType,
                 DateOrder,
                 BuyersName,
+                BoxSales,
+                Price,
+                Remaining,
+                GrossSales,
+                PlaceSales,
+                PaymentMode,
                 id: editData ? editData._id : undefined,
             }),
         });
@@ -77,6 +89,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBoxType("");
         setDateOrder("");
         setBuyersName("");
+        setBoxSales("");
+        setPrice("");
+        setRemaining("");
+        setGrossSales("");
+        setPlaceSales("");
+        setPaymentMode("");
         setEditData(null);
     };
 
@@ -92,6 +110,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBoxType(data.BoxType);
         setDateOrder(data.DateOrder);
         setBuyersName(data.BuyersName);
+        setBoxSales(data.BoxSales);
+        setPrice(data.Price);
+        setRemaining(data.Remaining);
+        setGrossSales(data.GrossSales);
+        setPlaceSales(data.PlaceSales);
+        setPaymentMode(data.PaymentMode);
         setEditData(data);
     };
 
@@ -135,6 +159,30 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                             <label className="block text-xs font-bold mb-2" htmlFor="BuyersName">Buyer's Name</label>
                             <input type="text" id="BuyersName" value={BuyersName} onChange={(e) => setBuyersName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="BoxSales">Box Sales</label>
+                            <input type="text" id="BoxSales" value={BoxSales} onChange={(e) => setBoxSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="Price">Price</label>
+                            <input type="text" id="Price" value={Price} onChange={(e) => setPrice(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining</label>
+                            <input type="text" id="Remaining" value={Remaining} onChange={(e) => setRemaining(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>
+                            <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
+                            <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>
+                            <input type="text" id="PaymentMode" value={PaymentMode} onChange={(e) => setPaymentMode(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                        </div>
                         <div className="flex justify-between">
                             <button type="button" onClick={onCancel} className="text-xs text-white bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md">Cancel</button>
                             <div className="flex gap-2">
@@ -158,7 +206,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         <thead>
                             <tr>
                                 <th className="w-1/6 text-left border px-4 py-2">Date</th>
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
                             </tr>
                         </thead>
