@@ -129,7 +129,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     useEffect(() => {
         fetchData();
-    }, [post?.ContainerNo, userName]);
+    }, [post?.ContainerNo]);
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
