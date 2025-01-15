@@ -34,7 +34,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
   return (
     <>
       <div className="flex flex-wrap -mx-4">
-<h1>{userName}</h1>
+<h1>{post.userName}</h1>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Vendor">Vendor</label>
           <input type="text" id="Vendor" value={Vendor} onChange={(e) => setVendor(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
