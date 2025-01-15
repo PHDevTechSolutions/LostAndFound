@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from "react";
+use client";
 
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-
-import 'react-toastify/dist/ReactToastify.css';
-
+import "react-toastify/dist/ReactToastify.css";
 import { MdEdit, MdDelete } from "react-icons/md";
 
-
 interface CreateDataFormProps {
-
     post: any;
-
     onCancel: () => void;
-
 }
-
 
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
@@ -47,6 +41,26 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [tableData, setTableData] = useState<any[]>([]);
 
     const [activeTab, setActiveTab] = useState("White Box");
+
+// Fetch Username
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get("id");
+
+      if (userId) {
+        try {
+          const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
+          const data = await response.json();
+          setUsername(data.name || "");
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUsername();
+  }, []);
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -254,12 +268,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
 
     return (
-
-
         <div className="container mx-auto p-4">
-
             <ToastContainer className="text-xs" />
-
             <div className="flex flex-col items-start gap-2">
 
                 <h2 className="text-xs font-semibold text-gray-700">
@@ -278,8 +288,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
 
             <div className="flex flex-wrap gap-4">
-
-                {/* Form Section */}
 
                 <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[20%]">
 
