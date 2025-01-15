@@ -142,6 +142,15 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                         <strong>Container No. :</strong> {post.ContainerNo}
                       </div>
                       <div className="mt-2">
+<button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCreateData(post._id);  // <-- This is now defined
+                                }}
+                                className="bg-gray-100 text-gray-900 text-gray-700 block w-full text-left px-4 py-2 text-xs" >
+                                Create Data
+                              </button>
+
                         <button
                           className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
                           onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
