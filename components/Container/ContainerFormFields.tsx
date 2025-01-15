@@ -99,7 +99,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Remarks">Remarks</label>
-         <textarea id="Remarks" value={Remarks} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" row="2"></textarea>
+         <textarea id="Remarks" value={Remarks} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" rows="2"></textarea>
         </div>
       </div>
     </>
