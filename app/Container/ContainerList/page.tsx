@@ -112,7 +112,6 @@ const ContainerList: React.FC = () => {
             <ParentLayout>
                 <UserFetcher>
                     {(userName) => (
-<h1>Hi {userName}</h1>
                         <div className="container mx-auto p-4">
                             <div className="grid grid-cols-1 md:grid-cols-1">
                                 {showCreateForm ? (
@@ -133,6 +132,7 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
+<h1>Hi {userName}</h1>
                                             <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
                                                 Add Fishing Container
                                             </button>
