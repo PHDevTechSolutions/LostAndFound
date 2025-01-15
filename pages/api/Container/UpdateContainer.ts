@@ -9,14 +9,14 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         return;
     }
 
-    const { id, ContainerNo, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
+    const { id, ContainerNo, Username, Location, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
 
     try {
         const db = await connectToDatabase();
         const containerCollection = db.collection('container_order');
 
         const updatedAccount = {
-          ContainerNo, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, updatedAt: new Date(),
+          ContainerNo, Username, Location, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, updatedAt: new Date(),
         };
 
         await containerCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedAccount });
