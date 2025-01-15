@@ -165,7 +165,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
-                            <input type="text" id="Location" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                            <select id="BoxType" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+                                <option value="">Select Location</option>
+                                <option value="Navotas">Navotas</option>
+                                <option value="Sambat">Sambat</option>
+                                <option value="Minalin">Minalin</option>
+                            </select>
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date</label>
