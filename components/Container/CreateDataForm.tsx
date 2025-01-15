@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,6 +26,27 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [editData, setEditData] = useState<any>(null);
     const [tableData, setTableData] = useState<any[]>([]);
     const [activeTab, setActiveTab] = useState("White Box");
+
+// Fetch Username
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get("id");
+
+      if (userId) {
+        try {
+          const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
+          const data = await response.json();
+          setUsername(data.name || "");
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUsername();
+  }, []);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -161,7 +184,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Username">Username</label>
-                            <input type="text" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="text" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required  disabled/>
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
