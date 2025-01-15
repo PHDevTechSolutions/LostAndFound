@@ -2,8 +2,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to save container data
-async function saveContainer({ ContainerNo, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode }: {
+async function saveContainer({ ContainerNo, Username, Location, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode }: {
   ContainerNo: string;
+  Username: string;
+  Location: string;
   BoxType: string;
   DateOrder: string;
   BuyersName: string;
@@ -16,7 +18,7 @@ async function saveContainer({ ContainerNo, BoxType, DateOrder, BuyersName, BoxS
 }) {
   const db = await connectToDatabase();
   const containerCollection = db.collection("container_order");
-  const newData = { ContainerNo, BoxType, DateOrder, BuyersName,BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, createdAt: new Date() };
+  const newData = { ContainerNo, Username, Location, BoxType, DateOrder, BuyersName,BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, createdAt: new Date() };
   await containerCollection.insertOne(newData);
 
   // Broadcast logic if needed
@@ -29,7 +31,7 @@ async function saveContainer({ ContainerNo, BoxType, DateOrder, BuyersName, BoxS
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { ContainerNo, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
+    const { ContainerNo, Username, Location, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
 
     // Validate required fields
     if (!BoxType || !BuyersName) {
@@ -37,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const result = await saveContainer({ ContainerNo, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode });
+      const result = await saveContainer({ ContainerNo, Username, Location, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode });
       res.status(200).json(result);
     } catch (error) {
       console.error("Error saving container:", error);
