@@ -10,7 +10,7 @@ interface CreateDataFormProps {
 
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
-    const [Username, setUsername] = useState("");
+    const [Username, setUsername] = useState(post?.Username || "");
     const [Location, setLocation] = useState("");
     const [BoxType, setBoxType] = useState("");
     const [DateOrder, setDateOrder] = useState("");
