@@ -136,7 +136,7 @@ const ContainerList: React.FC = () => {
                                                 Add Fishing Container
                                             </button>
                                         </div>
-                                        <h2 className="text-lg font-bold mb-2">Summary of Sales Fishing</h2>
+                                        <h2 className="text-lg font-bold mb-2">Summary of Sales</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <SearchFilters
                                                 searchTerm={searchTerm}
