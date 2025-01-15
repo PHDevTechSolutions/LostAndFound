@@ -3,8 +3,6 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { MdEdit, MdDelete } from "react-icons/md";
 
-import UserFetcher from "../UserFetcher";
-
 interface CreateDataFormProps {
     post: any;
     onCancel: () => void;
@@ -136,7 +134,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
     return (
-<UserFetcher>
 
         <div className="container mx-auto p-4">
             <ToastContainer className="text-xs" />
@@ -266,7 +263,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 </div>
             </div>
         </div>
-</UserFetcher>
     );
 };
 
