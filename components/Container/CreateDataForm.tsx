@@ -161,7 +161,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Username">Username</label>
-                            <input type="text" id="Username" value={userName} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="text" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
@@ -221,6 +221,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                     <table className="min-w-full bg-white border text-xs">
                         <thead>
                             <tr>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Username</th> 
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Location</th> 
                                 <th className="w-1/6 text-left border px-4 py-2">Date</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
@@ -235,6 +237,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         <tbody>
                             {filteredData.map((data: any) => (
                                 <tr key={data._id}>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Username}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Location}</td>
                                     <td className="px-4 py-2 border">{data.DateOrder}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
