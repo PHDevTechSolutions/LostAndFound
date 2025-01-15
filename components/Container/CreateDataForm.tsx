@@ -10,6 +10,8 @@ interface CreateDataFormProps {
 
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
+    const [Username, setUsername] = useState("");
+    const [Location, setLocation] = useState("");
     const [BoxType, setBoxType] = useState("");
     const [DateOrder, setDateOrder] = useState("");
     const [BuyersName, setBuyersName] = useState("");
@@ -38,6 +40,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 ContainerNo,
+                Username, 
+                Location,
                 BoxType,
                 DateOrder,
                 BuyersName,
@@ -86,6 +90,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     const resetForm = () => {
         setContainerNo(post?.ContainerNo || "");
+        setUsername("");
+        setLocation("");
         setBoxType("");
         setDateOrder("");
         setBuyersName("");
@@ -107,6 +113,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     const handleEdit = (data: any) => {
         setContainerNo(data.ContainerNo);
+        setUsername(data.Username);
+        setLocation(data.Location);
         setBoxType(data.BoxType);
         setDateOrder(data.DateOrder);
         setBuyersName(data.BuyersName);
@@ -150,6 +158,14 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                                 <option value="Brown Box">Brown Box</option>
                                 <option value="White Box">White Box</option>
                             </select>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="Username">Username</label>
+                            <input type="text" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
+                            <input type="date" id="Location" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date</label>
