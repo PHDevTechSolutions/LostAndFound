@@ -132,7 +132,6 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-<h1>Hi {userName}</h1>
                                             <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
                                                 Add Fishing Container
                                             </button>
