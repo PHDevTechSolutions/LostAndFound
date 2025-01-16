@@ -20,7 +20,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
     const [Boxes, setBoxes] = useState(post?.Boxes || "");
-const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State for original quantity of boxes
+    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State for original quantity of boxes
     const [GrossSales, setGrossSales] = useState("");
     const [PlaceSales, setPlaceSales] = useState("");
     const [PaymentMode, setPaymentMode] = useState("");
@@ -149,7 +149,6 @@ const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State 
         setEditData(null);
     };
 
-
     const fetchData = async () => {
         const response = await fetch("/api/Container/GetAllContainer");
         const data = await response.json();
@@ -162,12 +161,12 @@ const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State 
         const data = await response.json();
         setBoxes(data.Boxes);
         setOriginalBoxes(data.Boxes); // Update original boxes with latest value
+        fetchData(); // Refresh table data as well
     };
 
     useEffect(() => {
         fetchData();
     }, [post]);
-
 
     const handleEdit = (data: any) => {
         setContainerNo(data.ContainerNo);
@@ -185,7 +184,6 @@ const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State 
         setPaymentMode(data.PaymentMode);
         setEditData(data);
     };
-
 
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
@@ -222,8 +220,8 @@ const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State 
         }
     }, [post]);
 
-
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
+
 
     return (
 
