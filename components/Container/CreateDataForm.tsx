@@ -344,6 +344,23 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                                 </tr>
                             ))}
                         </tbody>
+<tfoot>
+      <tr className="font-bold">
+        <td colSpan={2} className="px-4 py-2 border text-right">
+          Totals:
+        </td>
+        <td className="px-4 py-2 border">
+          {filteredData.reduce((sum, item) => sum + parseFloat(item.BoxSales || 0), 0)}
+        </td>
+        <td className="px-4 py-2 border">
+          {filteredData.reduce((sum, item) => sum + parseFloat(item.Price || 0), 0).toFixed(2)}
+        </td>
+        <td className="px-4 py-2 border">
+          {filteredData.reduce((sum, item) => sum + parseFloat(item.GrossSales || 0), 0).toFixed(2)}
+        </td>
+        <td colSpan={3} className="px-4 py-2 border"></td>
+      </tr>
+    </tfoot>
                     </table>
 
                 </div>
