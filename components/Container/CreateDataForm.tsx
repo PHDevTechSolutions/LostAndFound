@@ -84,7 +84,7 @@ const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State 
                 onClose: () => {
                     // Update boxes in the database
                     updateBoxesInDatabase(post._id, remainingBoxes);
-                    fetchData();
+                    fetchUpdatedData();
                     resetForm();
                 },
             });
@@ -142,11 +142,13 @@ const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State 
         setBoxSales("");
         setPrice("");
         setBoxes(post?.Boxes || "");
+        setOriginalBoxes(post?.Boxes || ""); // Reset original boxes as well
         setGrossSales("");
         setPlaceSales("");
         setPaymentMode("");
         setEditData(null);
     };
+
 
     const fetchData = async () => {
         const response = await fetch("/api/Container/GetAllContainer");
@@ -155,7 +157,16 @@ const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State 
         setTableData(filteredData);
     };
 
-useEffect(() => { fetchData(); }, [post]);
+    const fetchUpdatedData = async () => {
+        const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
+        const data = await response.json();
+        setBoxes(data.Boxes);
+        setOriginalBoxes(data.Boxes); // Update original boxes with latest value
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [post]);
 
 
     const handleEdit = (data: any) => {
@@ -168,11 +179,13 @@ useEffect(() => { fetchData(); }, [post]);
         setBoxSales(data.BoxSales);
         setPrice(data.Price);
         setBoxes(data.Boxes);
+        setOriginalBoxes(data.Boxes); // Set original boxes when editing
         setGrossSales(data.GrossSales);
         setPlaceSales(data.PlaceSales);
         setPaymentMode(data.PaymentMode);
         setEditData(data);
     };
+
 
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
