@@ -2,153 +2,229 @@
 
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import 'react-toastify/dist/ReactToastify.css';
+import { MdEdit, MdDelete } from "react-icons/md";
 
 interface CreateDataFormProps {
-  post: any;
-  onCancel: () => void;
+    post: any;
+    onCancel: () => void;
 }
 
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
-  const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
-  const [Username, setUsername] = useState("");
-  const [Location, setLocation] = useState("");
-  const [BoxType, setBoxType] = useState("");
-  const [DateOrder, setDateOrder] = useState("");
-  const [BuyersName, setBuyersName] = useState("");
-  const [BoxSales, setBoxSales] = useState("");
-  const [Price, setPrice] = useState("");
-  const [Boxes, setBoxes] = useState(post?.Boxes || "");
-  const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || "");
-  const [GrossSales, setGrossSales] = useState("");
-  const [PlaceSales, setPlaceSales] = useState("");
-  const [PaymentMode, setPaymentMode] = useState("");
-  const [editData, setEditData] = useState<any>(null);
-  const [tableData, setTableData] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState("White Box");
+    const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
+    const [Username, setUsername] = useState("");
+    const [Location, setLocation] = useState("");
+    const [BoxType, setBoxType] = useState("");
+    const [DateOrder, setDateOrder] = useState("");
+    const [BuyersName, setBuyersName] = useState("");
+    const [BoxSales, setBoxSales] = useState("");
+    const [Price, setPrice] = useState("");
+    const [Boxes, setBoxes] = useState(post?.Boxes || "");
+const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State for original quantity of boxes
+    const [GrossSales, setGrossSales] = useState("");
+    const [PlaceSales, setPlaceSales] = useState("");
+    const [PaymentMode, setPaymentMode] = useState("");
+    const [editData, setEditData] = useState<any>(null);
+    const [tableData, setTableData] = useState<any[]>([]);
+    const [activeTab, setActiveTab] = useState("White Box");
 
-  // Fetch table data on load
-  useEffect(() => {
-    fetchData();
-  }, [post]);
+    useEffect(() => {
+        const fetchUsername = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get("id");
 
-  const fetchData = async () => {
-    const response = await fetch("/api/Container/GetAllContainer");
-    const data = await response.json();
-    setTableData(data);
-  };
+            if (userId) {
+                try {
+                    const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
+                    const data = await response.json();
+                    setUsername(data.name || "");
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            }
+        };
 
-  const fetchUpdatedData = async () => {
-    const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
-    const data = await response.json();
-    setBoxes(data.Boxes);
-    setOriginalBoxes(data.Boxes);
-  };
+        fetchUsername();
+    }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!ContainerNo) {
+            toast.error("Container No is required", { autoClose: 1000 });
+            return;
+        }
 
-    if (!ContainerNo) {
-      toast.error("Container No is required", { autoClose: 1000 });
-      return;
-    }
+        const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
+        const method = editData ? "PUT" : "POST";
+        const remainingBoxes = parseInt(Boxes) || 0;
 
-    const remainingBoxes =
-      editData && BoxSales
-        ? parseInt(OriginalBoxes) - parseInt(BoxSales) + parseInt(editData.BoxSales)
-        : parseInt(Boxes);
+        const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ContainerNo,
+                Username,
+                Location,
+                BoxType,
+                DateOrder,
+                BuyersName,
+                BoxSales,
+                Price,
+                Boxes: remainingBoxes,  // Update boxes with remaining quantity on submit
+                GrossSales,
+                PlaceSales,
+                PaymentMode,
+                id: editData ? editData._id : undefined,
+            }),
+        });
 
-    const url = editData
-      ? `/api/Container/UpdateContainer`
-      : `/api/Container/SaveContainer`;
+        if (response.ok) {
+            toast.success(editData ? "Data updated successfully" : "Data added successfully", {
+                autoClose: 1000,
+                onClose: () => {
+                    // Update boxes in the database
+                    updateBoxesInDatabase(post._id, remainingBoxes);
+                    fetchUpdatedData();
+ fetchData();
+                    resetForm();
+                },
+            });
+        } else {
+            toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
+        }
+    };
 
-    const method = editData ? "PUT" : "POST";
+    const updateBoxesInDatabase = async (id: string, remainingBoxes: number) => {
+        try {
+            const response = await fetch('/api/Container/UpdateBoxes', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, Boxes: remainingBoxes }),
+            });
 
-    const response = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ContainerNo,
-        Username,
-        Location,
-        BoxType,
-        DateOrder,
-        BuyersName,
-        BoxSales,
-        Price,
-        Boxes: remainingBoxes,
-        GrossSales,
-        PlaceSales,
-        PaymentMode,
-        id: editData ? editData._id : undefined,
-      }),
-    });
+            if (response.ok) {
+                toast.success('Boxes updated in database', { autoClose: 1000 });
+            } else {
+                toast.error('Failed to update boxes in database', { autoClose: 1000 });
+            }
+        } catch (error) {
+            console.error('Error updating boxes:', error);
+            toast.error('An error occurred while updating boxes', { autoClose: 1000 });
+        }
+    };
 
-    if (response.ok) {
-      toast.success(editData ? "Data updated successfully" : "Data added successfully", {
-        autoClose: 1000,
-        onClose: () => {
-          fetchData();
-          resetForm();
-        },
-      });
-    } else {
-      toast.error(editData ? "Failed to update data" : "Failed to add data", {
-        autoClose: 1000,
-      });
-    }
-  };
+    const handleDelete = async (id: string) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this record?");
+        if (!confirmDelete) return;
 
-  const handleEdit = (data: any) => {
-    setContainerNo(data.ContainerNo);
-    setUsername(data.Username);
-    setLocation(data.Location);
-    setBoxType(data.BoxType);
-    setDateOrder(data.DateOrder);
-    setBuyersName(data.BuyersName);
-    setBoxSales(data.BoxSales);
-    setPrice(data.Price);
-    setBoxes(data.Boxes);
-    setOriginalBoxes(data.Boxes);
-    setGrossSales(data.GrossSales);
-    setPlaceSales(data.PlaceSales);
-    setPaymentMode(data.PaymentMode);
-    setEditData(data);
-  };
+        const response = await fetch(`/api/Container/RemoveContainer`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+        });
 
-  const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSales = parseInt(e.target.value) || 0;
-    const originalSales = editData ? parseInt(editData.BoxSales) : 0;
-    const currentBoxes = parseInt(OriginalBoxes);
+        if (response.ok) {
+            toast.success("Data deleted successfully", {
+                autoClose: 1000,
+                onClose: fetchData,
+            });
+        } else {
+            toast.error("Failed to delete data", { autoClose: 1000 });
+        }
+    };
 
-    if (newSales > currentBoxes + originalSales) {
-      toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
-      setBoxSales("");
-      setGrossSales("");
-      return;
-    }
+    const resetForm = () => {
+        setContainerNo(post?.ContainerNo || "");
+        setUsername("");
+        setLocation("");
+        setBoxType("");
+        setDateOrder("");
+        setBuyersName("");
+        setBoxSales("");
+        setPrice("");
+        setBoxes(post?.Boxes || "");
+        setOriginalBoxes(post?.Boxes || ""); // Reset original boxes as well
+        setGrossSales("");
+        setPlaceSales("");
+        setPaymentMode("");
+        setEditData(null);
+    };
 
-    const updatedBoxes = currentBoxes + originalSales - newSales;
-    setBoxSales(newSales.toString());
-    setGrossSales((newSales * parseFloat(Price)).toFixed(2));
-    setBoxes(updatedBoxes.toString());
-  };
 
-  const resetForm = () => {
-    setContainerNo(post?.ContainerNo || "");
-    setUsername("");
-    setLocation("");
-    setBoxType("");
-    setDateOrder("");
-    setBuyersName("");
-    setBoxSales("");
-    setPrice("");
-    setGrossSales("");
-    setPlaceSales("");
-    setPaymentMode("");
-    setEditData(null);
-  };
+    const fetchData = async () => {
+        const response = await fetch("/api/Container/GetAllContainer");
+        const data = await response.json();
+        const filteredData = data.filter((container: any) => container.ContainerNo === post?.ContainerNo);
+        setTableData(filteredData);
+    };
 
+    const fetchUpdatedData = async () => {
+        const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
+        const data = await response.json();
+        setBoxes(data.Boxes);
+        setOriginalBoxes(data.Boxes); // Update original boxes with latest value
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [post]);
+
+
+    const handleEdit = (data: any) => {
+        setContainerNo(data.ContainerNo);
+        setUsername(data.Username);
+        setLocation(data.Location);
+        setBoxType(data.BoxType);
+        setDateOrder(data.DateOrder);
+        setBuyersName(data.BuyersName);
+        setBoxSales(data.BoxSales);
+        setPrice(data.Price);
+        setBoxes(data.Boxes);
+        setOriginalBoxes(data.Boxes); // Set original boxes when editing
+        setGrossSales(data.GrossSales);
+        setPlaceSales(data.PlaceSales);
+        setPaymentMode(data.PaymentMode);
+        setEditData(data);
+    };
+
+
+    const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const sales = parseInt(e.target.value) || 0;
+        const price = parseFloat(Price) || 0;
+        const currentBoxes = parseInt(OriginalBoxes) || 0; // Use original boxes for calculation
+
+        if (sales > currentBoxes) {
+            toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
+            setBoxSales("");
+            setGrossSales("");
+            setBoxes(OriginalBoxes); // Reset boxes to original if error
+            return;
+        }
+
+        const remainingBoxes = currentBoxes - sales;
+        setBoxSales(sales.toString());
+        setGrossSales((sales * price).toString());
+        setBoxes(remainingBoxes.toString());
+    };
+
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const price = parseFloat(e.target.value) || 0;
+        const sales = parseInt(BoxSales) || 0;
+
+        setPrice(price.toString());
+        setGrossSales((sales * price).toString());
+    };
+
+    useEffect(() => {
+        if (post) {
+            setContainerNo(post.ContainerNo);
+            setBoxes(post.Boxes);
+            setOriginalBoxes(post.Boxes); // Set original boxes on initial load
+        }
+    }, [post]);
+
+
+    const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
     return (
 
