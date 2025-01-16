@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         try {
             const db = await connectToDatabase();
-            const collection = db.collection('container'); // Make sure your collection name is correct
+            const collection = db.collection('container'); // Ensure your collection name is correct
 
             const result = await collection.updateOne(
                 { _id: id },
