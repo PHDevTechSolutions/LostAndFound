@@ -163,7 +163,7 @@ const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const remainingBoxes = currentBoxes - sales;
     setBoxSales(sales.toString());
-    setGrossSales((sales * price).toString());
+    setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
     setBoxes(remainingBoxes.toString());
 
     // Update the database
@@ -171,13 +171,15 @@ const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const response = await fetch('/api/Container/UpdateBoxes', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
+            body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }), // Ensure correct payload
         });
 
         if (response.ok) {
             toast.success('Boxes updated in database', { autoClose: 1000 });
+            fetchData(); // Re-fetch data to reflect updates
         } else {
-            toast.error('Failed to update boxes in database', { autoClose: 1000 });
+            const errorData = await response.json();
+            toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
         }
     } catch (error) {
         console.error('Error updating boxes:', error);
@@ -185,19 +187,10 @@ const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }
 };
 
+useEffect(() => {
+    fetchData();
+}, [post?.ContainerNo, Boxes]); // Include Boxes to re-fetch data after updates
 
-const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const price = parseFloat(e.target.value) || 0; // Parse price as float
-    const sales = parseInt(BoxSales) || 0; // Parse box sales as integer
-
-    setPrice(price.toString());
-    setGrossSales((sales * price).toString()); // Update gross sales
-};
-
-
-    useEffect(() => {
-        fetchData();
-    }, [post?.ContainerNo, post?.Boxes]);
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
