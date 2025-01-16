@@ -1,54 +1,22 @@
+// pages/api/Container/UpdateBoxes.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../lib/mongodb';
-import { ObjectId } from 'mongodb';
 
-export default async function updateBoxes(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== 'PUT') {
-        res.setHeader('Allow', ['PUT']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
-        return;
-    }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method === 'PUT') {
+        const { id, Boxes } = req.body;
 
-    const { id, BoxesSold } = req.body;
+        try {
+            const db = await connectToDatabase();
+            const collection = db.collection('container'); // Replace with your collection name
+            await collection.updateOne({ _id: id }, { $set: { Boxes } });
 
-    if (!id || typeof BoxesSold !== 'number') {
-        res.status(400).json({ error: 'Invalid request data' });
-        return;
-    }
-
-    try {
-        const db = await connectToDatabase();
-        const containerCollection = db.collection('container');
-
-        // Fetch the existing container data
-        const container = await containerCollection.findOne({ _id: new ObjectId(id) });
-
-        if (!container) {
-            res.status(404).json({ error: 'Container not found' });
-            return;
+            res.status(200).json({ message: 'Boxes updated successfully' });
+        } catch (error) {
+            console.error('Error updating boxes:', error);
+            res.status(500).json({ error: 'Failed to update boxes' });
         }
-
-        const currentBoxes = container.Boxes || 0;
-
-        if (BoxesSold > currentBoxes) {
-            res.status(400).json({ error: 'Boxes sold exceeds available boxes' });
-            return;
-        }
-
-        // Update the Boxes count
-        const updatedBoxes = currentBoxes - BoxesSold;
-        await containerCollection.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: { Boxes: updatedBoxes, updatedAt: new Date() } }
-        );
-
-        res.status(200).json({
-            success: true,
-            message: 'Boxes updated successfully',
-            updatedBoxes,
-        });
-    } catch (error) {
-        console.error('Error updating Boxes:', error);
-        res.status(500).json({ error: 'Failed to update Boxes' });
+    } else {
+        res.status(405).json({ error: 'Method not allowed' });
     }
 }
