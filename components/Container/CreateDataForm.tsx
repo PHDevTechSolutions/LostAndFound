@@ -21,15 +21,44 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
   const [PaymentMode, setPaymentMode] = useState("");
   const [editData, setEditData] = useState<any>(null);
 
-  // Handle BoxSales change without reducing Boxes
-  const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Update Boxes and GrossSales when BoxSales changes
+  const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const sales = parseInt(e.target.value) || 0;
     const price = parseFloat(Price) || 0;
+    const currentBoxes = parseInt(Boxes) || 0;
+
+    if (sales > currentBoxes) {
+      toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
+      setBoxSales(currentBoxes.toString());
+      return;
+    }
+
+    const remainingBoxes = currentBoxes - sales;
     setBoxSales(sales.toString());
-    setGrossSales((sales * price).toFixed(2)); // Update GrossSales but not Boxes
+    setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
+    setBoxes(remainingBoxes.toString());
+
+    // Update the database for Boxes
+    try {
+      const response = await fetch('/api/Container/UpdateBoxes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
+      });
+
+      if (response.ok) {
+        toast.success('Boxes updated in database', { autoClose: 1000 });
+      } else {
+        const errorData = await response.json();
+        toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
+      }
+    } catch (error) {
+      console.error('Error updating boxes:', error);
+      toast.error('An error occurred while updating boxes', { autoClose: 1000 });
+    }
   };
 
-  // Handle form submission to update boxes only on "Save"
+  // Handle form submission for both create and update
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ContainerNo) {
@@ -67,21 +96,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
           resetForm();
         },
       });
-
-      // Now update the boxes in the database only after the form is saved
-      const updatedBoxes = parseInt(Boxes) - parseInt(BoxSales); // Calculate remaining boxes
-      const responseBoxes = await fetch('/api/Container/UpdateBoxes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: post._id, Boxes: updatedBoxes }),
-      });
-
-      if (responseBoxes.ok) {
-        toast.success('Boxes updated in database', { autoClose: 1000 });
-      } else {
-        const errorData = await responseBoxes.json();
-        toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
-      }
     } else {
       toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
     }
