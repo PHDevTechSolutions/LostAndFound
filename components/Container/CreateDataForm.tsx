@@ -360,6 +360,16 @@ const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
                                 </tr>
                             ))}
                         </tbody>
+      <tfoot>
+                        <tr>
+                            <td colSpan={2} className="text-xs font-semibold text-right border px-4 py-2">Total</td>
+                            <td className="text-xs font-semibold border px-4 py-2">{totalBoxSales}</td>
+                            <td className="text-xs font-semibold border px-4 py-2">{totalPrice.toFixed(2)}</td>
+                            <td className="text-xs font-semibold border px-4 py-2">{totalGrossSales.toFixed(2)}</td>
+                            <td colSpan={3}></td>
+                        </tr>
+                    </tfoot>
+
                     </table>
                 </div>
             </div>
