@@ -192,6 +192,15 @@ useEffect(() => {
 }, [post?.ContainerNo, Boxes]); // Include Boxes to re-fetch data after updates
 
 
+
+const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const price = parseFloat(e.target.value) || 0; // Parse price as float
+    const sales = parseInt(BoxSales) || 0; // Parse box sales as integer
+
+    setPrice(price.toString());
+    setGrossSales((sales * price).toString()); // Update gross sales
+};
+
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
     return (
