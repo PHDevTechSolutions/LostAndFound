@@ -19,7 +19,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [DateSoldout, setDateSoldout] = useState(editData ? editData.DateSoldout: "");
   const [SupplierName, setSupplierName] = useState(editData ? editData.SupplierName: "");
   const [ContainerNo, setContainerNo] = useState(editData ? editData.ContainerNo: "");
-  const [Brand, setBrand] = useState(editData ? editData.Brand: "");
+  const [Country, setCountry] = useState(editData ? editData.Country: "");
   const [Boxes, setBoxes] = useState(editData ? editData.Boxes: "");
   const [Commodity, setCommodity] = useState(editData ? editData.Commodity: "");
   const [Size, setSize] = useState(editData ? editData.Size: "");
@@ -38,7 +38,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Brand, Boxes, Commodity, Size, Freezing, Remarks,
+        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, Commodity, Size, Freezing, Remarks,
         id: editData ? editData._id : undefined, // Send post ID if editing
       }),
     });
@@ -69,7 +69,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           DateSoldout={DateSoldout} setDateSoldout={setDateSoldout}
           SupplierName={SupplierName} setSupplierName={setSupplierName}
           ContainerNo={ContainerNo} setContainerNo={setContainerNo}
-          setBrand={setBrand} Brand={Brand}
+          setCountry={setCountry} Country={Country}
           setBoxes={setBoxes} Boxes={Boxes}
           setCommodity={setCommodity} Commodity={Commodity}
           setSize={setSize} Size={Size}

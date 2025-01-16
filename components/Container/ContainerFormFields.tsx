@@ -13,8 +13,8 @@ interface FormFieldsProps {
   setSupplierName: (value: string) => void;
   ContainerNo: string;
   setContainerNo: (value: string) => void;
-  Brand: string;
-  setBrand: (value: string) => void;
+  Country: string;
+  setCountry: (value: string) => void;
   Boxes: string;
   setBoxes: (value: string) => void;
   Commodity: string;
@@ -28,7 +28,7 @@ interface FormFieldsProps {
   editData?: any;
 }
 
-const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, SpsicNo, setSpsicNo, DateArrived, setDateArrived, DateSoldout, setDateSoldout, SupplierName, setSupplierName, ContainerNo, setContainerNo, Brand, setBrand, Boxes, setBoxes, Commodity, setCommodity, Size, setSize, Freezing, setFreezing, Remarks, setRemarks, editData
+const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, SpsicNo, setSpsicNo, DateArrived, setDateArrived, DateSoldout, setDateSoldout, SupplierName, setSupplierName, ContainerNo, setContainerNo, Country, setCountry, Boxes, setBoxes, Commodity, setCommodity, Size, setSize, Freezing, setFreezing, Remarks, setRemarks, editData
 }) => {
 
   return (
@@ -69,8 +69,8 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <label className="block text-xs font-bold mb-2" htmlFor="Brand">Brand</label>
-          <select id="Brand" value={Brand} onChange={(e) => setBrand(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
+          <label className="block text-xs font-bold mb-2" htmlFor="Country">Country</label>
+          <select id="Country" value={Country} onChange={(e) => setCountry(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
             <option value="China">China</option>
             <option value="Vietnam">Vietna</option>
           </select>
