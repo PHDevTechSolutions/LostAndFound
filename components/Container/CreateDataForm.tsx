@@ -21,23 +21,15 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
   const [PaymentMode, setPaymentMode] = useState("");
   const [editData, setEditData] = useState<any>(null);
 
-  // Update GrossSales when BoxSales changes
+  // Handle BoxSales change without reducing Boxes
   const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const sales = parseInt(e.target.value) || 0;
     const price = parseFloat(Price) || 0;
-    const currentBoxes = parseInt(Boxes) || 0;
-
-    if (sales > currentBoxes) {
-      toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
-      setBoxSales(currentBoxes.toString());
-      return;
-    }
-
     setBoxSales(sales.toString());
-    setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
+    setGrossSales((sales * price).toFixed(2)); // Update GrossSales but not Boxes
   };
 
-  // Handle form submission for both create and update
+  // Handle form submission to update boxes only on "Save"
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ContainerNo) {
@@ -77,10 +69,11 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
       });
 
       // Now update the boxes in the database only after the form is saved
+      const updatedBoxes = parseInt(Boxes) - parseInt(BoxSales); // Calculate remaining boxes
       const responseBoxes = await fetch('/api/Container/UpdateBoxes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: post._id, Boxes: parseInt(Boxes) }),
+        body: JSON.stringify({ id: post._id, Boxes: updatedBoxes }),
       });
 
       if (responseBoxes.ok) {
