@@ -218,7 +218,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
-
+};
 
     return (
 
