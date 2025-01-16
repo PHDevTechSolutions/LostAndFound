@@ -151,51 +151,54 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
 const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sales = parseInt(e.target.value) || 0;
-    const price = parseFloat(Price) || 0;
-    const currentBoxes = parseInt(Boxes) || 0;
+        const sales = parseInt(e.target.value) || 0;
+        const price = parseFloat(Price) || 0;
+        const currentBoxes = parseInt(Boxes) || 0;
 
-    if (sales > currentBoxes) {
-        toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
-        setBoxSales(currentBoxes.toString());
-        return;
-    }
-
-    const remainingBoxes = currentBoxes - sales;
-    setBoxSales(sales.toString());
-    setGrossSales((sales * price).toString());
-    setBoxes(remainingBoxes.toString());
-
-    // Update the database
-    try {
-        const response = await fetch('/api/Container/UpdateBoxes', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
-        });
-
-        if (response.ok) {
-            toast.success('Boxes updated in database', { autoClose: 1000 });
-        } else {
-            toast.error('Failed to update boxes in database', { autoClose: 1000 });
+        if (sales > currentBoxes) {
+            toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
+            setBoxSales(currentBoxes.toString());
+            return;
         }
-    } catch (error) {
-        console.error('Error updating boxes:', error);
-        toast.error('An error occurred while updating boxes', { autoClose: 1000 });
-    }
-};
 
+        const remainingBoxes = currentBoxes - sales;
+        setBoxSales(sales.toString());
+        setGrossSales((sales * price).toString());
+        setBoxes(remainingBoxes.toString());
 
-const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const price = parseFloat(e.target.value) || 0; // Parse price as float
-    const sales = parseInt(BoxSales) || 0; // Parse box sales as integer
+        try {
+            const response = await fetch('/api/Container/UpdateBoxes', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
+            });
 
-    setPrice(price.toString());
-    setGrossSales((sales * price).toString()); // Update gross sales
-};
+            if (response.ok) {
+                toast.success('Boxes updated in database', { autoClose: 1000 });
+            } else {
+                toast.error('Failed to update boxes in database', { autoClose: 1000 });
+            }
+        } catch (error) {
+            console.error('Error updating boxes:', error);
+            toast.error('An error occurred while updating boxes', { autoClose: 1000 });
+        }
+    };
 
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const price = parseFloat(e.target.value) || 0;
+        const sales = parseInt(BoxSales) || 0;
 
-    useEffect(() => { if (post) { setContainerNo(post.ContainerNo); setBoxes(post.Boxes); } }, [post]); ,
+        setPrice(price.toString());
+        setGrossSales((sales * price).toString());
+    };
+
+    useEffect(() => {
+        if (post) {
+            setContainerNo(post.ContainerNo);
+            setBoxes(post.Boxes);
+        }
+    }, [post]);
+
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
