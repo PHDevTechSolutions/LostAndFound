@@ -291,7 +291,7 @@ const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
                             <input type="number" id="Price" value={Price} onChange={handlePriceChange} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining</label>
+                            <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining Boxes</label>
                             <input type="number" id="Remaining" value={Boxes}  className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
