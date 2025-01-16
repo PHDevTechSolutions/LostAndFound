@@ -54,6 +54,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Date Soldout</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Supplier</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Container No.</th>
+            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Boxes</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
           </tr>
         </thead>
@@ -72,6 +73,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                   <td className="px-4 py-2 border hidden md:table-cell">{post.DateSoldout}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">{post.SupplierName}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">{post.ContainerNo}</td>
+                  <td className="px-4 py-2 border hidden md:table-cell">{post.Boxes}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">
                     <Menu as="div" className="relative inline-block text-left">
                       <div>
@@ -140,6 +142,9 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                       </div>
                       <div>
                         <strong>Container No. :</strong> {post.ContainerNo}
+                      </div>
+                      <div>
+                        <strong>Boxes :</strong> {post.Boxes}
                       </div>
                       <div className="mt-2">
 <button
