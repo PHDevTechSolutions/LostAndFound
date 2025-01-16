@@ -211,7 +211,7 @@ const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                             <input type="hidden" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required  disabled/>
                         </div>
                         <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
+                            <label className="block text-xs font-bold mb-2" htmlFor="Location">Warehouse Location</label>
                             <select id="BoxType" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
                                 <option value="">Select Location</option>
                                 <option value="Navotas">Navotas</option>
