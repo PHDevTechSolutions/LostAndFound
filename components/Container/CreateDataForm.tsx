@@ -154,6 +154,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setTableData(filteredData);
     };
 
+useEffect(() => { fetchData(); }, [post]);
+
 
     const handleEdit = (data: any) => {
         setContainerNo(data.ContainerNo);
