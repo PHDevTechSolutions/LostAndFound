@@ -72,7 +72,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
           <label className="block text-xs font-bold mb-2" htmlFor="Country">Country</label>
           <select id="Country" value={Country} onChange={(e) => setCountry(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
             <option value="China">China</option>
-            <option value="Vietnam">Vietna</option>
+            <option value="Vietnam">Vietnam</option>
           </select>
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
