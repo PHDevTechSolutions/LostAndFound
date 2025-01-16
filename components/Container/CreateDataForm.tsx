@@ -217,9 +217,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setGrossSales((sales * price).toString());
     };
 
-    const filteredData = tableData.filter((data) => data.BoxType === activeTab);
-};
-
 const calculateTotals = () => {
         let totalBoxSales = 0;
         let totalPrice = 0;
@@ -236,6 +233,8 @@ const calculateTotals = () => {
 
     const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
 
+    const filteredData = tableData.filter((data) => data.BoxType === activeTab);
+};
 
 
     return (
