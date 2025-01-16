@@ -19,7 +19,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BuyersName, setBuyersName] = useState("");
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
-    const [Remaining, setRemaining] = useState("");
+    const [Boxes, setBoxes] = useState(post?.Boxes || "");
     const [GrossSales, setGrossSales] = useState("");
     const [PlaceSales, setPlaceSales] = useState("");
     const [PaymentMode, setPaymentMode] = useState("");
@@ -70,7 +70,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 BuyersName,
                 BoxSales,
                 Price,
-                Remaining,
+                Boxes,
                 GrossSales,
                 PlaceSales,
                 PaymentMode,
@@ -120,7 +120,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName("");
         setBoxSales("");
         setPrice("");
-        setRemaining("");
+        setBoxes("");
         setGrossSales("");
         setPlaceSales("");
         setPaymentMode("");
@@ -143,7 +143,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName(data.BuyersName);
         setBoxSales(data.BoxSales);
         setPrice(data.Price);
-        setRemaining(data.Remaining);
+        setBoxes(data.Boxes);
         setGrossSales(data.GrossSales);
         setPlaceSales(data.PlaceSales);
         setPaymentMode(data.PaymentMode);
@@ -152,7 +152,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     useEffect(() => {
         fetchData();
-    }, [post?.ContainerNo]);
+    }, [post?.ContainerNo, post?.Boxes]);
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
@@ -212,7 +212,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining</label>
-                            <input type="text" id="Remaining" value={Remaining} onChange={(e) => setRemaining(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="text" id="Remaining" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>
