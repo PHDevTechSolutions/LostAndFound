@@ -11,42 +11,57 @@ interface CreateDataFormProps {
 }
 
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
-  const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
-  const [Username, setUsername] = useState("");
-  const [Location, setLocation] = useState("");
-  const [BoxType, setBoxType] = useState("");
-  const [DateOrder, setDateOrder] = useState("");
-  const [BuyersName, setBuyersName] = useState("");
-  const [BoxSales, setBoxSales] = useState("");
-  const [Price, setPrice] = useState("");
-  const [Boxes, setBoxes] = useState(post?.Boxes || "");
-  const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || "");
-  const [GrossSales, setGrossSales] = useState("");
-  const [PlaceSales, setPlaceSales] = useState("");
-  const [PaymentMode, setPaymentMode] = useState("");
-  const [editData, setEditData] = useState<any>(null);
-  const [tableData, setTableData] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState("White Box");
-
+    const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
+    const [Username, setUsername] = useState("");
+    const [Location, setLocation] = useState("");
+    const [BoxType, setBoxType] = useState("");
+    const [DateOrder, setDateOrder] = useState("");
+    const [BuyersName, setBuyersName] = useState("");
+    const [BoxSales, setBoxSales] = useState("");
+    const [Price, setPrice] = useState("");
+    const [Boxes, setBoxes] = useState(post?.Boxes || "");
+    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State for original quantity of boxes
+    const [GrossSales, setGrossSales] = useState("");
+    const [PlaceSales, setPlaceSales] = useState("");
+    const [PaymentMode, setPaymentMode] = useState("");
+    const [editData, setEditData] = useState<any>(null);
+    const [tableData, setTableData] = useState<any[]>([]);
+    const [activeTab, setActiveTab] = useState("White Box");
 
     useEffect(() => {
-        const fetchUsername = async () => {
-            const params = new URLSearchParams(window.location.search);
-            const userId = params.get("id");
-
-            if (userId) {
-                try {
-                    const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
-                    const data = await response.json();
-                    setUsername(data.name || "");
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                }
-            }
-        };
-
         fetchUsername();
-    }, []);
+        fetchData();
+    }, [post]);
+
+    const fetchUsername = async () => {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("id");
+
+        if (userId) {
+            try {
+                const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
+                const data = await response.json();
+                setUsername(data.name || "");
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        }
+    };
+
+    const fetchData = async () => {
+        const response = await fetch("/api/Container/GetAllContainer");
+        const data = await response.json();
+        const filteredData = data.filter((container: any) => container.ContainerNo === post?.ContainerNo);
+        setTableData(filteredData);
+        fetchUpdatedData();
+    };
+
+    const fetchUpdatedData = async () => {
+        const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
+        const data = await response.json();
+        setBoxes(data.Boxes);
+        setOriginalBoxes(data.Boxes); // Update original boxes with latest value
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -85,9 +100,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 onClose: () => {
                     // Update boxes in the database
                     updateBoxesInDatabase(post._id, remainingBoxes);
-                    fetchUpdatedData();
- fetchData();
-                    resetForm();
                 },
             });
         } else {
@@ -105,6 +117,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
             if (response.ok) {
                 toast.success('Boxes updated in database', { autoClose: 1000 });
+                fetchData(); // Refresh data after updating boxes
             } else {
                 toast.error('Failed to update boxes in database', { autoClose: 1000 });
             }
@@ -143,35 +156,24 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName("");
         setBoxSales("");
         setPrice("");
-        setBoxes(post?.Boxes || "");
-        setOriginalBoxes(post?.Boxes || ""); // Reset original boxes as well
         setGrossSales("");
         setPlaceSales("");
         setPaymentMode("");
         setEditData(null);
     };
 
-
-    const fetchData = async () => {
-        const response = await fetch("/api/Container/GetAllContainer");
-        const data = await response.json();
-        const filteredData = data.filter((container: any) => container.ContainerNo === post?.ContainerNo);
-        setTableData(filteredData);
-    };
-
-    const fetchUpdatedData = async () => {
-        const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
-        const data = await response.json();
-        setBoxes(data.Boxes);
-        setOriginalBoxes(data.Boxes); // Update original boxes with latest value
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [post]);
-
-
     const handleEdit = (data: any) => {
+        const originalBoxSales = parseInt(BoxSales) || 0;
+        const newBoxSales = parseInt(data.BoxSales) || 0;
+
+        let updatedBoxes = parseInt(OriginalBoxes) || 0;
+
+        if (newBoxSales < originalBoxSales) {
+            updatedBoxes += originalBoxSales - newBoxSales;
+        } else if (newBoxSales > originalBoxSales) {
+            updatedBoxes -= newBoxSales - originalBoxSales;
+        }
+
         setContainerNo(data.ContainerNo);
         setUsername(data.Username);
         setLocation(data.Location);
@@ -180,14 +182,13 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName(data.BuyersName);
         setBoxSales(data.BoxSales);
         setPrice(data.Price);
-        setBoxes(data.Boxes);
-        setOriginalBoxes(data.Boxes); // Set original boxes when editing
+        setBoxes(updatedBoxes.toString());
+        setOriginalBoxes(updatedBoxes.toString()); // Set original boxes when editing
         setGrossSales(data.GrossSales);
         setPlaceSales(data.PlaceSales);
         setPaymentMode(data.PaymentMode);
         setEditData(data);
     };
-
 
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
@@ -216,16 +217,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setGrossSales((sales * price).toString());
     };
 
-    useEffect(() => {
-        if (post) {
-            setContainerNo(post.ContainerNo);
-            setBoxes(post.Boxes);
-            setOriginalBoxes(post.Boxes); // Set original boxes on initial load
-        }
-    }, [post]);
-
-
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
+
 
     return (
 
