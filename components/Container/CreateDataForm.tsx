@@ -27,26 +27,24 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [tableData, setTableData] = useState<any[]>([]);
     const [activeTab, setActiveTab] = useState("White Box");
 
-// Fetch Username
-  useEffect(() => {
-    const fetchUsername = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const userId = params.get("id");
+    useEffect(() => {
+        const fetchUsername = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get("id");
 
-      if (userId) {
-        try {
-          const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
-          const data = await response.json();
-          setUsername(data.name || "");
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    };
+            if (userId) {
+                try {
+                    const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
+                    const data = await response.json();
+                    setUsername(data.name || "");
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            }
+        };
 
-    fetchUsername();
-  }, []);
-
+        fetchUsername();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,20 +55,21 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
         const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
         const method = editData ? "PUT" : "POST";
+        const remainingBoxes = parseInt(Boxes) || 0;
 
         const response = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 ContainerNo,
-                Username, 
+                Username,
                 Location,
                 BoxType,
                 DateOrder,
                 BuyersName,
                 BoxSales,
                 Price,
-                Boxes,
+                Boxes: remainingBoxes,  // Update boxes with remaining quantity on submit
                 GrossSales,
                 PlaceSales,
                 PaymentMode,
@@ -82,12 +81,33 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             toast.success(editData ? "Data updated successfully" : "Data added successfully", {
                 autoClose: 1000,
                 onClose: () => {
+                    // Update boxes in the database
+                    updateBoxesInDatabase(post._id, remainingBoxes);
                     fetchData();
                     resetForm();
                 },
             });
         } else {
             toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
+        }
+    };
+
+    const updateBoxesInDatabase = async (id: string, remainingBoxes: number) => {
+        try {
+            const response = await fetch('/api/Container/UpdateBoxes', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, Boxes: remainingBoxes }),
+            });
+
+            if (response.ok) {
+                toast.success('Boxes updated in database', { autoClose: 1000 });
+            } else {
+                toast.error('Failed to update boxes in database', { autoClose: 1000 });
+            }
+        } catch (error) {
+            console.error('Error updating boxes:', error);
+            toast.error('An error occurred while updating boxes', { autoClose: 1000 });
         }
     };
 
@@ -120,7 +140,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName("");
         setBoxSales("");
         setPrice("");
-        setBoxes("");
+        setBoxes(post?.Boxes || "");
         setGrossSales("");
         setPlaceSales("");
         setPaymentMode("");
@@ -150,7 +170,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(data);
     };
 
-const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
         const price = parseFloat(Price) || 0;
         const currentBoxes = parseInt(Boxes) || 0;
@@ -165,23 +185,6 @@ const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setBoxSales(sales.toString());
         setGrossSales((sales * price).toString());
         setBoxes(remainingBoxes.toString());
-
-        try {
-            const response = await fetch('/api/Container/UpdateBoxes', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
-            });
-
-            if (response.ok) {
-                toast.success('Boxes updated in database', { autoClose: 1000 });
-            } else {
-                toast.error('Failed to update boxes in database', { autoClose: 1000 });
-            }
-        } catch (error) {
-            console.error('Error updating boxes:', error);
-            toast.error('An error occurred while updating boxes', { autoClose: 1000 });
-        }
     };
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,7 +201,6 @@ const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
             setBoxes(post.Boxes);
         }
     }, [post]);
-
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
