@@ -150,7 +150,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(data);
     };
 
-const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleBoxSalesChange = (e: const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const sales = parseInt(e.target.value) || 0; // Parse input as integer
     const price = parseFloat(Price) || 0; // Parse price as float
     const currentBoxes = parseInt(Boxes) || 0; // Parse remaining boxes as integer
@@ -161,9 +161,12 @@ const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         return;
     }
 
+    const newRemaining = currentBoxes - sales;
+
     setBoxSales(sales.toString());
     setGrossSales((sales * price).toString()); // Update gross sales
-    setBoxes((currentBoxes - sales).toString()); // Update remaining boxes
+    setBoxes(newRemaining.toString()); // Update remaining boxes
+    updateRemainingBoxes(newRemaining.toString()); // Save to database
 };
 
 const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,6 +176,27 @@ const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(price.toString());
     setGrossSales((sales * price).toString()); // Update gross sales
 };
+
+const updateRemainingBoxes = async (newRemaining: string) => {
+    try {
+        const response = await fetch(`/api/Container/EditContainer`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ContainerNo,
+                Remaining: newRemaining,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update remaining boxes in the database.");
+        }
+    } catch (error) {
+        console.error("Error updating remaining boxes:", error);
+        toast.error("Failed to update remaining boxes.", { autoClose: 1000 });
+    }
+};
+
 
 
     useEffect(() => {
