@@ -21,7 +21,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
   const [PaymentMode, setPaymentMode] = useState("");
   const [editData, setEditData] = useState<any>(null);
 
-  // Update Boxes and GrossSales when BoxSales changes
+  // Update GrossSales when BoxSales changes
   const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const sales = parseInt(e.target.value) || 0;
     const price = parseFloat(Price) || 0;
@@ -33,10 +33,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
       return;
     }
 
-    const remainingBoxes = currentBoxes - sales;
     setBoxSales(sales.toString());
     setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
-    setBoxes(remainingBoxes.toString());
   };
 
   // Handle form submission for both create and update
