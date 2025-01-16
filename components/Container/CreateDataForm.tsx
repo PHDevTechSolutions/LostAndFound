@@ -166,27 +166,6 @@ const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
     setBoxes(remainingBoxes.toString());
 
-    // Update the database
-    try {
-        const response = await fetch('/api/Container/UpdateBoxes', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }), // Ensure correct payload
-        });
-
-        if (response.ok) {
-            toast.success('Boxes updated in database', { autoClose: 1000 });
-            fetchData(); // Re-fetch data to reflect updates
-        } else {
-            const errorData = await response.json();
-            toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
-        }
-    } catch (error) {
-        console.error('Error updating boxes:', error);
-        toast.error('An error occurred while updating boxes', { autoClose: 1000 });
-    }
-};
-
 useEffect(() => {
     fetchData();
 }, [post?.ContainerNo, Boxes]); // Include Boxes to re-fetch data after updates
