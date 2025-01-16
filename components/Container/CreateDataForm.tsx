@@ -21,12 +21,13 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
   const [PaymentMode, setPaymentMode] = useState("");
   const [editData, setEditData] = useState<any>(null);
 
-  // Update Boxes and GrossSales when BoxSales changes
-  const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Update BoxSales and GrossSales when BoxSales field changes
+  const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const sales = parseInt(e.target.value) || 0;
     const price = parseFloat(Price) || 0;
     const currentBoxes = parseInt(Boxes) || 0;
 
+    // Prevent sales from exceeding available boxes
     if (sales > currentBoxes) {
       toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
       setBoxSales(currentBoxes.toString());
@@ -35,30 +36,11 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     const remainingBoxes = currentBoxes - sales;
     setBoxSales(sales.toString());
-    setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
-    setBoxes(remainingBoxes.toString());
-
-    // Update the database for Boxes
-    try {
-      const response = await fetch('/api/Container/UpdateBoxes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
-      });
-
-      if (response.ok) {
-        toast.success('Boxes updated in database', { autoClose: 1000 });
-      } else {
-        const errorData = await response.json();
-        toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
-      }
-    } catch (error) {
-      console.error('Error updating boxes:', error);
-      toast.error('An error occurred while updating boxes', { autoClose: 1000 });
-    }
+    setGrossSales((sales * price).toFixed(2)); // Set the gross sales correctly
+    setBoxes(remainingBoxes.toString()); // Update boxes locally (not in database yet)
   };
 
-  // Handle form submission for both create and update
+  // Handle the form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ContainerNo) {
@@ -66,9 +48,11 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
       return;
     }
 
+    // Determine the URL and method for API call based on whether it's an update or create
     const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
     const method = editData ? "PUT" : "POST";
 
+    // Send data to the backend for creating or updating container
     const response = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
@@ -81,7 +65,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         BuyersName,
         BoxSales,
         Price,
-        Boxes,
+        Boxes,  // Remaining Boxes after BoxSales
         GrossSales,
         PlaceSales,
         PaymentMode,
@@ -96,11 +80,27 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
           resetForm();
         },
       });
+
+      // Update Boxes in database only after form submission
+      const remainingBoxes = parseInt(Boxes) - parseInt(BoxSales); // Update the boxes in the database
+      const responseBoxes = await fetch('/api/Container/UpdateBoxes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
+      });
+
+      if (responseBoxes.ok) {
+        toast.success('Boxes updated in database', { autoClose: 1000 });
+      } else {
+        const errorData = await responseBoxes.json();
+        toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
+      }
     } else {
       toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
     }
   };
 
+  // Reset form after submission
   const resetForm = () => {
     setContainerNo(post?.ContainerNo || "");
     setUsername("");
