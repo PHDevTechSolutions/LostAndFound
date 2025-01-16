@@ -69,8 +69,8 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           DateSoldout={DateSoldout} setDateSoldout={setDateSoldout}
           SupplierName={SupplierName} setSupplierName={setSupplierName}
           ContainerNo={ContainerNo} setContainerNo={setContainerNo}
+          Boxes={Boxes} setBoxes={setBoxes}
           setBrand={setBrand} Brand={Brand}
-          setBoxes={setBoxes} Boxes={Boxes}
           setCommodity={setCommodity} Commodity={Commodity}
           setSize={setSize} Size={Size}
           setFreezing={setFreezing} Freezing={Freezing}
