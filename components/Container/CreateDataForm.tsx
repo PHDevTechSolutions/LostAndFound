@@ -195,9 +195,7 @@ const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 
-    useEffect(() => {
-        fetchData();
-    }, [post?.ContainerNo, post?.Boxes]);
+    useEffect(() => { if (post) { setContainerNo(post.ContainerNo); setBoxes(post.Boxes); } }, [post]); ,
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
@@ -257,7 +255,7 @@ const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining</label>
-                            <input type="text" id="Remaining" value={Boxes}  className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="number" id="Remaining" value={Boxes}  className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>
