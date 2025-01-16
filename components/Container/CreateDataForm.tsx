@@ -176,11 +176,13 @@ useEffect(() => { fetchData(); }, [post]);
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
         const price = parseFloat(Price) || 0;
-        const currentBoxes = parseInt(Boxes) || 0;
+        const currentBoxes = parseInt(OriginalBoxes) || 0; // Use original boxes for calculation
 
         if (sales > currentBoxes) {
             toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
-            setBoxSales(currentBoxes.toString());
+            setBoxSales("");
+            setGrossSales("");
+            setBoxes(OriginalBoxes); // Reset boxes to original if error
             return;
         }
 
@@ -202,8 +204,10 @@ useEffect(() => { fetchData(); }, [post]);
         if (post) {
             setContainerNo(post.ContainerNo);
             setBoxes(post.Boxes);
+            setOriginalBoxes(post.Boxes); // Set original boxes on initial load
         }
     }, [post]);
+
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
