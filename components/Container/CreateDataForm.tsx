@@ -1,5 +1,5 @@
 "use client";
- 
+
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -257,7 +257,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Price</th>
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Remaining</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gross Sales Per Day</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Mode of Payment</th>    
@@ -271,7 +270,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.Price}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Remaining}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.GrossSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.PaymentMode}</td>
