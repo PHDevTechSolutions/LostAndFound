@@ -48,11 +48,10 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
       return;
     }
 
-    // Determine the URL and method for API call based on whether it's an update or create
     const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
     const method = editData ? "PUT" : "POST";
 
-    // Send data to the backend for creating or updating container
+    // Save container data to database
     const response = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
@@ -65,7 +64,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         BuyersName,
         BoxSales,
         Price,
-        Boxes,  // Remaining Boxes after BoxSales
+        Boxes, // Remaining Boxes after BoxSales
         GrossSales,
         PlaceSales,
         PaymentMode,
@@ -81,22 +80,32 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         },
       });
 
-      // Update Boxes in database only after form submission
-      const remainingBoxes = parseInt(Boxes) - parseInt(BoxSales); // Update the boxes in the database
-      const responseBoxes = await fetch('/api/Container/UpdateBoxes', {
+      // Update the Boxes in the database once the form is saved
+      const remainingBoxes = parseInt(Boxes) - parseInt(BoxSales);
+      await updateBoxesInDatabase(remainingBoxes);
+    } else {
+      toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
+    }
+  };
+
+  // Function to update the boxes in the database
+  const updateBoxesInDatabase = async (remainingBoxes: number) => {
+    try {
+      const response = await fetch('/api/Container/UpdateBoxes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
       });
 
-      if (responseBoxes.ok) {
+      if (response.ok) {
         toast.success('Boxes updated in database', { autoClose: 1000 });
       } else {
-        const errorData = await responseBoxes.json();
+        const errorData = await response.json();
         toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
       }
-    } else {
-      toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
+    } catch (error) {
+      console.error('Error updating boxes:', error);
+      toast.error('An error occurred while updating boxes', { autoClose: 1000 });
     }
   };
 
