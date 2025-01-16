@@ -150,7 +150,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(data);
     };
 
-const handleBoxSalesChange = (e: const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const sales = parseInt(e.target.value) || 0; // Parse input as integer
     const price = parseFloat(Price) || 0; // Parse price as float
     const currentBoxes = parseInt(Boxes) || 0; // Parse remaining boxes as integer
@@ -163,8 +163,7 @@ const handleBoxSalesChange = (e: const handleBoxSalesChange = (e: React.ChangeEv
 
     setBoxSales(sales.toString());
     setGrossSales((sales * price).toString()); // Update gross sales
-
-setBoxes((currentBoxes - sales).toString());
+    setBoxes((currentBoxes - sales).toString()); // Update remaining boxes
 };
 
 const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,6 +173,7 @@ const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(price.toString());
     setGrossSales((sales * price).toString()); // Update gross sales
 };
+
 
     useEffect(() => {
         fetchData();
