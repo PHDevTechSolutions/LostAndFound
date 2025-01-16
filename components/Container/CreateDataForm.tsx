@@ -150,10 +150,10 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(data);
     };
 
-const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sales = parseInt(e.target.value) || 0; // Parse input as integer
-    const price = parseFloat(Price) || 0; // Parse price as float
-    const currentBoxes = parseInt(Boxes) || 0; // Parse remaining boxes as integer
+const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const sales = parseInt(e.target.value) || 0;
+    const price = parseFloat(Price) || 0;
+    const currentBoxes = parseInt(Boxes) || 0;
 
     if (sales > currentBoxes) {
         toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
@@ -161,10 +161,30 @@ const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         return;
     }
 
+    const remainingBoxes = currentBoxes - sales;
     setBoxSales(sales.toString());
-    setGrossSales((sales * price).toString()); // Update gross sales
-    setBoxes((currentBoxes - sales).toString()); // Update remaining boxes
+    setGrossSales((sales * price).toString());
+    setBoxes(remainingBoxes.toString());
+
+    // Update the database
+    try {
+        const response = await fetch('/api/Container/UpdateBoxes', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
+        });
+
+        if (response.ok) {
+            toast.success('Boxes updated in database', { autoClose: 1000 });
+        } else {
+            toast.error('Failed to update boxes in database', { autoClose: 1000 });
+        }
+    } catch (error) {
+        console.error('Error updating boxes:', error);
+        toast.error('An error occurred while updating boxes', { autoClose: 1000 });
+    }
 };
+
 
 const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const price = parseFloat(e.target.value) || 0; // Parse price as float
