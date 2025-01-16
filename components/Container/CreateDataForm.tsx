@@ -307,61 +307,64 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
                 {/* Tabbed Table Section */}
                 <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[70%]">
-    {/* Tab Buttons */}
-    <div className="flex border-b mb-4 text-xs">
-        <button className={`px-4 py-2 ${activeTab === "White Box" ? "border-b-2 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("White Box")}>White Box</button>
-        <button className={`px-4 py-2 ${activeTab === "Brown Box" ? "border-b-2 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("Brown Box")}>Brown Box</button>
-    </div>
+                    {/* Tab Buttons */}
+                    <div className="flex border-b mb-4 text-xs">
+                        <button className={`px-4 py-2 ${activeTab === "White Box" ? "border-b-2 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("White Box")}>White Box</button>
+                        <button className={`px-4 py-2 ${activeTab === "Brown Box" ? "border-b-2 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("Brown Box")}>Brown Box</button>
+                    </div>
 
-    {/* Table */}
-    <table className="min-w-full bg-white border text-xs">
-        <thead>
-            <tr>
-                <th className="w-1/6 text-left border px-4 py-2">Date</th>
-                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
-                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
-                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Price</th>
-                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gross Sales Per Day</th> 
-                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th> 
-                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Mode of Payment</th>    
-                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {filteredData.map((data: any) => (
-                <tr key={data._id}>
-                    <td className="px-4 py-2 border">{data.DateOrder}</td>
-                    <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
-                    <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
-                    <td className="px-4 py-2 border hidden md:table-cell">{data.Price}</td>
-                    <td className="px-4 py-2 border hidden md:table-cell">{data.GrossSales}</td>
-                    <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
-                    <td className="px-4 py-2 border hidden md:table-cell">{data.PaymentMode}</td>
-                    <td className="px-4 py-2 border hidden md:table-cell flex gap-2">
-                        <button className="mr-2" onClick={() => handleEdit(data)}><MdEdit /></button>
-                        <button onClick={() => handleDelete(data._id)}><MdDelete /></button>
-                    </td>
-                </tr>
-            ))}
-        </tbody>
-        <tfoot>
-            <tr className="font-bold">
-                <td colSpan={2} className="px-4 py-2 border text-right">Totals:</td>
-                <td className="px-4 py-2 border">
-                    {filteredData.reduce((sum, item) => sum + parseFloat(item.BoxSales || 0), 0)}
-                </td>
-                <td className="px-4 py-2 border">
-                    {filteredData.reduce((sum, item) => sum + parseFloat(item.Price || 0), 0).toFixed(2)}
-                </td>
-                <td className="px-4 py-2 border">
-                    {filteredData.reduce((sum, item) => sum + parseFloat(item.GrossSales || 0), 0).toFixed(2)}
-                </td>
-                <td colSpan={3} className="px-4 py-2 border"></td>
-            </tr>
-        </tfoot>
-    </table>
-</div>
+                    {/* Table */}
+                    <table className="min-w-full bg-white border text-xs">
+                        <thead>
+                            <tr>
+                                <th className="w-1/6 text-left border px-4 py-2">Date</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Price</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gross Sales Per Day</th> 
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th> 
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Mode of Payment</th>    
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredData.map((data: any) => (
+                                <tr key={data._id}>
+                                    <td className="px-4 py-2 border">{data.DateOrder}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Price}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.GrossSales}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.PaymentMode}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell flex gap-2">
+                                        <button className="mr-2" onClick={() => handleEdit(data)}><MdEdit /></button>
+                                        <button onClick={() => handleDelete(data._id)}><MdDelete /></button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+<tfoot>
+    <tr className="font-bold bg-gray-100">
+        <td colSpan={2} className="px-4 py-2 border text-right">Totals:</td>
+        {/* Box Sales Total */}
+        <td className="px-4 py-2 border text-center">
+            {filteredData.reduce((sum, item) => sum + (parseFloat(item.BoxSales) || 0), 0)}
+        </td>
+        {/* Price Total */}
+        <td className="px-4 py-2 border text-center">
+            {filteredData.reduce((sum, item) => sum + (parseFloat(item.Price) || 0), 0).toFixed(2)}
+        </td>
+        {/* Gross Sales Total */}
+        <td className="px-4 py-2 border text-center">
+            {filteredData.reduce((sum, item) => sum + (parseFloat(item.GrossSales) || 0), 0).toFixed(2)}
+        </td>
+        <td colSpan={3} className="px-4 py-2 border"></td>
+    </tr>
+</tfoot>
 
+                    </table>
+                </div>
             </div>
         </div>
     );
