@@ -219,25 +219,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 };
-
-const calculateTotals = () => {
-        let totalBoxSales = 0;
-        let totalPrice = 0;
-        let totalGrossSales = 0;
-
-        filteredData.forEach((data: any) => {
-            totalBoxSales += parseInt(data.BoxSales) || 0;
-            totalPrice += parseFloat(data.Price) || 0;
-            totalGrossSales += parseFloat(data.GrossSales) || 0;
-        });
-
-        return { totalBoxSales, totalPrice, totalGrossSales };
-    };
-
-    const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
-
-
-
     return (
 
         <div className="container mx-auto p-4">
