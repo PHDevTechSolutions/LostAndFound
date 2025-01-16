@@ -163,13 +163,27 @@ const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const remainingBoxes = currentBoxes - sales;
     setBoxSales(sales.toString());
-    setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
+    setGrossSales((sales * price).toString());
     setBoxes(remainingBoxes.toString());
 
-useEffect(() => {
-    fetchData();
-}, [post?.ContainerNo, Boxes]); // Include Boxes to re-fetch data after updates
+    // Update the database
+    try {
+        const response = await fetch('/api/Container/UpdateBoxes', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
+        });
 
+        if (response.ok) {
+            toast.success('Boxes updated in database', { autoClose: 1000 });
+        } else {
+            toast.error('Failed to update boxes in database', { autoClose: 1000 });
+        }
+    } catch (error) {
+        console.error('Error updating boxes:', error);
+        toast.error('An error occurred while updating boxes', { autoClose: 1000 });
+    }
+};
 
 
 const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,6 +193,11 @@ const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(price.toString());
     setGrossSales((sales * price).toString()); // Update gross sales
 };
+
+
+    useEffect(() => {
+        fetchData();
+    }, [post?.ContainerNo, post?.Boxes]);
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
@@ -313,4 +332,4 @@ const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     );
 };
 
-export default CreateDataForm; 
+export default CreateDataForm;
