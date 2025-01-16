@@ -150,55 +150,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(data);
     };
 
-const handleBoxSalesChange = (e: const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sales = parseInt(e.target.value) || 0; // Parse input as integer
-    const price = parseFloat(Price) || 0; // Parse price as float
-    const currentBoxes = parseInt(Boxes) || 0; // Parse remaining boxes as integer
-
-    if (sales > currentBoxes) {
-        toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
-        setBoxSales(currentBoxes.toString());
-        return;
-    }
-
-    const newRemaining = currentBoxes - sales;
-
-    setBoxSales(sales.toString());
-    setGrossSales((sales * price).toString()); // Update gross sales
-    setBoxes(newRemaining.toString()); // Update remaining boxes
-    updateRemainingBoxes(newRemaining.toString()); // Save to database
-};
-
-const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const price = parseFloat(e.target.value) || 0; // Parse price as float
-    const sales = parseInt(BoxSales) || 0; // Parse box sales as integer
-
-    setPrice(price.toString());
-    setGrossSales((sales * price).toString()); // Update gross sales
-};
-
-const updateRemainingBoxes = async (newRemaining: string) => {
-    try {
-        const response = await fetch(`/api/Container/EditContainer`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ContainerNo,
-                Remaining: newRemaining,
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to update remaining boxes in the database.");
-        }
-    } catch (error) {
-        console.error("Error updating remaining boxes:", error);
-        toast.error("Failed to update remaining boxes.", { autoClose: 1000 });
-    }
-};
-
-
-
     useEffect(() => {
         fetchData();
     }, [post?.ContainerNo, post?.Boxes]);
@@ -235,7 +186,7 @@ const updateRemainingBoxes = async (newRemaining: string) => {
                             <input type="hidden" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required  disabled/>
                         </div>
                         <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="Location">Warehouse Location</label>
+                            <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
                             <select id="BoxType" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
                                 <option value="">Select Location</option>
                                 <option value="Navotas">Navotas</option>
@@ -253,19 +204,19 @@ const updateRemainingBoxes = async (newRemaining: string) => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="BoxSales">Box Sales</label>
-                            <input type="text" id="BoxSales" value={BoxSales} onChange={handleBoxSalesChange} className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="text" id="BoxSales" value={BoxSales} onChange={(e) => setBoxSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Price">Price</label>
-                            <input type="number" id="Price" value={Price} onChange={handlePriceChange} className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="text" id="Price" value={Price} onChange={(e) => setPrice(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining</label>
-                            <input type="text" id="Remaining" value={Boxes}  className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="text" id="Remaining" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>
-                            <input type="text" id="GrossSales" value={GrossSales}  className="w-full px-3 py-2 border rounded text-xs" required />
+                            <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
