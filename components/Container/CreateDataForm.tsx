@@ -1,169 +1,225 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useState } from 'react';
+import toast from 'react-toastify';
 
-interface CreateDataFormProps {
-  post: any;
-  onCancel: () => void;
-}
+const CreateDataForm = ({ editData, fetchData, resetForm, post }) => {
+    const [ContainerNo, setContainerNo] = useState(editData ? editData.ContainerNo : '');
+    const [Username, setUsername] = useState(editData ? editData.Username : '');
+    const [Location, setLocation] = useState(editData ? editData.Location : '');
+    const [BoxType, setBoxType] = useState(editData ? editData.BoxType : '');
+    const [DateOrder, setDateOrder] = useState(editData ? editData.DateOrder : '');
+    const [BuyersName, setBuyersName] = useState(editData ? editData.BuyersName : '');
+    const [BoxSales, setBoxSales] = useState(editData ? editData.BoxSales : '');
+    const [Price, setPrice] = useState(editData ? editData.Price : '');
+    const [Boxes, setBoxes] = useState(editData ? editData.Boxes : '0');
+    const [GrossSales, setGrossSales] = useState(editData ? editData.GrossSales : '');
+    const [PlaceSales, setPlaceSales] = useState(editData ? editData.PlaceSales : '');
+    const [PaymentMode, setPaymentMode] = useState(editData ? editData.PaymentMode : '');
 
-const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
-  const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
-  const [Username, setUsername] = useState("");
-  const [Location, setLocation] = useState("");
-  const [BoxType, setBoxType] = useState("");
-  const [DateOrder, setDateOrder] = useState("");
-  const [BuyersName, setBuyersName] = useState("");
-  const [BoxSales, setBoxSales] = useState("");
-  const [Price, setPrice] = useState("");
-  const [Boxes, setBoxes] = useState(post?.Boxes || "");
-  const [GrossSales, setGrossSales] = useState("");
-  const [PlaceSales, setPlaceSales] = useState("");
-  const [PaymentMode, setPaymentMode] = useState("");
-  const [editData, setEditData] = useState<any>(null);
+    // Handle change in box sales and update gross sales and available boxes (no immediate DB update)
+    const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const sales = parseInt(e.target.value) || 0;
+        const price = parseFloat(Price) || 0;
+        const currentBoxes = parseInt(Boxes) || 0;
 
-  // Update Boxes and GrossSales when BoxSales changes
-  const handleBoxSalesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sales = parseInt(e.target.value) || 0;
-    const price = parseFloat(Price) || 0;
-    const currentBoxes = parseInt(Boxes) || 0;
+        if (sales > currentBoxes) {
+            toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
+            setBoxSales(currentBoxes.toString());
+            return;
+        }
 
-    if (sales > currentBoxes) {
-      toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
-      setBoxSales(currentBoxes.toString());
-      return;
-    }
+        const remainingBoxes = currentBoxes - sales;
+        setBoxSales(sales.toString());
+        setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
+        setBoxes(remainingBoxes.toString()); // Update state, not DB yet
+    };
 
-    const remainingBoxes = currentBoxes - sales;
-    setBoxSales(sales.toString());
-    setGrossSales((sales * price).toFixed(2)); // Ensure proper formatting
-    setBoxes(remainingBoxes.toString());
+    // Handle form submission and update database
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    // Update the database for Boxes
-    try {
-      const response = await fetch('/api/Container/UpdateBoxes', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: post._id, Boxes: remainingBoxes }),
-      });
+        if (!ContainerNo) {
+            toast.error("Container No is required", { autoClose: 1000 });
+            return;
+        }
 
-      if (response.ok) {
-        toast.success('Boxes updated in database', { autoClose: 1000 });
-      } else {
-        const errorData = await response.json();
-        toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
-      }
-    } catch (error) {
-      console.error('Error updating boxes:', error);
-      toast.error('An error occurred while updating boxes', { autoClose: 1000 });
-    }
-  };
+        const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
+        const method = editData ? "PUT" : "POST";
 
-  // Handle form submission for both create and update
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!ContainerNo) {
-      toast.error("Container No is required", { autoClose: 1000 });
-      return;
-    }
+        // Perform the API request to save the form data
+        const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ContainerNo,
+                Username,
+                Location,
+                BoxType,
+                DateOrder,
+                BuyersName,
+                BoxSales,
+                Price,
+                Boxes,
+                GrossSales,
+                PlaceSales,
+                PaymentMode,
+                id: editData ? editData._id : undefined,
+            }),
+        });
 
-    const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
-    const method = editData ? "PUT" : "POST";
+        if (response.ok) {
+            toast.success(editData ? "Data updated successfully" : "Data added successfully", {
+                autoClose: 1000,
+                onClose: () => {
+                    fetchData();
+                    resetForm();
+                },
+            });
 
-    const response = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ContainerNo,
-        Username,
-        Location,
-        BoxType,
-        DateOrder,
-        BuyersName,
-        BoxSales,
-        Price,
-        Boxes,
-        GrossSales,
-        PlaceSales,
-        PaymentMode,
-        id: editData ? editData._id : undefined,
-      }),
-    });
+            // Update the box count in the database (only after form is saved)
+            const responseBoxes = await fetch('/api/Container/UpdateBoxes', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: post._id, Boxes: parseInt(Boxes) }),
+            });
 
-    if (response.ok) {
-      toast.success(editData ? "Data updated successfully" : "Data added successfully", {
-        autoClose: 1000,
-        onClose: () => {
-          resetForm();
-        },
-      });
-    } else {
-      toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
-    }
-  };
+            if (responseBoxes.ok) {
+                toast.success('Boxes updated in database', { autoClose: 1000 });
+                fetchData(); // Re-fetch data to reflect updates
+            } else {
+                const errorData = await responseBoxes.json();
+                toast.error(`Failed to update boxes: ${errorData.message || ''}`, { autoClose: 1000 });
+            }
+        } else {
+            toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
+        }
+    };
 
-  const resetForm = () => {
-    setContainerNo(post?.ContainerNo || "");
-    setUsername("");
-    setLocation("");
-    setBoxType("");
-    setDateOrder("");
-    setBuyersName("");
-    setBoxSales("");
-    setPrice("");
-    setBoxes("");
-    setGrossSales("");
-    setPlaceSales("");
-    setPaymentMode("");
-    setEditData(null);
-  };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Container No:</label>
+                <input
+                    type="text"
+                    value={ContainerNo}
+                    onChange={(e) => setContainerNo(e.target.value)}
+                    required
+                />
+            </div>
 
-  useEffect(() => {
-    if (post) {
-      setContainerNo(post.ContainerNo);
-      setBoxes(post.Boxes);
-    }
-  }, [post]);
+            <div>
+                <label>Username:</label>
+                <input
+                    type="text"
+                    value={Username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+            </div>
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Container No:</label>
-        <input
-          type="text"
-          value={ContainerNo}
-          onChange={(e) => setContainerNo(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Box Sales:</label>
-        <input
-          type="number"
-          value={BoxSales}
-          onChange={handleBoxSalesChange}
-        />
-      </div>
-      <div>
-        <label>Price:</label>
-        <input
-          type="number"
-          value={Price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Boxes Available:</label>
-        <input
-          type="number"
-          value={Boxes}
-          disabled
-        />
-      </div>
-      <div>
-        <button type="submit">Save</button>
-        <button type="button" onClick={onCancel}>Cancel</button>
-      </div>
-    </form>
-  );
+            <div>
+                <label>Location:</label>
+                <input
+                    type="text"
+                    value={Location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Box Type:</label>
+                <input
+                    type="text"
+                    value={BoxType}
+                    onChange={(e) => setBoxType(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Date of Order:</label>
+                <input
+                    type="date"
+                    value={DateOrder}
+                    onChange={(e) => setDateOrder(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Buyer's Name:</label>
+                <input
+                    type="text"
+                    value={BuyersName}
+                    onChange={(e) => setBuyersName(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Box Sales:</label>
+                <input
+                    type="number"
+                    value={BoxSales}
+                    onChange={handleBoxSalesChange}
+                    min="0"
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Price:</label>
+                <input
+                    type="number"
+                    value={Price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Remaining Boxes:</label>
+                <input
+                    type="number"
+                    value={Boxes}
+                    readOnly
+                />
+            </div>
+
+            <div>
+                <label>Gross Sales:</label>
+                <input
+                    type="number"
+                    value={GrossSales}
+                    readOnly
+                />
+            </div>
+
+            <div>
+                <label>Place of Sales:</label>
+                <input
+                    type="text"
+                    value={PlaceSales}
+                    onChange={(e) => setPlaceSales(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Payment Mode:</label>
+                <input
+                    type="text"
+                    value={PaymentMode}
+                    onChange={(e) => setPaymentMode(e.target.value)}
+                    required
+                />
+            </div>
+
+            <button type="submit">
+                {editData ? 'Save Changes' : 'Save Data'}
+            </button>
+        </form>
+    );
 };
 
 export default CreateDataForm;
