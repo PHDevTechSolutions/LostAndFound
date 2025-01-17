@@ -337,6 +337,7 @@ const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Price</th>
+                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Remaining</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gross Sales Per Day</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Mode of Payment</th>    
