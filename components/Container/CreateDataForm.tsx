@@ -226,22 +226,20 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 const calculateTotals = () => {
         let totalBoxSales = 0;
         let totalPrice = 0;
-        let totalRemaining = 0;
         let totalGrossSales = 0;
 
         filteredData.forEach((data: any) => {
             totalBoxSales += parseInt(data.BoxSales) || 0;
             totalPrice += parseFloat(data.Price) || 0;
-            totalRemaining += parseFloat(data.Remaining) || 0;
             totalGrossSales += parseFloat(data.GrossSales) || 0;
         });
 
-        return { totalBoxSales, totalPrice, totalRemaining, totalGrossSales };
+        return { totalBoxSales, totalPrice,totalGrossSales };
 
 
 };
 
-const { totalBoxSales, totalPrice, totalRemaining, totalGrossSales } = calculateTotals();
+const { totalBoxSales, totalPrice,totalGrossSales } = calculateTotals();
     return (
 
         <div className="container mx-auto p-4">
@@ -343,7 +341,6 @@ const { totalBoxSales, totalPrice, totalRemaining, totalGrossSales } = calculate
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Price</th>
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Remaining</th>
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gross Sales Per Day</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th> 
                                 <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Mode of Payment</th>    
@@ -357,7 +354,6 @@ const { totalBoxSales, totalPrice, totalRemaining, totalGrossSales } = calculate
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.Price}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Remaining}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.GrossSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.PaymentMode}</td>
@@ -373,7 +369,6 @@ const { totalBoxSales, totalPrice, totalRemaining, totalGrossSales } = calculate
         <td colSpan={2} className="text-xs font-semibold text-right border px-4 py-2">Total</td>
         <td className="text-xs font-semibold border px-4 py-2">{totalBoxSales}</td>
         <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalPrice)}</td>
-        <td className="text-xs font-semibold border px-4 py-2">{(totalRemaining)}</td>
         <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalGrossSales)}</td>
         <td colSpan={3}></td>
     </tr>
