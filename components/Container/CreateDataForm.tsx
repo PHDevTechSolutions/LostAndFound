@@ -351,6 +351,7 @@ const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.Price}</td>
+                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Remaining}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.GrossSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
                                     <td className="px-4 py-2 border hidden md:table-cell">{data.PaymentMode}</td>
