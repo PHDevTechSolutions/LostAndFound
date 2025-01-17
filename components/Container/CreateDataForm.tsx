@@ -185,7 +185,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName(data.BuyersName);
         setBoxSales(data.BoxSales);
         setPrice(data.Price);
-        setPrice(data.Remaining);
+        setRemaining(data.Remaining);
         setBoxes(updatedBoxes.toString());
         setOriginalBoxes(updatedBoxes.toString()); // Set original boxes when editing
         setGrossSales(data.GrossSales);
