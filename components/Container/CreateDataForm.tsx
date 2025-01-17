@@ -222,20 +222,22 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 const calculateTotals = () => {
         let totalBoxSales = 0;
         let totalPrice = 0;
+        let totalRemaining = 0;
         let totalGrossSales = 0;
 
         filteredData.forEach((data: any) => {
             totalBoxSales += parseInt(data.BoxSales) || 0;
             totalPrice += parseFloat(data.Price) || 0;
+            totalRemaining += parseFloat(data.Remaining) || 0;
             totalGrossSales += parseFloat(data.GrossSales) || 0;
         });
 
-        return { totalBoxSales, totalPrice, totalGrossSales };
+        return { totalBoxSales, totalPrice, totalRemaining, totalGrossSales };
 
 
 };
 
-const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
+const { totalBoxSales, totalPrice, totalRemaining, totalGrossSales } = calculateTotals();
     return (
 
         <div className="container mx-auto p-4">
@@ -367,6 +369,7 @@ const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
         <td colSpan={2} className="text-xs font-semibold text-right border px-4 py-2">Total</td>
         <td className="text-xs font-semibold border px-4 py-2">{totalBoxSales}</td>
         <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalPrice)}</td>
+        <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalRemaining)}</td>
         <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalGrossSales)}</td>
         <td colSpan={3}></td>
     </tr>
