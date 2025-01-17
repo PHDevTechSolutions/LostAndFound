@@ -363,7 +363,7 @@ const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
       <tfoot>
     <tr>
         <td colSpan={2} className="text-xs font-semibold text-right border px-4 py-2">Total</td>
-        <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalBoxSales)}</td>
+        <td className="text-xs font-semibold border px-4 py-2">{totalBoxSales}</td>
         <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalPrice)}</td>
         <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalGrossSales)}</td>
         <td colSpan={3}></td>
