@@ -19,6 +19,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BuyersName, setBuyersName] = useState("");
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
+    const [Remaining, setRemaining] = useState("");
     const [Boxes, setBoxes] = useState(post?.Boxes || "");
     const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State for original quantity of boxes
     const [GrossSales, setGrossSales] = useState("");
@@ -86,6 +87,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 BuyersName,
                 BoxSales,
                 Price,
+                Remaining,
                 Boxes: remainingBoxes,  // Update boxes with remaining quantity on submit
                 GrossSales,
                 PlaceSales,
@@ -156,6 +158,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName("");
         setBoxSales("");
         setPrice("");
+        setRemaining("");
         setGrossSales("");
         setPlaceSales("");
         setPaymentMode("");
@@ -182,6 +185,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBuyersName(data.BuyersName);
         setBoxSales(data.BoxSales);
         setPrice(data.Price);
+        setPrice(data.Remaining);
         setBoxes(updatedBoxes.toString());
         setOriginalBoxes(updatedBoxes.toString()); // Set original boxes when editing
         setGrossSales(data.GrossSales);
