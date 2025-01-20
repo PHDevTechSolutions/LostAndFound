@@ -4,16 +4,21 @@ import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
-import AddAccountForm from "../../../components/Accounts/AddAccountForm";
-import SearchFilters from "../../../components/Accounts/SearchFilters";
-import AccountsTable from "../../../components/Accounts/AccountsTable";
-import Pagination from "../../../components/Accounts/Pagination";
+
+// Pages
+import AddAccountForm from "../../../components/Container/AddContainerForm";
+import CreateDataForm from "../../../components/Container/CreateDataForm";
+import SearchFilters from "../../../components/Container/SearchFilters";
+import ContainerTable from "../../../components/Container/ContainerTable";
+import Pagination from "../../../components/Container/Pagination";
+
+// Toasts
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const ListOfUsers: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
-    const [editPost, setEditPost] = useState<any>(null);
+    const [editData, setEditData] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCityAddress, setSelectedCityAddress] = useState("");
@@ -22,10 +27,13 @@ const ListOfUsers: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState<string | null>(null);
 
-    // Fetch accounts from the API
-    const fetchAccounts = async () => {
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [postForCreate, setPostForCreate] = useState<any>(null);
+
+    // Fetch Data from the API
+    const fetchDatabase = async () => {
         try {
-            const response = await fetch("/api/account/fetchAccounts");
+            const response = await fetch("/api/Container/FetchContainer");
             const data = await response.json();
             setPosts(data);
         } catch (error) {
@@ -35,16 +43,15 @@ const ListOfUsers: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchAccounts();
+        fetchDatabase();
     }, []);
 
-    // Filter accounts based on search term and city address
+    // Filter Data based on search term and city address
     const filteredAccounts = posts.filter((post) => {
         return (
-            (post.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                post.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                post.contactNumber.includes(searchTerm)) &&
-            (selectedCityAddress ? post.cityAddress.includes(selectedCityAddress) : true)
+            (post.SpsicNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.ContainerNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()))
         );
     });
 
@@ -56,7 +63,7 @@ const ListOfUsers: React.FC = () => {
 
     // Edit post function
     const handleEdit = (post: any) => {
-        setEditPost(post);
+        setEditData(post);
         setShowForm(true);
     };
 
@@ -70,7 +77,7 @@ const ListOfUsers: React.FC = () => {
     const handleDelete = async () => {
         if (!postToDelete) return;
         try {
-            const response = await fetch(`/api/account/deleteAccount`, {
+            const response = await fetch(`/api/Container/DeleteContainer`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -80,42 +87,56 @@ const ListOfUsers: React.FC = () => {
 
             if (response.ok) {
                 setPosts(posts.filter((post) => post._id !== postToDelete));
-                toast.success("Account deleted successfully.");
+                toast.success("Data deleted successfully.");
             } else {
-                toast.error("Failed to delete account.");
+                toast.error("Failed to delete data.");
             }
         } catch (error) {
-            toast.error("Failed to delete account.");
-            console.error("Error deleting account:", error);
+            toast.error("Failed to delete data.");
+            console.error("Error deleting data:", error);
         } finally {
             setShowDeleteModal(false);
             setPostToDelete(null);
         }
     };
 
+    const handleCreateData = (postId: string) => {
+        const selectedPost = posts.find((post) => post._id === postId);
+        setPostForCreate(selectedPost); // Pass the selected post details
+        setShowCreateForm(true);
+        setShowForm(false); // Ensure other forms are closed
+    };
+
     return (
         <SessionChecker>
             <ParentLayout>
                 <UserFetcher>
-                    {(userName, userEmail) => (
+                    {(userName) => (
                         <div className="container mx-auto p-4">
                             <div className="grid grid-cols-1 md:grid-cols-1">
-                                {showForm ? (
+                                {showCreateForm ? (
+                                    <CreateDataForm
+                                        post={postForCreate} // Pass the selected post details
+                                        onCancel={() => setShowCreateForm(false)} // Close the form
+                                    />
+                                ) : showForm ? (
                                     <AddAccountForm
                                         onCancel={() => {
                                             setShowForm(false);
-                                            setEditPost(null);
+                                            setEditData(null);
                                         }}
-                                        refreshPosts={fetchAccounts}  // Pass the refreshPosts callback
+                                        refreshPosts={fetchDatabase}  // Pass the refreshPosts callback
                                         userName={userName}
-                                        editPost={editPost}
+                                        editData={editData}
                                     />
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>Add Account</button>
+                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
+                                                Add Fishing Container
+                                            </button>
                                         </div>
-                                        <h2 className="text-lg font-bold mb-2">Client Accounts</h2>
+                                        <h2 className="text-lg font-bold mb-2">Summary of Sales</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <SearchFilters
                                                 searchTerm={searchTerm}
@@ -125,10 +146,11 @@ const ListOfUsers: React.FC = () => {
                                                 postsPerPage={postsPerPage}
                                                 setPostsPerPage={setPostsPerPage}
                                             />
-                                            <AccountsTable
+                                            <ContainerTable
                                                 posts={currentPosts}
                                                 handleEdit={handleEdit}
                                                 handleDelete={confirmDelete}
+                                                handleCreateData={handleCreateData}
                                             />
 
                                             <Pagination
