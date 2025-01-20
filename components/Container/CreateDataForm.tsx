@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { MdEdit, MdDelete } from "react-icons/md";
+import Table from "./OrderTable";
+import OrderFormFields from "./OrderFormFields";
 
 interface CreateDataFormProps {
     post: any;
@@ -20,8 +21,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
     const [Remaining, setRemaining] = useState("");
-    const [Boxes, setBoxes] = useState(post?.Boxes || "");
-    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || ""); // State for original quantity of boxes
+    const [Beginning, setBeginning] = useState(post?.Beginning || "");
+    const [OriginalBeginning, setOriginalBeginning] = useState(post?.Beginning || "");
     const [GrossSales, setGrossSales] = useState("");
     const [PlaceSales, setPlaceSales] = useState("");
     const [PaymentMode, setPaymentMode] = useState("");
@@ -58,10 +59,10 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     const fetchUpdatedData = async () => {
-        const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
+        const response = await fetch(`/api/Container/GetAllContainer?id=${post._id}`);
         const data = await response.json();
-        setBoxes(data.Boxes);
-        setOriginalBoxes(data.Boxes); // Update original boxes with latest value
+        setBeginning(data.Beginning);
+        setOriginalBeginning(data.Beginning); // Update original boxes with latest value
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -73,26 +74,14 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
         const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
         const method = editData ? "PUT" : "POST";
-        const remainingBoxes = parseInt(Boxes) || 0;
+        const remainingBeginning = parseInt(Beginning) || 0;
 
         const response = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                ContainerNo,
-                Username,
-                Location,
-                BoxType,
-                DateOrder,
-                BuyersName,
-                BoxSales,
-                Price,
-                Remaining,
-                Boxes: remainingBoxes,  // Update boxes with remaining quantity on submit
-                GrossSales,
-                PlaceSales,
-                PaymentMode,
-                id: editData ? editData._id : undefined,
+                ContainerNo, Username, Location, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, Beginning: remainingBeginning,
+                GrossSales, PlaceSales, PaymentMode, id: editData ? editData._id : undefined,
             }),
         });
 
@@ -101,7 +90,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 autoClose: 1000,
                 onClose: () => {
                     // Update boxes in the database
-                    updateBoxesInDatabase(post._id, remainingBoxes);
+                    updateBeginningInDatabase(post._id, remainingBeginning);
                 },
             });
         } else {
@@ -109,12 +98,12 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         }
     };
 
-    const updateBoxesInDatabase = async (id: string, remainingBoxes: number) => {
+    const updateBeginningInDatabase = async (id: string, remainingBeginning: number) => {
         try {
             const response = await fetch('/api/Container/UpdateBoxes', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, Boxes: remainingBoxes }),
+                body: JSON.stringify({ id, Beginning: remainingBeginning }),
             });
 
             if (response.ok) {
@@ -150,67 +139,44 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     const resetForm = () => {
-        setContainerNo(post?.ContainerNo || "");
-        setUsername("");
-        setLocation("");
-        setBoxType("");
-        setDateOrder("");
-        setBuyersName("");
-        setBoxSales("");
-        setPrice("");
-        setRemaining("");
-        setGrossSales("");
-        setPlaceSales("");
-        setPaymentMode("");
-        setEditData(null);
+        setContainerNo(post?.ContainerNo || ""); setUsername(""); setLocation(""); setBoxType(""); setDateOrder(""); setBuyersName(""); setBoxSales("");
+        setPrice(""); setRemaining(""); setGrossSales(""); setPlaceSales(""); setPaymentMode(""); setEditData(null);
     };
 
     const handleEdit = (data: any) => {
         const originalBoxSales = parseInt(BoxSales) || 0;
         const newBoxSales = parseInt(data.BoxSales) || 0;
 
-        let updatedBoxes = parseInt(OriginalBoxes) || 0;
+        let updatedBeginning = parseInt(OriginalBeginning) || 0;
 
         if (newBoxSales < originalBoxSales) {
-            updatedBoxes += originalBoxSales - newBoxSales;
+            updatedBeginning += originalBoxSales - newBoxSales;
         } else if (newBoxSales > originalBoxSales) {
-            updatedBoxes -= newBoxSales - originalBoxSales;
+            updatedBeginning -= newBoxSales - originalBoxSales;
         }
 
-        setContainerNo(data.ContainerNo);
-        setUsername(data.Username);
-        setLocation(data.Location);
-        setBoxType(data.BoxType);
-        setDateOrder(data.DateOrder);
-        setBuyersName(data.BuyersName);
-        setBoxSales(data.BoxSales);
-        setPrice(data.Price);
-        setRemaining(data.Remaining);
-        setBoxes(updatedBoxes.toString());
-        setOriginalBoxes(updatedBoxes.toString()); // Set original boxes when editing
-        setGrossSales(data.GrossSales);
-        setPlaceSales(data.PlaceSales);
-        setPaymentMode(data.PaymentMode);
-        setEditData(data);
+        setContainerNo(data.ContainerNo); setUsername(data.Username); setLocation(data.Location); setBoxType(data.BoxType); setDateOrder(data.DateOrder); setBuyersName(data.BuyersName);
+        setBoxSales(data.BoxSales); setPrice(data.Price); setRemaining(data.Remaining); setBeginning(updatedBeginning.toString()); setOriginalBeginning(updatedBeginning.toString());
+        setGrossSales(data.GrossSales); setPlaceSales(data.PlaceSales); setPaymentMode(data.PaymentMode); setEditData(data);
     };
 
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
         const price = parseFloat(Price) || 0;
-        const currentBoxes = parseInt(OriginalBoxes) || 0; // Use original boxes for calculation
+        const currentBoxes = parseInt(OriginalBeginning) || 0; // Use original boxes for calculation
 
         if (sales > currentBoxes) {
             toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
             setBoxSales("");
             setGrossSales("");
-            setBoxes(OriginalBoxes); // Reset boxes to original if error
+            setBeginning(OriginalBeginning); // Reset boxes to original if error
             return;
         }
 
         const remainingBoxes = currentBoxes - sales;
         setBoxSales(sales.toString());
         setGrossSales((sales * price).toString());
-        setBoxes(remainingBoxes.toString());
+        setBeginning(remainingBoxes.toString());
     };
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,7 +189,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     const filteredData = tableData.filter((data) => data.BoxType === activeTab);
 
-const calculateTotals = () => {
+    const calculateTotals = () => {
         let totalBoxSales = 0;
         let totalPrice = 0;
         let totalGrossSales = 0;
@@ -233,13 +199,10 @@ const calculateTotals = () => {
             totalPrice += parseFloat(data.Price) || 0;
             totalGrossSales += parseFloat(data.GrossSales) || 0;
         });
+        return { totalBoxSales, totalPrice, totalGrossSales };
+    };
 
-        return { totalBoxSales, totalPrice,totalGrossSales };
-
-
-};
-
-const { totalBoxSales, totalPrice,totalGrossSales } = calculateTotals();
+    const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
     return (
 
         <div className="container mx-auto p-4">
@@ -256,73 +219,39 @@ const { totalBoxSales, totalPrice,totalGrossSales } = calculateTotals();
             <div className="flex flex-wrap gap-4">
                 {/* Form Section */}
                 <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[20%]">
-                    <form onSubmit={handleSubmit}>
-                        <input id="containerNo" type="hidden" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4" placeholder="Enter Container No." />
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="BoxType">Box Type</label>
-                            <select id="BoxType" value={BoxType} onChange={(e) => setBoxType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
-                                <option value="">Select Box</option>
-                                <option value="Brown Box">Brown Box</option>
-                                <option value="White Box">White Box</option>
-                            </select>
-                        </div>
-                        <div className="mb-4">
-                            <input type="hidden" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required  disabled/>
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="Location">Warehouse Location</label>
-                            <select id="BoxType" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
-                                <option value="">Select Location</option>
-                                <option value="Navotas">Navotas</option>
-                                <option value="Sambat">Sambat</option>
-                                <option value="Minalin">Minalin</option>
-                            </select>
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date</label>
-                            <input type="date" id="DateOrder" value={DateOrder} onChange={(e) => setDateOrder(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="BuyersName">Buyer's Name</label>
-                            <input type="text" id="BuyersName" value={BuyersName} onChange={(e) => setBuyersName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="BoxSales">Box Sales</label>
-                            <input type="text" id="BoxSales" value={BoxSales} onChange={handleBoxSalesChange} className="w-full px-3 py-2 border rounded text-xs" required />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="Price">Price</label>
-                            <input type="number" id="Price" value={Price} onChange={handlePriceChange} className="w-full px-3 py-2 border rounded text-xs" required />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining Boxes</label>
-                            <input type="number" id="Remaining" value={Boxes}  className="w-full px-3 py-2 border rounded text-xs" required />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>
-                            <input type="text" id="GrossSales" value={GrossSales}  className="w-full px-3 py-2 border rounded text-xs" required />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
-                            <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>
+                    <OrderFormFields
+                        ContainerNo={ContainerNo}
+                        setContainerNo={setContainerNo}
+                        BoxType={BoxType}
+                        setBoxType={setBoxType}
+                        Username={Username}
+                        setUsername={setUsername}
+                        Location={Location}
+                        setLocation={setLocation}
+                        DateOrder={DateOrder}
+                        setDateOrder={setDateOrder}
+                        BuyersName={BuyersName}
+                        setBuyersName={setBuyersName}
+                        BoxSales={BoxSales}
+                        setBoxSales={setBoxSales}
+                        handleBoxSalesChange={handleBoxSalesChange}
+                        Price={Price}
+                        setPrice={setPrice}
+                        handlePriceChange={handlePriceChange}
+                        Beginning={Beginning}
+                        setBeginning={setBeginning}
+                        GrossSales={GrossSales}
+                        setGrossSales={setGrossSales}
+                        PlaceSales={PlaceSales}
+                        setPlaceSales={setPlaceSales}
+                        PaymentMode={PaymentMode}
+                        setPaymentMode={setPaymentMode}
+                        editData={editData}
+                        onCancel={onCancel}
+                        handleSubmit={handleSubmit}
+                        resetForm={resetForm}
+                    />
 
-<select id="PaymentMode" value={PaymentMode} onChange={(e) => setPaymentMode(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
-<option value="">Select Mode</option>
-<option value="Cash">Cash</option>
-<option value="PDC">PDC</option>
-</select>
-                        </div>
-                        <div className="flex justify-between">
-                            <button type="button" onClick={onCancel} className="text-xs text-white bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md">Cancel</button>
-                            <div className="flex gap-2">
-                                <button type="submit" className="text-xs text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">{editData ? "Update" : "Save"}</button>
-                                <button type="button" onClick={resetForm} className="text-xs text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md">Reset</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
 
                 {/* Tabbed Table Section */}
@@ -334,48 +263,15 @@ const { totalBoxSales, totalPrice,totalGrossSales } = calculateTotals();
                     </div>
 
                     {/* Table */}
-                    <table className="min-w-full bg-white border text-xs">
-                        <thead>
-                            <tr>
-                                <th className="w-1/6 text-left border px-4 py-2">Date</th>
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Buyer's Name</th> 
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Box Sales</th>
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Price</th>
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Gross Sales Per Day</th> 
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th> 
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Mode of Payment</th>    
-                                <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredData.map((data: any) => (
-                                <tr key={data._id}>
-                                    <td className="px-4 py-2 border">{data.DateOrder}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.BuyersName}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.BoxSales}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.Price}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.GrossSales}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell">{data.PaymentMode}</td>
-                                    <td className="px-4 py-2 border hidden md:table-cell flex gap-2">
-                                        <button className="mr-2" onClick={() => handleEdit(data)}><MdEdit /></button>
-                                        <button onClick={() => handleDelete(data._id)}><MdDelete /></button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-      <tfoot>
-    <tr>
-        <td colSpan={2} className="text-xs font-semibold text-right border px-4 py-2">Total</td>
-        <td className="text-xs font-semibold border px-4 py-2">{totalBoxSales}</td>
-        <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalPrice)}</td>
-        <td className="text-xs font-semibold border px-4 py-2">₱{new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2 }).format(totalGrossSales)}</td>
-        <td colSpan={3}></td>
-    </tr>
-</tfoot>
-
-
-                    </table>
+                    <Table
+                        filteredData={filteredData}
+                        handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                        totalBoxSales={totalBoxSales}
+                        totalPrice={totalPrice}
+                        totalGrossSales={totalGrossSales}
+                    />
+                    <ToastContainer className="text-xs" />
                 </div>
             </div>
         </div>

@@ -5,8 +5,6 @@ import React from "react";
 interface SearchFiltersProps {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
-    selectedCityAddress: string;
-    setSelectedCityAddress: (city: string) => void;
     postsPerPage: number;
     setPostsPerPage: (num: number) => void;
 }
@@ -14,8 +12,6 @@ interface SearchFiltersProps {
 const SearchFilters: React.FC<SearchFiltersProps> = ({
     searchTerm,
     setSearchTerm,
-    selectedCityAddress,
-    setSelectedCityAddress,
     postsPerPage,
     setPostsPerPage,
 }) => {
@@ -25,15 +21,8 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 type="text"
                 placeholder="Search..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value.toLocaleLowerCase())}
+                onChange={(e) => setSearchTerm(e.target.value.toLocaleUpperCase())}
                 className="border px-3 py-2 rounded text-xs w-full md:w-auto flex-grow capitalize"
-            />
-            <input
-                type="text"
-                placeholder="Filter by City Address"
-                value={selectedCityAddress}
-                onChange={(e) => setSelectedCityAddress(e.target.value)}
-                className="border px-3 py-2 rounded text-xs w-full md:w-auto flex-grow"
             />
             <select
                 value={postsPerPage}

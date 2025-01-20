@@ -54,7 +54,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Date Soldout</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Supplier</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Container No.</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Boxes</th>
+            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Beginning</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
           </tr>
         </thead>
@@ -73,7 +73,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                   <td className="px-4 py-2 border hidden md:table-cell">{post.DateSoldout}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">{post.SupplierName}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">{post.ContainerNo}</td>
-                  <td className="px-4 py-2 border hidden md:table-cell">{post.Boxes}</td>
+                  <td className="px-4 py-2 border hidden md:table-cell">{post.Beginning}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">
                     <Menu as="div" className="relative inline-block text-left">
                       <div>
@@ -147,14 +147,14 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                         <strong>Boxes :</strong> {post.Boxes}
                       </div>
                       <div className="mt-2">
-<button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCreateData(post._id);  // <-- This is now defined
-                                }}
-                                className="bg-gray-100 text-gray-900 text-gray-700 block w-full text-left px-4 py-2 text-xs" >
-                                Create Data
-                              </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCreateData(post._id);  // <-- This is now defined
+                          }}
+                          className="bg-gray-100 text-gray-900 text-gray-700 block w-full text-left px-4 py-2 text-xs" >
+                          Create Data
+                        </button>
 
                         <button
                           className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"

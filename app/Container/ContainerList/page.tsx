@@ -21,7 +21,6 @@ const ContainerList: React.FC = () => {
     const [editData, setEditData] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCityAddress, setSelectedCityAddress] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(5);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -49,8 +48,8 @@ const ContainerList: React.FC = () => {
     // Filter Data based on search term and city address
     const filteredAccounts = posts.filter((post) => {
         return (
-            (post.SpsicNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                post.ContainerNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (post.SpsicNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
+                post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
                 post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()))
         );
     });
@@ -141,8 +140,6 @@ const ContainerList: React.FC = () => {
                                             <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
-                                                selectedCityAddress={selectedCityAddress}
-                                                setSelectedCityAddress={setSelectedCityAddress}
                                                 postsPerPage={postsPerPage}
                                                 setPostsPerPage={setPostsPerPage}
                                             />

@@ -15,8 +15,8 @@ interface FormFieldsProps {
   setContainerNo: (value: string) => void;
   Country: string;
   setCountry: (value: string) => void;
-  Boxes: string;
-  setBoxes: (value: string) => void;
+  Beginning: string;
+  setBeginning: (value: string) => void;
   Commodity: string;
   setCommodity: (value: string) => void;
   Size: string;
@@ -28,7 +28,7 @@ interface FormFieldsProps {
   editData?: any;
 }
 
-const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, SpsicNo, setSpsicNo, DateArrived, setDateArrived, DateSoldout, setDateSoldout, SupplierName, setSupplierName, ContainerNo, setContainerNo, Country, setCountry, Boxes, setBoxes, Commodity, setCommodity, Size, setSize, Freezing, setFreezing, Remarks, setRemarks, editData
+const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, SpsicNo, setSpsicNo, DateArrived, setDateArrived, DateSoldout, setDateSoldout, SupplierName, setSupplierName, ContainerNo, setContainerNo, Country, setCountry, Beginning, setBeginning, Commodity, setCommodity, Size, setSize, Freezing, setFreezing, Remarks, setRemarks, editData
 }) => {
 
   return (
@@ -76,8 +76,8 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({ Vendor, setVendor, Sps
           </select>
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <label className="block text-xs font-bold mb-2" htmlFor="Boxes">Boxes</label>
-          <input type="text" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <label className="block text-xs font-bold mb-2" htmlFor="Boxes">Beginning</label>
+          <input type="number" id="number" value={Beginning} onChange={(e) => setBeginning(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
       </div>
 
