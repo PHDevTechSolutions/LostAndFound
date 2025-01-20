@@ -28,7 +28,7 @@ const ListofUser: React.FC = () => {
                             ) : (
                                 <>
                                 <div className="flex justify-between items-center mb-4">
-                                    <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" >Create User</button>
+                                    <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>Create User</button>
                                 </div>
                                 </>
                             )}
