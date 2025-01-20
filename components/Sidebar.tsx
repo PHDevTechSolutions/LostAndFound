@@ -5,6 +5,7 @@ import { PiShippingContainer } from "react-icons/pi";
 import { FaUsersGear } from "react-icons/fa6";
 
 
+
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 
@@ -42,9 +43,9 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
       title: 'Users',
       icon: FaUsersGear  ,
       subItems: [
-        { title: 'List of Users', href: `/Users/ListOfUsers${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+        { title: 'List of Users', href: `/User/ListofUser${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
       ],
-    }
+    },
   ];
 
   return (
