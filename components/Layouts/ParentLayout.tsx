@@ -9,7 +9,7 @@ interface ParentLayoutProps {
 }
 
 const ParentLayout: React.FC<ParentLayoutProps> = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
