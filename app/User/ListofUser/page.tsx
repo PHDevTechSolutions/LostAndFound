@@ -16,7 +16,7 @@ import Pagination from "../../../components/Container/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const ListOfUsers: React.FC = () => {
+const ListofUser: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
@@ -188,4 +188,4 @@ const ListOfUsers: React.FC = () => {
     );
 };
 
-export default ListOfUsers;
+export default ListofUser;
