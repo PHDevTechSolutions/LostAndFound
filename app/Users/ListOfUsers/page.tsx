@@ -1,10 +1,9 @@
 
-import React from "react"; 
-
 const ListOfUsers: React.FC = () => {
     return (
         <>
-        <h1>hello</h1></>
+        <h1>hello</h1>
+        </>
     );
 };
 
