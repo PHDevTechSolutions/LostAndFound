@@ -188,4 +188,4 @@ const ListofUser: React.FC = () => {
     );
 };
 
-export default ListofUsers;
+export default ListofUser;
