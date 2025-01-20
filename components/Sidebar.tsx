@@ -44,7 +44,7 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
       subItems: [
         { title: 'List of Users', href: `/Users/ListOfUsers${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
       ],
-    },
+    }
   ];
 
   return (
