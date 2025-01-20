@@ -13,6 +13,9 @@ const ListofUser: React.FC = () => {
                     {(userName) => (
                         <div className="container mx-auto p-4">
                             <div className="grid grid-cols-1 md:grid-cols-1">
+                                <div className="flex justify-between items-center mb-4">
+                                    <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" ></>
+                                </div>
                             </div>
                         </div>
                     )}
