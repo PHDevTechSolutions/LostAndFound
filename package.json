@@ -29,7 +29,9 @@
     "react-select": "^5.9.0",
     "react-toastify": "^11.0.2",
     "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "@types/draft-js": "^0.11.18",

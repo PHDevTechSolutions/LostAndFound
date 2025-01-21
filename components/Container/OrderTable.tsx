@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
+import { IoPrint } from "react-icons/io5";
+import { FaRegFileExcel } from "react-icons/fa";
+
+import * as XLSX from "xlsx";
+import { BsPlusCircle } from "react-icons/bs"; // For expandable icon
 
 interface TableProps {
   filteredData: any[];
@@ -8,6 +13,7 @@ interface TableProps {
   totalBoxSales: number;
   totalPrice: number;
   totalGrossSales: number;
+  post: { Vendor: string; ContainerNo: string }; // Including ContainerNo in post
 }
 
 const Table: React.FC<TableProps> = ({
@@ -17,58 +23,205 @@ const Table: React.FC<TableProps> = ({
   totalBoxSales,
   totalPrice,
   totalGrossSales,
+  post,
 }) => {
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = () => {
+    if (tableRef.current) {
+      const printContent = `
+        <div>
+          <h2>${post?.Vendor}</h2>
+          <h2>Container Van No.: ${post?.ContainerNo}</h2>
+          ${tableRef.current.innerHTML}
+        </div>
+      `;
+
+      const printWindow = window.open("", "_blank", "width=800,height=600");
+
+      if (printWindow) {
+        printWindow.document.open();
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Print Table</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  margin: 20px;
+                }
+                table {
+                  width: 100%;
+                  border-collapse: collapse;
+                }
+                th, td {
+                  border: 1px solid #ddd;
+                  padding: 8px;
+                  text-align: left;
+                }
+                th {
+                  background-color: #f4f4f4;
+                }
+                h2 {
+                  font-size: 0.75rem;
+                }
+                
+              </style>
+            </head>
+            <body>
+              <div>${printContent}</div>
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.onafterprint = () => printWindow.close();
+      }
+    }
+  };
+
+  const exportToExcel = () => {
+    const vendor = post?.Vendor || "N/A";
+
+    const columns = [
+      "ContainerNo",
+      "Size",
+      "Username",
+      "Location",
+      "DateOrder",
+      "BuyersName",
+      "BoxSales",
+      "Price",
+      "GrossSales",
+      "PlaceSales",
+      "PaymentMode",
+    ];
+
+    const dataToExport = filteredData.map((data) =>
+      columns.reduce((obj, key) => {
+        obj[key] = data[key] || "";
+        return obj;
+      }, {} as Record<string, any>)
+    );
+
+    const ws = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(ws, [[`Vendor: ${vendor}`]], { origin: "A1" });
+    XLSX.utils.sheet_add_json(ws, dataToExport, { origin: "A3", skipHeader: false });
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sales Data");
+    XLSX.writeFile(wb, "JJV-Ventures-System-data.xlsx");
+  };
+
+  const toggleRow = (dataId: string) => {
+    setExpandedRows((prev) => {
+      const newExpandedRows = new Set(prev);
+      if (newExpandedRows.has(dataId)) {
+        newExpandedRows.delete(dataId);
+      } else {
+        newExpandedRows.add(dataId);
+      }
+      return newExpandedRows;
+    });
+  };
+
   return (
-      <table className="min-w-full bg-white border text-xs overflow">
-        <thead>
-          <tr>
-            <th className="w-1/6 text-left border px-4 py-2">Date</th>
-            <th className="w-1/6 text-left border px-4 py-2">Buyer's Name</th>
-            <th className="w-1/6 text-left border px-4 py-2">Box Sales</th>
-            <th className="w-1/6 text-left border px-4 py-2">Price</th>
-            <th className="w-1/6 text-left border px-4 py-2">Gross Sales Per Day</th>
-            <th className="w-1/6 text-left border px-4 py-2">Place of Sales</th>
-            <th className="w-1/6 text-left border px-4 py-2">Mode of Payment</th>
-            <th className="w-1/6 text-left border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((data) => (
-            <tr key={data._id}>
-              <td className="px-4 py-2 border">{data.DateOrder}</td>
-              <td className="px-4 py-2 border">{data.BuyersName}</td>
-              <td className="px-4 py-2 border">{data.BoxSales}</td>
-              <td className="px-4 py-2 border">{data.Price}</td>
-              <td className="px-4 py-2 border">{data.GrossSales}</td>
-              <td className="px-4 py-2 border">{data.PlaceSales}</td>
-              <td className="px-4 py-2 border">{data.PaymentMode}</td>
-              <td className="px-4 py-2 border">
-                <button className="mr-2" onClick={() => handleEdit(data)}>
-                  <MdEdit />
-                </button>
-                <button onClick={() => handleDelete(data._id)}>
-                  <MdDelete />
-                </button>
-              </td>
+    <div>
+      {/* Print Button */}
+      <button onClick={handlePrint} className="text-sm text-white bg-gray-500 hover:bg-blue-900 px-4 py-2 rounded-md mb-2"><IoPrint /></button>
+      {/* Export Button */}
+      <button onClick={exportToExcel} className="text-sm text-white bg-green-600 hover:bg-green-900 px-4 py-2 rounded-md mb-2 ml-2"><FaRegFileExcel /></button>
+      {/* Table Section */}
+      <div ref={tableRef}>
+        <table className="min-w-full bg-white border text-xs">
+          <thead>
+            <tr>
+              <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Date</th>
+              <th className="w-1/6 text-left border px-4 py-2">Buyer's Name</th>
+              <th className="w-1/6 text-left border px-4 py-2">Box Sales</th>
+              <th className="w-1/6 text-left border px-4 py-2">Price</th>
+              <th className="w-1/6 text-left border px-4 py-2">Gross Sales Per Day</th>
+              <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Place of Sales</th>
+              <th className="w-1/6 text-left border px-4 py-2">Mode of Payment</th>
+              <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
             </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={2} className="text-xs font-semibold text-right border px-4 py-2">
-              Total
-            </td>
-            <td className="text-xs font-semibold border px-4 py-2">{totalBoxSales}</td>
-            <td className="text-xs font-semibold border px-4 py-2">
-              ₱{new Intl.NumberFormat("en-PH", { minimumFractionDigits: 2 }).format(totalPrice)}
-            </td>
-            <td className="text-xs font-semibold border px-4 py-2">
-              ₱{new Intl.NumberFormat("en-PH", { minimumFractionDigits: 2 }).format(totalGrossSales)}
-            </td>
-            <td colSpan={3}></td>
-          </tr>
-        </tfoot>
-      </table>
+          </thead>
+          <tbody>
+            {filteredData.map((data) => (
+              <React.Fragment key={data._id}>
+                {/* Expandable Row */}
+                <tr onClick={() => toggleRow(data._id)} className="cursor-pointer">
+                  <td className="px-4 py-2 border hidden md:table-cell">{data.DateOrder}</td>
+                  <td className="px-4 py-2 border">
+                    {data.BuyersName}
+                    <BsPlusCircle className="inline-block mr-2 md:hidden" />
+                  </td>
+                  <td className="px-4 py-2 border">{data.BoxSales}</td>
+                  <td className="px-4 py-2 border">{data.Price}</td>
+                  <td className="px-4 py-2 border">{data.GrossSales}</td>
+                  <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
+                  <td className="px-4 py-2 border">{data.PaymentMode}</td>
+                  <td className="px-4 py-2 border hidden md:table-cell">
+                    <button className="mr-2" onClick={() => handleEdit(data)}>
+                      <MdEdit />
+                    </button>
+                    <button onClick={() => handleDelete(data._id)}>
+                      <MdDelete />
+                    </button>
+                  </td>
+                </tr>
+
+                {/* Expanded Details on Mobile */}
+                {expandedRows.has(data._id) && (
+                  <tr className="md:hidden bg-gray-100">
+                    <td colSpan={7} className="px-4 py-2">
+                      <div><strong>Date:</strong> {data.DateOrder}</div>
+                      <div><strong>Buyer's Name:</strong> {data.BuyersName}</div>
+                      <div><strong>Box Sales:</strong> {data.BoxSales}</div>
+                      <div><strong>Price:</strong> {data.Price}</div>
+                      <div><strong>Gross Sales:</strong> {data.GrossSales}</div>
+                      <div><strong>Place of Sales:</strong> {data.PlaceSales}</div>
+                      <div><strong>Mode of Payment:</strong> {data.PaymentMode}</div>
+                      <div className="mt-2">
+                        <button
+                          onClick={() => handleEdit(data)}
+                          className="bg-blue-500 text-white px-2 py-1 rounded text-xs"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(data._id)}
+                          className="bg-red-500 text-white px-2 py-1 rounded text-xs"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={2} className="text-xs font-semibold text-right border px-4 py-2">
+                Total
+              </td>
+              <td className="text-xs font-semibold border px-4 py-2">{totalBoxSales}</td>
+              <td className="text-xs font-semibold border px-4 py-2">
+                ₱{new Intl.NumberFormat("en-PH", { minimumFractionDigits: 2 }).format(totalPrice)}
+              </td>
+              <td className="text-xs font-semibold border px-4 py-2">
+                ₱{new Intl.NumberFormat("en-PH", { minimumFractionDigits: 2 }).format(totalGrossSales)}
+              </td>
+
+            </tr>
+          </tfoot>
+        </table>
+
+      </div>
+    </div>
   );
 };
 

@@ -278,7 +278,9 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         totalBoxSales={totalBoxSales}
                         totalPrice={totalPrice}
                         totalGrossSales={totalGrossSales}
+                        post={post} // Pass the post prop here
                     />
+
                 </div>
             </div>
         </div>
