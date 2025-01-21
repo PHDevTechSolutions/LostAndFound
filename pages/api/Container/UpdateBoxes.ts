@@ -4,9 +4,9 @@ import { ObjectId } from 'mongodb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'PUT') {
-        const { id, Beginning } = req.body;
+        const { id, Boxes } = req.body;
 
-        if (!id || typeof Beginning !== 'number') {
+        if (!id || typeof Boxes !== 'number') {
             return res.status(400).json({ error: 'Invalid data' });
         }
 
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             const result = await collection.updateOne(
                 { _id: objectId },
-                { $set: { Beginning } }
+                { $set: { Boxes } }
             );
 
             if (result.modifiedCount === 0) {

@@ -5,8 +5,8 @@ import React from "react";
 interface OrderFormFieldsProps {
     ContainerNo: string;
     setContainerNo: React.Dispatch<React.SetStateAction<string>>;
-    BoxType: string;
-    setBoxType: React.Dispatch<React.SetStateAction<string>>;
+    Size: string;
+    setSize: React.Dispatch<React.SetStateAction<string>>;
     Username: string;
     setUsername: React.Dispatch<React.SetStateAction<string>>;
     Location: string;
@@ -21,8 +21,8 @@ interface OrderFormFieldsProps {
     Price: string;
     setPrice: React.Dispatch<React.SetStateAction<string>>;
     handlePriceChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    Beginning: string;
-    setBeginning: React.Dispatch<React.SetStateAction<string>>;
+    Boxes: string;
+    setBoxes: React.Dispatch<React.SetStateAction<string>>;
     GrossSales: string;
     setGrossSales: React.Dispatch<React.SetStateAction<string>>;
     PlaceSales: string;
@@ -32,52 +32,33 @@ interface OrderFormFieldsProps {
     editData: any;
     onCancel: () => void;
     handleSubmit: (e: React.FormEvent) => void;
-    resetForm: () => void;
 }
 
 const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
-    ContainerNo,
-    setContainerNo,
-    BoxType,
-    setBoxType,
-    Username,
-    setUsername,
-    Location,
-    setLocation,
-    DateOrder,
-    setDateOrder,
-    BuyersName,
-    setBuyersName,
-    BoxSales,
-    setBoxSales,
-    handleBoxSalesChange,
-    Price,
-    setPrice,
-    handlePriceChange,
-    Beginning,
-    setBeginning,
-    GrossSales,
-    setGrossSales,
-    PlaceSales,
-    setPlaceSales,
-    PaymentMode,
-    setPaymentMode,
-    editData,
-    onCancel,
-    handleSubmit,
-    resetForm
+    ContainerNo, setContainerNo, Size, setSize,
+    Username, setUsername, Location, setLocation,
+    DateOrder, setDateOrder, BuyersName, setBuyersName,
+    BoxSales, setBoxSales, handleBoxSalesChange, Price, setPrice,
+    handlePriceChange, Boxes, setBoxes, GrossSales, setGrossSales, 
+    PlaceSales, setPlaceSales, PaymentMode, setPaymentMode,
+    editData, onCancel, handleSubmit,
 }) => {
+
+    const handleReset = () => {
+        setLocation("");
+        setDateOrder("");
+        setBuyersName("");
+        setBoxSales("");
+        setPrice("");
+        setGrossSales("");
+        setPlaceSales("");
+        setPaymentMode("");
+    };
+
     return (
         <form onSubmit={handleSubmit}>
-            <input id="containerNo" type="hidden" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4" placeholder="Enter Container No." />
-            <div className="mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="BoxType">Box Type</label>
-                <select id="BoxType" value={BoxType} onChange={(e) => setBoxType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
-                    <option value="">Select Box</option>
-                    <option value="Brown Box">Brown Box</option>
-                    <option value="White Box">White Box</option>
-                </select>
-            </div>
+            <input id="containerNo" type="hidden" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
+            <input id="Size" type="hidden" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
             <div className="mb-4">
                 <input type="hidden" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             </div>
@@ -108,11 +89,11 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining Boxes</label>
-                <input type="number" id="Remaining" value={Beginning} onChange={(e) => setBeginning(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                <input type="number" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>
-                <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
@@ -129,8 +110,8 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             <div className="flex justify-between">
                 <button type="button" onClick={onCancel} className="text-xs text-white bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md">Cancel</button>
                 <div className="flex gap-2">
+                    <button type="button" onClick={handleReset} className="text-xs text-white bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-md">Reset</button>
                     <button type="submit" className="text-xs text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">{editData ? "Update" : "Save"}</button>
-                    <button type="button" onClick={resetForm} className="text-xs text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md">Reset</button>
                 </div>
             </div>
         </form>

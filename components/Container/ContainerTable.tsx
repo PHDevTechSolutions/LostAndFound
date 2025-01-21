@@ -73,7 +73,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                   <td className="px-4 py-2 border hidden md:table-cell">{post.DateSoldout}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">{post.SupplierName}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">{post.ContainerNo}</td>
-                  <td className="px-4 py-2 border hidden md:table-cell">{post.Beginning}</td>
+                  <td className="px-4 py-2 border hidden md:table-cell">{post.Boxes}</td>
                   <td className="px-4 py-2 border hidden md:table-cell">
                     <Menu as="div" className="relative inline-block text-left">
                       <div>

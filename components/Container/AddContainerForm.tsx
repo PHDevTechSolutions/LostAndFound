@@ -20,10 +20,12 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [SupplierName, setSupplierName] = useState(editData ? editData.SupplierName: "");
   const [ContainerNo, setContainerNo] = useState(editData ? editData.ContainerNo: "");
   const [Country, setCountry] = useState(editData ? editData.Country: "");
-  const [Beginning, setBeginning] = useState(editData ? editData.Beginning: "");
+  const [Boxes, setBoxes] = useState(editData ? editData.Boxes: "");
   const [Commodity, setCommodity] = useState(editData ? editData.Commodity: "");
   const [Size, setSize] = useState(editData ? editData.Size: "");
   const [Freezing, setFreezing] = useState(editData ? editData.Freezing: "");
+  const [Status, setStatus] = useState(editData ? editData.Status: "");
+  const [BoxType, setBoxType] = useState(editData ? editData.BoxType: "");
   const [Remarks, setRemarks] = useState(editData ? editData.Remarks: "");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +40,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Beginning, Commodity, Size, Freezing, Remarks,
+        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, Commodity, Size, Freezing, Status, BoxType, Remarks,
         id: editData ? editData._id : undefined, // Send post ID if editing
       }),
     });
@@ -70,10 +72,12 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           SupplierName={SupplierName} setSupplierName={setSupplierName}
           ContainerNo={ContainerNo} setContainerNo={setContainerNo}
           setCountry={setCountry} Country={Country}
-          setBeginning={setBeginning} Beginning={Beginning}
+          setBoxes={setBoxes} Boxes={Boxes}
           setCommodity={setCommodity} Commodity={Commodity}
           setSize={setSize} Size={Size}
           setFreezing={setFreezing} Freezing={Freezing}
+          setStatus={setStatus} Status={Status}
+          setBoxType={setBoxType} BoxType={BoxType}
           setRemarks={setRemarks} Remarks={Remarks}
           editData={editData}
         />

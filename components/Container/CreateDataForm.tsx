@@ -13,22 +13,70 @@ interface CreateDataFormProps {
 
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
+    const [Size, setSize] = useState(post?.Size || "");
     const [Username, setUsername] = useState("");
     const [Location, setLocation] = useState("");
-    const [BoxType, setBoxType] = useState("");
     const [DateOrder, setDateOrder] = useState("");
     const [BuyersName, setBuyersName] = useState("");
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
-    const [Remaining, setRemaining] = useState("");
-    const [Beginning, setBeginning] = useState(post?.Beginning || "");
-    const [OriginalBeginning, setOriginalBeginning] = useState(post?.Beginning || "");
+    const [Boxes, setBoxes] = useState(post?.Boxes || "");
+    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || "");
     const [GrossSales, setGrossSales] = useState("");
     const [PlaceSales, setPlaceSales] = useState("");
     const [PaymentMode, setPaymentMode] = useState("");
     const [editData, setEditData] = useState<any>(null);
     const [tableData, setTableData] = useState<any[]>([]);
-    const [activeTab, setActiveTab] = useState("White Box");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!ContainerNo) {
+            toast.error("Container No is required", { autoClose: 1000 });
+            return;
+        }
+
+        const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
+        const method = editData ? "PUT" : "POST";
+        const remainingBoxes = parseInt(Boxes) || 0;
+
+        const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ContainerNo,
+                Size,
+                Username,
+                Location,
+                DateOrder,
+                BuyersName,
+                BoxSales,
+                Price,
+                Boxes: remainingBoxes,
+                GrossSales,
+                PlaceSales,
+                PaymentMode,
+                id: editData ? editData._id : undefined,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            toast.success(editData ? "Data updated successfully" : "Data added successfully", {
+                autoClose: 1000,
+                onClose: () => {
+                    updateBoxesInDatabase(post._id, remainingBoxes);
+                    handleReset();
+                },
+            });
+        } else {
+            if (data.message === "Duplicate entry with the same data.") {
+                toast.error("Duplicate entry with the same data.", { autoClose: 1000 });
+            } else {
+                toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
+            }
+        }
+    };
 
     useEffect(() => {
         fetchUsername();
@@ -59,56 +107,23 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     const fetchUpdatedData = async () => {
-        const response = await fetch(`/api/Container/GetAllContainer?id=${post._id}`);
+        const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
         const data = await response.json();
-        setBeginning(data.Beginning);
-        setOriginalBeginning(data.Beginning); // Update original boxes with latest value
+        setBoxes(data.Boxes);
+        setOriginalBoxes(data.Boxes);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!ContainerNo) {
-            toast.error("Container No is required", { autoClose: 1000 });
-            return;
-        }
-
-        const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
-        const method = editData ? "PUT" : "POST";
-        const remainingBeginning = parseInt(Beginning) || 0;
-
-        const response = await fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ContainerNo, Username, Location, BoxType, DateOrder, BuyersName, BoxSales, Price, Remaining, Beginning: remainingBeginning,
-                GrossSales, PlaceSales, PaymentMode, id: editData ? editData._id : undefined,
-            }),
-        });
-
-        if (response.ok) {
-            toast.success(editData ? "Data updated successfully" : "Data added successfully", {
-                autoClose: 1000,
-                onClose: () => {
-                    // Update boxes in the database
-                    updateBeginningInDatabase(post._id, remainingBeginning);
-                },
-            });
-        } else {
-            toast.error(editData ? "Failed to update data" : "Failed to add data", { autoClose: 1000 });
-        }
-    };
-
-    const updateBeginningInDatabase = async (id: string, remainingBeginning: number) => {
+    const updateBoxesInDatabase = async (id: string, remainingBoxes: number) => {
         try {
             const response = await fetch('/api/Container/UpdateBoxes', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, Beginning: remainingBeginning }),
+                body: JSON.stringify({ id, Boxes: remainingBoxes }),
             });
 
             if (response.ok) {
                 toast.success('Boxes updated in database', { autoClose: 1000 });
-                fetchData(); // Refresh data after updating boxes
+                fetchData();
             } else {
                 toast.error('Failed to update boxes in database', { autoClose: 1000 });
             }
@@ -138,45 +153,63 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         }
     };
 
-    const resetForm = () => {
-        setContainerNo(post?.ContainerNo || ""); setUsername(""); setLocation(""); setBoxType(""); setDateOrder(""); setBuyersName(""); setBoxSales("");
-        setPrice(""); setRemaining(""); setGrossSales(""); setPlaceSales(""); setPaymentMode(""); setEditData(null);
+    const handleReset = () => {
+        setLocation("");
+        setDateOrder("");
+        setBuyersName("");
+        setBoxSales("");
+        setPrice("");
+        setGrossSales("");
+        setPlaceSales("");
+        setPaymentMode("");
+        setEditData(null);
     };
 
     const handleEdit = (data: any) => {
         const originalBoxSales = parseInt(BoxSales) || 0;
         const newBoxSales = parseInt(data.BoxSales) || 0;
 
-        let updatedBeginning = parseInt(OriginalBeginning) || 0;
+        let updatedBoxes = parseInt(OriginalBoxes) || 0;
 
         if (newBoxSales < originalBoxSales) {
-            updatedBeginning += originalBoxSales - newBoxSales;
+            updatedBoxes += originalBoxSales - newBoxSales;
         } else if (newBoxSales > originalBoxSales) {
-            updatedBeginning -= newBoxSales - originalBoxSales;
+            updatedBoxes -= newBoxSales - originalBoxSales;
         }
 
-        setContainerNo(data.ContainerNo); setUsername(data.Username); setLocation(data.Location); setBoxType(data.BoxType); setDateOrder(data.DateOrder); setBuyersName(data.BuyersName);
-        setBoxSales(data.BoxSales); setPrice(data.Price); setRemaining(data.Remaining); setBeginning(updatedBeginning.toString()); setOriginalBeginning(updatedBeginning.toString());
-        setGrossSales(data.GrossSales); setPlaceSales(data.PlaceSales); setPaymentMode(data.PaymentMode); setEditData(data);
+        setContainerNo(data.ContainerNo);
+        setSize(data.Size);
+        setUsername(data.Username);
+        setLocation(data.Location);
+        setDateOrder(data.DateOrder);
+        setBuyersName(data.BuyersName);
+        setBoxSales(data.BoxSales);
+        setPrice(data.Price);
+        setBoxes(updatedBoxes.toString());
+        setOriginalBoxes(updatedBoxes.toString());
+        setGrossSales(data.GrossSales);
+        setPlaceSales(data.PlaceSales);
+        setPaymentMode(data.PaymentMode);
+        setEditData(data);
     };
 
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
         const price = parseFloat(Price) || 0;
-        const currentBoxes = parseInt(OriginalBeginning) || 0; // Use original boxes for calculation
+        const currentBoxes = parseInt(OriginalBoxes) || 0; // Use original boxes for calculation
 
         if (sales > currentBoxes) {
             toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
             setBoxSales("");
             setGrossSales("");
-            setBeginning(OriginalBeginning); // Reset boxes to original if error
+            setBoxes(OriginalBoxes); // Reset boxes to original if error
             return;
         }
 
         const remainingBoxes = currentBoxes - sales;
         setBoxSales(sales.toString());
         setGrossSales((sales * price).toString());
-        setBeginning(remainingBoxes.toString());
+        setBoxes(remainingBoxes.toString());
     };
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,7 +220,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setGrossSales((sales * price).toString());
     };
 
-    const filteredData = tableData.filter((data) => data.BoxType === activeTab);
+    const filteredData = tableData.filter((data) => data.Size === Size); // Filter by Size
 
     const calculateTotals = () => {
         let totalBoxSales = 0;
@@ -199,69 +232,44 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             totalPrice += parseFloat(data.Price) || 0;
             totalGrossSales += parseFloat(data.GrossSales) || 0;
         });
+
         return { totalBoxSales, totalPrice, totalGrossSales };
     };
 
     const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
-    return (
 
+    return (
         <div className="container mx-auto p-4">
             <ToastContainer className="text-xs" />
-            <div className="flex flex-col items-start gap-2">
-                <h2 className="text-xs font-semibold text-gray-700">
-                    {post?.Vendor}
-                </h2>
-                <h2 className="text-xs font-semibold text-gray-700 mb-6">
-                    Container Van No. {post?.ContainerNo}
-                </h2>
-            </div>
-
             <div className="flex flex-wrap gap-4">
                 {/* Form Section */}
                 <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[20%]">
                     <OrderFormFields
-                        ContainerNo={ContainerNo}
-                        setContainerNo={setContainerNo}
-                        BoxType={BoxType}
-                        setBoxType={setBoxType}
-                        Username={Username}
-                        setUsername={setUsername}
-                        Location={Location}
-                        setLocation={setLocation}
-                        DateOrder={DateOrder}
-                        setDateOrder={setDateOrder}
-                        BuyersName={BuyersName}
-                        setBuyersName={setBuyersName}
-                        BoxSales={BoxSales}
-                        setBoxSales={setBoxSales}
-                        handleBoxSalesChange={handleBoxSalesChange}
-                        Price={Price}
-                        setPrice={setPrice}
-                        handlePriceChange={handlePriceChange}
-                        Beginning={Beginning}
-                        setBeginning={setBeginning}
-                        GrossSales={GrossSales}
-                        setGrossSales={setGrossSales}
-                        PlaceSales={PlaceSales}
-                        setPlaceSales={setPlaceSales}
-                        PaymentMode={PaymentMode}
-                        setPaymentMode={setPaymentMode}
-                        editData={editData}
-                        onCancel={onCancel}
-                        handleSubmit={handleSubmit}
-                        resetForm={resetForm}
+                        ContainerNo={ContainerNo} setContainerNo={setContainerNo}
+                        Size={Size} setSize={setSize}
+                        Username={Username} setUsername={setUsername}
+                        Location={Location} setLocation={setLocation} DateOrder={DateOrder}
+                        setDateOrder={setDateOrder} BuyersName={BuyersName} setBuyersName={setBuyersName}
+                        BoxSales={BoxSales} setBoxSales={setBoxSales} handleBoxSalesChange={handleBoxSalesChange}
+                        Price={Price} setPrice={setPrice} handlePriceChange={handlePriceChange}
+                        Boxes={Boxes} setBoxes={setBoxes} GrossSales={GrossSales}
+                        setGrossSales={setGrossSales} PlaceSales={PlaceSales} setPlaceSales={setPlaceSales}
+                        PaymentMode={PaymentMode} setPaymentMode={setPaymentMode} editData={editData}
+                        onCancel={onCancel} handleSubmit={handleSubmit}
                     />
-
                 </div>
 
-                {/* Tabbed Table Section */}
+                {/* Table Section */}
                 <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[70%]">
-                    {/* Tab Buttons */}
-                    <div className="flex border-b mb-4 text-xs">
-                        <button className={`px-4 py-2 ${activeTab === "White Box" ? "border-b-2 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("White Box")}>White Box</button>
-                        <button className={`px-4 py-2 ${activeTab === "Brown Box" ? "border-b-2 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("Brown Box")}>Brown Box</button>
+                    <div className="flex flex-col items-start gap-2">
+                        <h2 className="text-xs font-semibold text-gray-700">{post?.Vendor}</h2>
+                        <h2 className="text-xs font-semibold text-gray-700 mb-6">
+                            Container Van No. {post?.ContainerNo}
+                        </h2>
                     </div>
-
+                    <div className="flex mb-4 text-xs font-bold">
+                        <h3>Size: {Size}</h3>
+                    </div>
                     {/* Table */}
                     <Table
                         filteredData={filteredData}
@@ -271,7 +279,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         totalPrice={totalPrice}
                         totalGrossSales={totalGrossSales}
                     />
-                    <ToastContainer className="text-xs" />
                 </div>
             </div>
         </div>
