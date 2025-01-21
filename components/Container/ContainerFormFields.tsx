@@ -32,21 +32,21 @@ interface FormFieldsProps {
   editData?: any;
 }
 
-const ContainerFormFields: React.FC<FormFieldsProps> = ({ 
-  Vendor, setVendor, 
-  SpsicNo, setSpsicNo, 
-  DateArrived, setDateArrived, 
-  DateSoldout, setDateSoldout, 
-  SupplierName, setSupplierName, 
-  ContainerNo, setContainerNo, 
-  Country, setCountry, 
-  Boxes, setBoxes, 
-  Commodity, setCommodity, 
-  Size, setSize, 
-  Freezing, setFreezing, 
+const ContainerFormFields: React.FC<FormFieldsProps> = ({
+  Vendor, setVendor,
+  SpsicNo, setSpsicNo,
+  DateArrived, setDateArrived,
+  DateSoldout, setDateSoldout,
+  SupplierName, setSupplierName,
+  ContainerNo, setContainerNo,
+  Country, setCountry,
+  Boxes, setBoxes,
+  Commodity, setCommodity,
+  Size, setSize,
+  Freezing, setFreezing,
   BoxType, setBoxType,
-  Status, setStatus, 
-  Remarks, setRemarks, 
+  Status, setStatus,
+  Remarks, setRemarks,
   editData
 }) => {
 
@@ -95,8 +95,21 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
           </select>
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <label className="block text-xs font-bold mb-2" htmlFor="Boxes">Beginning</label>
-          <input type="number" id="number" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Boxes</label>
+          <select id="BoxType" value={BoxType} onChange={(e) => setBoxType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+            <option value="">Select Boxes</option>
+            <option value="7 Star White">7 Star White</option>
+            <option value="Brown Box">Brown Box</option>
+            <option value="Brown Box 2L">Brown Box 2L</option>
+            <option value="Brown Box Lapad">Brown Box Lapad</option>
+            <option value="Top Frozen Brown">Top Frozen Brown</option>
+            <option value="Wax 13.5 Kgs">Wax 13.5 Kgs</option>
+            <option value="Wax 13 to 13.5kls">Wax 13 to 13.5kls</option>
+            <option value="White Box Ocean Tres">White Box Ocean Tres</option>
+            <option value="White Box">White Box</option>
+            <option value="White Box 2L">White Box 2L</option>
+            <option value="White Box Lapad">White Box Lapad</option>
+          </select>
         </div>
       </div>
 
@@ -123,7 +136,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Freezing</label>
+          <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Type of Freezing</label>
           <select id="Freezing" value={Freezing} onChange={(e) => setFreezing(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Freezing</option>
             <option value="BQF">BQF</option>
@@ -132,31 +145,18 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
         </div>
 
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="Boxes">Beginning</label>
+          <input type="number" id="number" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap -mx-4">
+        <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Status</label>
           <select id="Status" value={Status} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Status</option>
             <option value="Inventory">Inventory</option>
             <option value="Soldout">Soldout</option>
-          </select>
-        </div>
-      </div>
-      
-      <div className="flex flex-wrap -mx-4">
-      <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Boxes</label>
-          <select id="BoxType" value={BoxType} onChange={(e) => setBoxType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
-            <option value="">Select Boxes</option>
-            <option value="7 Star White">7 Star White</option>
-            <option value="Brown Box">Brown Box</option>
-            <option value="Brown Box 2L">Brown Box 2L</option>
-            <option value="Brown Box Lapad">Brown Box Lapad</option>
-            <option value="Top Frozen Brown">Top Frozen Brown</option>
-            <option value="Wax 13.5 Kgs">Wax 13.5 Kgs</option>
-            <option value="Wax 13 to 13.5kls">Wax 13 to 13.5kls</option>
-            <option value="White Box Ocean Tres">White Box Ocean Tres</option>
-            <option value="White Box">White Box</option>
-            <option value="White Box 2L">White Box 2L</option>
-            <option value="White Box Lapad">White Box Lapad</option>
           </select>
         </div>
 
