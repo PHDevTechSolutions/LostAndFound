@@ -238,6 +238,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
 
+    
+
     return (
         <div className="container mx-auto p-4">
             <ToastContainer className="text-xs" />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 interface FormFieldsProps {
   Vendor: string;
@@ -15,8 +15,10 @@ interface FormFieldsProps {
   setContainerNo: (value: string) => void;
   Country: string;
   setCountry: (value: string) => void;
-  Boxes: string;
-  setBoxes: (value: string) => void;
+  Boxes: number;
+  setBoxes: (value: number) => void;
+  TotalQuantity: number;
+  setTotalQuantity: (value: number) => void;
   Commodity: string;
   setCommodity: (value: string) => void;
   Size: string;
@@ -33,70 +35,107 @@ interface FormFieldsProps {
 }
 
 const ContainerFormFields: React.FC<FormFieldsProps> = ({
-  Vendor, setVendor,
-  SpsicNo, setSpsicNo,
-  DateArrived, setDateArrived,
-  DateSoldout, setDateSoldout,
-  SupplierName, setSupplierName,
-  ContainerNo, setContainerNo,
-  Country, setCountry,
-  Boxes, setBoxes,
-  Commodity, setCommodity,
-  Size, setSize,
-  Freezing, setFreezing,
-  BoxType, setBoxType,
-  Status, setStatus,
-  Remarks, setRemarks,
-  editData
+  Vendor,
+  setVendor,
+  SpsicNo,
+  setSpsicNo,
+  DateArrived,
+  setDateArrived,
+  DateSoldout,
+  setDateSoldout,
+  SupplierName,
+  setSupplierName,
+  ContainerNo,
+  setContainerNo,
+  Country,
+  setCountry,
+  Boxes,
+  setBoxes,
+  TotalQuantity,
+  setTotalQuantity,
+  Commodity,
+  setCommodity,
+  Size,
+  setSize,
+  Freezing,
+  setFreezing,
+  BoxType,
+  setBoxType,
+  Status,
+  setStatus,
+  Remarks,
+  setRemarks,
+  editData,
 }) => {
+  
+  const totalQuantityValue = TotalQuantity ?? 0; 
+  const boxesValue = Boxes ?? 0;
+
+  useEffect(() => {
+    if (totalQuantityValue !== boxesValue) {
+      setBoxes(totalQuantityValue); 
+    }
+  }, [totalQuantityValue, setBoxes, boxesValue]);
+
+  const handleTotalQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setTotalQuantity(value); 
+    setBoxes(value);
+  };
+
+  const handleBoxesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value); 
+    setBoxes(value);
+    setTotalQuantity(value); 
+  };
 
   return (
     <>
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Vendor">Vendor</label>
-          <input type="text" id="Vendor" value={Vendor} onChange={(e) => setVendor(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+          <input type="text" id="Vendor" value={Vendor || ""} onChange={(e) => setVendor(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="SPSIC No">SPSIC No.</label>
-          <input type="text" id="SpsicNo" value={SpsicNo} onChange={(e) => setSpsicNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
+          <input type="text" id="SpsicNo" value={SpsicNo || ""} onChange={(e) => setSpsicNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
         </div>
       </div>
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Date Arrived">Date Arrived</label>
-          <input type="date" id="DateArrived" value={DateArrived} onChange={(e) => setDateArrived(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="date" id="DateArrived" value={DateArrived || ""} onChange={(e) => setDateArrived(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Date Soldout">Date Soldout</label>
-          <input type="date" id="DateSoldout" value={DateSoldout} onChange={(e) => setDateSoldout(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="date" id="DateSoldout" value={DateSoldout || ""} onChange={(e) => setDateSoldout(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
       </div>
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Supplier Name">Supplier</label>
-          <input type="text" id="SupplierName" value={SupplierName} onChange={(e) => setSupplierName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
+          <input type="text" id="SupplierName" value={SupplierName || ""} onChange={(e) => setSupplierName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Container No">Container No.</label>
-          <input type="text" id="ContainerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" />
+          <input type="text" id="ContainerNo" value={ContainerNo || ""} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" />
         </div>
       </div>
-
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Country">Country</label>
-          <select id="Country" value={Country} onChange={(e) => setCountry(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
+          <select id="Country" value={Country || ""} onChange={(e) => setCountry(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
             <option value="China">China</option>
             <option value="Vietnam">Vietnam</option>
           </select>
         </div>
+
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Boxes</label>
-          <select id="BoxType" value={BoxType} onChange={(e) => setBoxType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+          <select id="BoxType" value={BoxType || ""} onChange={(e) => setBoxType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Boxes</option>
             <option value="7 Star White">7 Star White</option>
             <option value="Brown Box">Brown Box</option>
@@ -116,7 +155,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Commodity">Commodity</label>
-          <select id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+          <select id="Commodity" value={Commodity || ""} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Commodity</option>
             <option value="Chabeta">Chabeta</option>
             <option value="Galunggong (Female)">Galunggong (Female)</option>
@@ -130,14 +169,14 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Size">Size</label>
-          <input type="text" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="text" id="Size" value={Size || ""} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
       </div>
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Type of Freezing</label>
-          <select id="Freezing" value={Freezing} onChange={(e) => setFreezing(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+          <select id="Freezing" value={Freezing || ""} onChange={(e) => setFreezing(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Freezing</option>
             <option value="BQF">BQF</option>
             <option value="IQF">IQF</option>
@@ -145,15 +184,16 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
         </div>
 
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <label className="block text-xs font-bold mb-2" htmlFor="Boxes">Beginning</label>
-          <input type="number" id="number" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <label className="block text-xs font-bold mb-2" htmlFor="TotalQuantity">Beginning</label>
+          <input type="text" id="TotalQuantity" value={totalQuantityValue} onChange={handleTotalQuantityChange} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="hidden" id="Boxes" value={boxesValue} onChange={handleBoxesChange} className="w-full px-3 py-2 border rounded text-xs" disabled />
         </div>
       </div>
 
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Status</label>
-          <select id="Status" value={Status} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+          <label className="block text-xs font-bold mb-2" htmlFor="Status">Status</label>
+          <select id="Status" value={Status || ""} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Status</option>
             <option value="Inventory">Inventory</option>
             <option value="Soldout">Soldout</option>
@@ -162,7 +202,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
 
         <div className="w-full sm:w-1/1 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Remarks">Remarks</label>
-          <textarea id="Remarks" value={Remarks} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" rows={2}></textarea>
+          <textarea id="Remarks" value={Remarks || ""} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" rows={2}></textarea>
         </div>
       </div>
     </>
