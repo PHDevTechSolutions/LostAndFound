@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState, useCallback, useMemo } from "react";
@@ -69,6 +70,7 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
             <td className="px-4 py-2 border hidden md:table-cell">{post.TotalQuantity}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{salesBox}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{post.Boxes}</td>
+            <td className="px-4 py-2 border hidden md:table-cell">{post.GrossSales}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{post.Status}</td>
             <td className="px-4 py-2 border hidden md:table-cell">
               <Menu as="div" className="relative inline-block text-left">
@@ -186,6 +188,7 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Beginning</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Sales Box</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Remaining</th>
+            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Total Gross Sales</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Status</th>
             <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
           </tr>

@@ -19,6 +19,10 @@ interface FormFieldsProps {
   setBoxes: (value: number) => void;
   TotalQuantity: number;
   setTotalQuantity: (value: number) => void;
+
+  GrossSales: string;
+  setGrossSales: (value: string) => void;
+
   Commodity: string;
   setCommodity: (value: string) => void;
   Size: string;
@@ -53,6 +57,10 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
   setBoxes,
   TotalQuantity,
   setTotalQuantity,
+
+  GrossSales,
+  setGrossSales,
+
   Commodity,
   setCommodity,
   Size,
@@ -187,6 +195,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
           <label className="block text-xs font-bold mb-2" htmlFor="TotalQuantity">Beginning</label>
           <input type="text" id="TotalQuantity" value={totalQuantityValue} onChange={handleTotalQuantityChange} className="w-full px-3 py-2 border rounded text-xs" />
           <input type="hidden" id="Boxes" value={boxesValue} onChange={handleBoxesChange} className="w-full px-3 py-2 border rounded text-xs" disabled />
+          <input type="hidden" id="GrossSales" value={GrossSales || ""} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
       </div>
 
