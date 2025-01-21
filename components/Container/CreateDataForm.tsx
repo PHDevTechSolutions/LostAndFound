@@ -268,6 +268,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         <h2 className="text-xs font-semibold text-gray-700 mb-6">
                             Container Van No. {post?.ContainerNo}
                         </h2>
+<h2>{post?.BoxType}</h2>
                     </div>
                     <div className="flex mb-4 text-xs font-bold">
                         <h3>Size: {Size}</h3>
