@@ -26,12 +26,16 @@ const UserFields: React.FC<UserFieldsProps> = ({ Firstname, setFirstname, Lastna
                 <label className="block text-xs font-bold mb-2" htmlFor="Firstname">Firstname</label>
                 <input type="text" id="Firstname" value={Firstname} onChange={(e) => setFirstname(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
             </div> 
-        </div> 
-
-        <div className="flex flex-wrap -mx-4">
             <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="Lastname">Lastname</label>
                 <input type="text" id="Lastname" value={Lastname} onChange={(e) => setLastname(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
+            </div> 
+        </div> 
+
+        <div className="flex flex-wrap -mx-4">
+        <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                 <label className="block text-xs font-bold mb-2" htmlFor="Email">Email</label>
+                <input type="text" id="Email" value={Email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
             </div> 
         </div> 
         
