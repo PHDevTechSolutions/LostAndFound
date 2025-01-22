@@ -53,6 +53,7 @@ const UserFields: React.FC<UserFieldsProps> = ({ Firstname, setFirstname, Lastna
             <label className="block text-xs font-bold mb-2" htmlFor="Role">Role</label>
             <select id="Role" value={Role || ""} onChange={(e) => setRole(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
             <option value="Admin">Admin</option>
+            <option value="Staff">Staff</option>
           </select>
         </div> 
         </>
