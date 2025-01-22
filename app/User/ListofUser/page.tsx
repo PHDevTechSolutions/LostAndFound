@@ -34,11 +34,9 @@ const ListofUser: React.FC = () => {
 
     const filteredAccounts = posts.filter((post) => {
         return (
-            (post.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                post.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                post.contactNumber.includes(searchTerm)) &&
-            (selectedCityAddress ? post.cityAddress.includes(selectedCityAddress) : true)
-        );
+            (post.UserName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.Email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.contactNumber.includes(searchTerm))
     });
 
     // Pagination logic
