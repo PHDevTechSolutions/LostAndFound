@@ -20,8 +20,8 @@ interface FormFieldsProps {
   TotalQuantity: number;
   setTotalQuantity: (value: number) => void;
 
-  GrossSales: string;
-  setGrossSales: (value: string) => void;
+  TotalGrossSales: string;
+  setTotalGrossSales: (value: string) => void;
 
   Commodity: string;
   setCommodity: (value: string) => void;
@@ -58,8 +58,8 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
   TotalQuantity,
   setTotalQuantity,
 
-  GrossSales,
-  setGrossSales,
+  TotalGrossSales,
+  setTotalGrossSales,
 
   Commodity,
   setCommodity,
@@ -195,7 +195,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
           <label className="block text-xs font-bold mb-2" htmlFor="TotalQuantity">Beginning</label>
           <input type="text" id="TotalQuantity" value={totalQuantityValue} onChange={handleTotalQuantityChange} className="w-full px-3 py-2 border rounded text-xs" />
           <input type="hidden" id="Boxes" value={boxesValue} onChange={handleBoxesChange} className="w-full px-3 py-2 border rounded text-xs" disabled />
-          <input type="hidden" id="GrossSales" value={GrossSales || ""} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="hidden" id="TotalGrossSales" value={TotalGrossSales || ""} onChange={(e) => setTotalGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
       </div>
 

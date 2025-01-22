@@ -23,7 +23,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [Boxes, setBoxes] = useState(editData ? editData.Boxes: "");
   const [TotalQuantity, setTotalQuantity] = useState(editData ? editData.TotalQuantity: "");
 
-  const [GrossSales, setGrossSales] = useState(editData ? editData.GrossSales: "");
+  const [TotalGrossSales, setTotalGrossSales] = useState(editData ? editData.TotalGrossSales: "");
   
   const [Commodity, setCommodity] = useState(editData ? editData.Commodity: "");
   const [Size, setSize] = useState(editData ? editData.Size: "");
@@ -44,7 +44,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, GrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
+        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
         id: editData ? editData._id : undefined, // Send post ID if editing
       }),
     });
@@ -78,7 +78,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           setCountry={setCountry} Country={Country}
           setTotalQuantity={setTotalQuantity} TotalQuantity={TotalQuantity}
 
-          setGrossSales={setGrossSales} GrossSales={GrossSales}
+          setTotalGrossSales={setTotalGrossSales} TotalGrossSales={TotalGrossSales}
 
           setBoxes={setBoxes} Boxes={Boxes}
           setCommodity={setCommodity} Commodity={Commodity}

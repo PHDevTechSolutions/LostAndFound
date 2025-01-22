@@ -70,7 +70,6 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
             <td className="px-4 py-2 border hidden md:table-cell">{post.TotalQuantity}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{salesBox}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{post.Boxes}</td>
-            <td className="px-4 py-2 border hidden md:table-cell">{post.GrossSales}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{post.Status}</td>
             <td className="px-4 py-2 border hidden md:table-cell">
               <Menu as="div" className="relative inline-block text-left">
@@ -180,23 +179,22 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
       <table className="min-w-full bg-white border text-xs">
         <thead>
           <tr>
-            <th className="w-1/6 text-left border px-4 py-2">SPSIC No.</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Date Arrived</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Date Soldout</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Supplier</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Container No.</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Beginning</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Sales Box</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Remaining</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Total Gross Sales</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Status</th>
-            <th className="w-1/6 text-left border px-4 py-2 hidden md:table-cell">Actions</th>
+            <th className="w-1/7 text-left border px-4 py-2 whitespace-nowrap">SPSIC No.</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Date Arrived</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Date Soldout</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Supplier</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Container No.</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Beginning</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Sales Box</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Remaining</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Status</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody>
           {memoizedRows.length > 0 ? memoizedRows : (
             <tr>
-              <td colSpan={6} className="py-2 px-4 border text-center">No accounts available</td>
+              <td colSpan={10} className="py-2 px-4 border text-center">No accounts available</td>
             </tr>
           )}
         </tbody>
