@@ -59,13 +59,6 @@ const UserFields: React.FC<UserFieldsProps> = ({ Firstname, setFirstname, Lastna
         </div> 
 
         <div className="flex flex-wrap -mx-4">
-            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="Password">Password</label>
-                 <input type="text" id="Password" value={Password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
-            </div> 
-        </div> 
-
-        <div className="flex flex-wrap -mx-4">
              <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                  <label className="block text-xs font-bold mb-2" htmlFor="Role">Role</label>
                  <select id="Role" value={Role || ""} onChange={(e) => setRole(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
