@@ -33,21 +33,11 @@ const UserFields: React.FC<UserFieldsProps> = ({ Firstname, setFirstname, Lastna
         </div> 
 
         <div className="flex flex-wrap -mx-4">
-        <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                  <label className="block text-xs font-bold mb-2" htmlFor="Email">Email</label>
                 <input type="text" id="Email" value={Email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
             </div> 
-        </div> 
-        
-        <div className="flex flex-wrap -mx-4">
-             <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                 <label className="block text-xs font-bold mb-2" htmlFor="Email">Email</label>
-                <input type="text" id="Email" value={Email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
-            </div> 
-        </div> 
-
-        <div className="flex flex-wrap -mx-4">
-             <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
                 <select id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
                 <option value="Navotas">Navotas</option>
@@ -62,6 +52,10 @@ const UserFields: React.FC<UserFieldsProps> = ({ Firstname, setFirstname, Lastna
                 <label className="block text-xs font-bold mb-2" htmlFor="Username">Username</label>
                  <input type="text" id="UserName" value={UserName} onChange={(e) => setUserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
              </div> 
+             <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                <label className="block text-xs font-bold mb-2" htmlFor="Password">Password</label>
+                 <input type="text" id="Password" value={Password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
+            </div> 
         </div> 
 
         <div className="flex flex-wrap -mx-4">
