@@ -23,7 +23,7 @@ const ListofUser: React.FC = () => {
 
     const UsersAccounts = async () => {
         try {
-            const response = await fetch("/api/User/FetchUsers");
+            const response = await fetch("/api/User/FetchUser");
             const data = await response.json();
             setPosts(data);
         } catch (error) {
