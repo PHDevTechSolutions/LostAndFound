@@ -53,6 +53,7 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
   const memoizedRows = useMemo(() => {
     return updatedPosts.map((post) => {
       const salesBox = post.TotalQuantity - post.Boxes; // Calculate Sales Box value dynamically
+      const status = post.Boxes === 0 ? "Soldout" : "Inventory";
 
       return (
         <React.Fragment key={post._id}>
@@ -70,7 +71,17 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
             <td className="px-4 py-2 border hidden md:table-cell">{post.TotalQuantity}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{salesBox}</td>
             <td className="px-4 py-2 border hidden md:table-cell">{post.Boxes}</td>
-            <td className="px-4 py-2 border hidden md:table-cell">{post.Status}</td>
+            <td className="px-4 py-2 border hidden md:table-cell">{post.BoxType}</td>
+            <td className="px-4 py-2 border hidden md:table-cell">{post.Size}</td>
+            <td className="px-4 py-2 border hidden md:table-cell">
+            <span
+              className={`inline-block px-2 py-1 text-xs rounded-md ${
+                status === "Soldout" ? "bg-green-700 text-white" : "bg-gray-300 text-gray-800"
+              }`}
+            >
+              {status}
+            </span>
+          </td>
             <td className="px-4 py-2 border hidden md:table-cell">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
@@ -187,6 +198,8 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
             <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Beginning</th>
             <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Sales Box</th>
             <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Remaining</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Box Type</th>
+            <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Size</th>
             <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Status</th>
             <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Actions</th>
           </tr>

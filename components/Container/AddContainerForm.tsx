@@ -8,11 +8,11 @@ import FormFields from "./ContainerFormFields";
 interface AddContainerProps { 
   onCancel: () => void; 
   refreshPosts: () => void;  // Add a refreshPosts callback
-  userName: string; 
+  userName: string;  // The logged-in user's name passed as a prop
   editData?: any; // Optional prop for the post being edited
 }
 
-const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, editData }) => {
+const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, userName, editData }) => {
   const [Vendor, setVendor] = useState(editData ? editData.Vendor : "");
   const [SpsicNo, setSpsicNo] = useState(editData ? editData.SpsicNo: "");
   const [DateArrived, setDateArrived] = useState(editData ? editData.DateArrived: "");
@@ -22,9 +22,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [Country, setCountry] = useState(editData ? editData.Country: "");
   const [Boxes, setBoxes] = useState(editData ? editData.Boxes: "");
   const [TotalQuantity, setTotalQuantity] = useState(editData ? editData.TotalQuantity: "");
-
   const [TotalGrossSales, setTotalGrossSales] = useState(editData ? editData.TotalGrossSales: "");
-  
   const [Commodity, setCommodity] = useState(editData ? editData.Commodity: "");
   const [Size, setSize] = useState(editData ? editData.Size: "");
   const [Freezing, setFreezing] = useState(editData ? editData.Freezing: "");
@@ -35,6 +33,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const location = "Warehouse A"; // Can be dynamically set based on user session or context
     const url = editData ? `/api/Container/EditContainer` : `/api/Container/CreateContainer`; // API endpoint changes based on edit or add
     const method = editData ? "PUT" : "POST"; // HTTP method changes based on edit or add
 
@@ -45,6 +44,8 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       },
       body: JSON.stringify({
         Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
+        username: userName,  // Pass the dynamic username
+        location,  // Pass the static location or dynamic one as needed
         id: editData ? editData._id : undefined, // Send post ID if editing
       }),
     });

@@ -77,11 +77,11 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="BuyersName">Buyer's Name</label>
-                <input type="text" id="BuyersName" value={BuyersName} onChange={(e) => setBuyersName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                <input type="text" id="BuyersName" value={BuyersName} onChange={(e) => setBuyersName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="BoxSales">Box Sales</label>
-                <input type="text" id="BoxSales" value={BoxSales} onChange={handleBoxSalesChange} className="w-full px-3 py-2 border rounded text-xs" required />
+                <input type="number" id="BoxSales" value={BoxSales} onChange={handleBoxSalesChange} className="w-full px-3 py-2 border rounded text-xs" required />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="Price">Price</label>
@@ -97,7 +97,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
-                <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>

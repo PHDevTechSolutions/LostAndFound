@@ -2,8 +2,9 @@ import React, { useState, useRef, useMemo, useCallback } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { IoPrint } from "react-icons/io5";
 import { FaRegFileExcel } from "react-icons/fa";
-import { BsPlusCircle } from "react-icons/bs"; 
-import * as XLSX from "xlsx";
+import { BsPlusCircle } from "react-icons/bs";
+import ExcelJS from "exceljs";
+const saveAs = require("file-saver").saveAs;
 
 interface TableProps {
   filteredData: any[];
@@ -56,27 +57,52 @@ const Table: React.FC<TableProps> = React.memo(
       }
     }, [post]);
 
-    const exportToExcel = useCallback(() => {
-      const vendor = post?.Vendor || "N/A";
-      const columns = [
-        "ContainerNo", "Size", "Username", "Location", "DateOrder", "BuyersName", 
-        "BoxSales", "Price", "GrossSales", "PlaceSales", "PaymentMode"
-      ];
+    const exportToExcel = useCallback(async () => {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Sales Data");
 
-      const dataToExport = filteredData.map((data) =>
-        columns.reduce((obj, key) => {
-          obj[key] = data[key] || "";
-          return obj;
-        }, {} as Record<string, any>)
-      );
+      // Add headers
+      worksheet.addRow([`Vendor: ${post?.Vendor || "N/A"}`]);
+      worksheet.addRow([]);
+      worksheet.addRow([
+        "ContainerNo",
+        "Size",
+        "Username",
+        "Location",
+        "DateOrder",
+        "BuyersName",
+        "BoxSales",
+        "Price",
+        "GrossSales",
+        "PlaceSales",
+        "PaymentMode",
+      ]);
 
-      const ws = XLSX.utils.json_to_sheet([]);
-      XLSX.utils.sheet_add_aoa(ws, [[`Vendor: ${vendor}`]], { origin: "A1" });
-      XLSX.utils.sheet_add_json(ws, dataToExport, { origin: "A3", skipHeader: false });
+      // Add data
+      filteredData.forEach((data) => {
+        worksheet.addRow([
+          data.ContainerNo || "",
+          data.Size || "",
+          data.Username || "",
+          data.Location || "",
+          data.DateOrder || "",
+          data.BuyersName || "",
+          data.BoxSales || "",
+          data.Price || "",
+          data.GrossSales || "",
+          data.PlaceSales || "",
+          data.PaymentMode || "",
+        ]);
+      });
 
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Sales Data");
-      XLSX.writeFile(wb, "JJV-Ventures-System-data.xlsx");
+      // Style headers
+      worksheet.getRow(3).eachCell((cell) => {
+        cell.font = { bold: true };
+      });
+
+      // Save to file
+      const buffer = await workbook.xlsx.writeBuffer();
+      saveAs(new Blob([buffer]), "JJV-Ventures-System-data.xlsx");
     }, [filteredData, post]);
 
     const toggleRow = useCallback((dataId: string) => {

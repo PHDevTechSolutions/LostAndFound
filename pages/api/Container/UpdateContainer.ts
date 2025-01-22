@@ -14,12 +14,29 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
     try {
         const db = await connectToDatabase();
         const containerCollection = db.collection('container_order');
+        const activityCollection = db.collection("ActivityLogs");
 
         const updatedAccount = {
-          ContainerNo, Size, Username, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, updatedAt: new Date(),
+            ContainerNo, Size, Username, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, updatedAt: new Date(),
         };
 
+        // Update the container order data
         await containerCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedAccount });
+
+        // Activity log format
+        const activityLog = {
+            Username: Username, 
+            location: Location,
+            ContainerNo: ContainerNo,
+            Price: Price,
+            GrossSales: GrossSales,
+            message: `${Username} Has Updated Data on Container Number: ${ContainerNo}`,
+            createdAt: new Date(),
+        };
+
+        // Insert activity log into ActivityLogs collection
+        await activityCollection.insertOne(activityLog);
+
         res.status(200).json({ success: true, message: 'Data updated successfully' });
     } catch (error) {
         console.error('Error updating Data:', error);

@@ -102,7 +102,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Vendor">Vendor</label>
-          <input type="text" id="Vendor" value={Vendor || ""} onChange={(e) => setVendor(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+          <input type="text" id="Vendor" value={Vendor || ""} onChange={(e) => setVendor(e.target.value)} className="w-full px-3 py-2 border rounded capitalize text-xs" required />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="SPSIC No">SPSIC No.</label>
@@ -113,11 +113,11 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Date Arrived">Date Arrived</label>
-          <input type="date" id="DateArrived" value={DateArrived || ""} onChange={(e) => setDateArrived(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="date" id="DateArrived" value={DateArrived || ""} onChange={(e) => setDateArrived(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Date Soldout">Date Soldout</label>
-          <input type="date" id="DateSoldout" value={DateSoldout || ""} onChange={(e) => setDateSoldout(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="date" id="DateSoldout" value={DateSoldout || ""} onChange={(e) => setDateSoldout(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
         </div>
       </div>
 

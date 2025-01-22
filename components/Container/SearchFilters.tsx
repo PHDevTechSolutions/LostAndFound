@@ -7,6 +7,8 @@ interface SearchFiltersProps {
     setSearchTerm: (term: string) => void;
     postsPerPage: number;
     setPostsPerPage: (num: number) => void;
+    dateRange: { start: string; end: string };
+    setDateRange: (range: { start: string; end: string }) => void;
 }
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
@@ -14,6 +16,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     setSearchTerm,
     postsPerPage,
     setPostsPerPage,
+    dateRange,
+    setDateRange,
+
 }) => {
     return (
         <div className="flex flex-wrap gap-2 mb-4 items-center">
@@ -24,6 +29,20 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 onChange={(e) => setSearchTerm(e.target.value.toLocaleUpperCase())}
                 className="border px-3 py-2 rounded text-xs w-full md:w-auto flex-grow capitalize"
             />
+            <div className="flex gap-2">
+                <input
+                    type="date"
+                    value={dateRange.start}
+                    onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                    className="border px-3 py-2 rounded text-xs"
+                />
+                <input
+                    type="date"
+                    value={dateRange.end}
+                    onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                    className="border px-3 py-2 rounded text-xs"
+                />
+            </div>
             <select
                 value={postsPerPage}
                 onChange={(e) => setPostsPerPage(parseInt(e.target.value))}

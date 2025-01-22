@@ -238,7 +238,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
     const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
 
-    
+
 
     return (
         <div className="container mx-auto p-4">
@@ -262,12 +262,13 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 </div>
 
                 {/* Table Section */}
-                <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[70%]">
+                <div className="bg-white border border-dashed border-gray-300 shadow-md rounded-lg p-4 flex-grow basis-[70%]">
                     <div className="flex flex-col items-start gap-2">
                         <h2 className="text-xs font-semibold text-gray-700">{post?.Vendor}</h2>
                         <h2 className="text-xs font-semibold text-gray-700 mb-6">
                             Container Van No. {post?.ContainerNo}
                         </h2>
+                        <h2 className="text-xs font-semibold text gray-700">{post?.BoxType}</h2>
                     </div>
                     <div className="flex mb-4 text-xs font-bold">
                         <h3>Size: {Size}</h3>

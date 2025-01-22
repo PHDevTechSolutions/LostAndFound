@@ -21,6 +21,12 @@ const ContainerList: React.FC = () => {
     const [editData, setEditData] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+
+    const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
+        start: "",
+        end: "",
+    });
+
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(5);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -47,11 +53,21 @@ const ContainerList: React.FC = () => {
 
     // Filter Data based on search term and city address
     const filteredAccounts = posts.filter((post) => {
-        return (
-            (post.SpsicNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
-                post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
-                post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
+        const inSearchTerm =
+            post.SpsicNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
+            post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
+            post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const dateArrive = new Date(post.DateArrived).getTime();
+        const dateSoldout = new Date(post.DateSoldout).getTime();
+        const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
+        const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
+
+        const inDateRange =
+            (!rangeStart || dateArrive >= rangeStart) &&
+            (!rangeEnd || dateSoldout <= rangeEnd);
+
+        return inSearchTerm && inDateRange;
     });
 
     // Pagination logic
@@ -137,11 +153,13 @@ const ContainerList: React.FC = () => {
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">Summary of Sales</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                            <SearchFilters
+                                        <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}
                                                 setPostsPerPage={setPostsPerPage}
+                                                dateRange={dateRange}
+                                                setDateRange={setDateRange}
                                             />
                                             <ContainerTable
                                                 posts={currentPosts}

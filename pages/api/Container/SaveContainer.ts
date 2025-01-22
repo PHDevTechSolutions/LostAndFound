@@ -63,6 +63,20 @@ async function saveContainer({
 
   await containerCollection.insertOne(newData);
 
+  // Log activity data
+  const activityLog = {
+    username: Username, 
+    location: Location, 
+    ContainerNo,
+    Price,
+    GrossSales,
+    message: `${Username} Has Created Data on Container Number: ${ContainerNo}`,
+    createdAt: new Date(),
+  };
+
+  const activityCollection = db.collection("ActivityLogs");
+  await activityCollection.insertOne(activityLog);
+
   return { success: true };
 }
 

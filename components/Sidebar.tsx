@@ -36,7 +36,8 @@ const Sidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpen, o
       title: 'Containers',
       icon: PiShippingContainer  ,
       subItems: [
-        { title: 'Log Entries', href: `/Container/ContainerList${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+        { title: 'List of Containers', href: `/Container/ContainerList${userId ? `?id=${encodeURIComponent(userId)}` : ''}` },
+        { title: 'Activity Logs', href: `/Container/ActivityLog${userId ? `?id=${encodeURIComponent(userId)}`: ''}`},
       ],
     },
     {
