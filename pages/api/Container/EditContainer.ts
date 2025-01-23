@@ -9,7 +9,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         return;
     }
 
-    const { id, Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, location } = req.body;
+    const { id, Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, location } = req.body;
 
     try {
         const db = await connectToDatabase();
@@ -17,7 +17,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         const activityLogsCollection = db.collection('ActivityLogs');
 
         const updatedAccount = {
-            Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, updatedAt: new Date(),
+            Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, updatedAt: new Date(),
         };
 
         // Update container data
@@ -30,7 +30,6 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
             SpsicNo: SpsicNo,
             message: `${userName} Has Updated Container Number: ${ContainerNo}`,
             ContainerNo: ContainerNo,
-            Boxes: Boxes,
             createdAt: new Date(),
         };
 

@@ -129,7 +129,7 @@ const Table: React.FC<TableProps> = React.memo(
             <td className="px-4 py-2 border">{data.BoxSales}</td>
             <td className="px-4 py-2 border">{data.Price}</td>
             <td className="px-4 py-2 border">{data.GrossSales}</td>
-            <td className="px-4 py-2 border hidden md:table-cell">{data.PlaceSales}</td>
+            <td className="px-4 py-2 border hidden md:table-cell uppercase">{data.PlaceSales}</td>
             <td className="px-4 py-2 border">{data.PaymentMode}</td>
             <td className="px-4 py-2 border hidden md:table-cell">
               <button className="mr-2" onClick={() => handleEdit(data)}>
