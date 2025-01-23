@@ -44,7 +44,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       },
       body: JSON.stringify({
         Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
-        username: userName,  // Pass the dynamic username
+        userName: userName,  // Pass the dynamic username
         location,  // Pass the static location or dynamic one as needed
         id: editData ? editData._id : undefined, // Send post ID if editing
       }),

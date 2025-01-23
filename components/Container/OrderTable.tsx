@@ -122,7 +122,7 @@ const Table: React.FC<TableProps> = React.memo(
         <React.Fragment key={data._id}>
           <tr onClick={() => toggleRow(data._id)} className="cursor-pointer">
             <td className="px-4 py-2 border hidden md:table-cell">{data.DateOrder}</td>
-            <td className="px-4 py-2 border">
+            <td className="px-4 py-2 border uppercase">
               {data.BuyersName}
               <BsPlusCircle className="inline-block mr-2 md:hidden" />
             </td>

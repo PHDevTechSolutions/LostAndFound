@@ -7,8 +7,8 @@ interface OrderFormFieldsProps {
     setContainerNo: React.Dispatch<React.SetStateAction<string>>;
     Size: string;
     setSize: React.Dispatch<React.SetStateAction<string>>;
-    Username: string;
-    setUsername: React.Dispatch<React.SetStateAction<string>>;
+    userName: string;
+    setuserName: React.Dispatch<React.SetStateAction<string>>;
     Location: string;
     setLocation: React.Dispatch<React.SetStateAction<string>>;
     DateOrder: string;
@@ -36,7 +36,7 @@ interface OrderFormFieldsProps {
 
 const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
     ContainerNo, setContainerNo, Size, setSize,
-    Username, setUsername, Location, setLocation,
+    userName, setuserName, Location, setLocation,
     DateOrder, setDateOrder, BuyersName, setBuyersName,
     BoxSales, setBoxSales, handleBoxSalesChange, Price, setPrice,
     handlePriceChange, Boxes, setBoxes, GrossSales, setGrossSales, 
@@ -60,7 +60,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             <input id="containerNo" type="hidden" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
             <input id="Size" type="hidden" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
             <div className="mb-4">
-                <input type="hidden" id="Username" value={Username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
+                <input type="hidden" id="Username" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="Location">Warehouse Location</label>

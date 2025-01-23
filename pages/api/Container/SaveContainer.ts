@@ -3,12 +3,12 @@ import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to save container data
 async function saveContainer({
-  ContainerNo, Size, Username, Location, DateOrder, BuyersName,
+  ContainerNo, Size, userName, Location, DateOrder, BuyersName,
   BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode
 }: {
   ContainerNo: string;
   Size: string;
-  Username: string;
+  userName: string;
   Location: string;
   DateOrder: string;
   BuyersName: string;
@@ -29,7 +29,7 @@ async function saveContainer({
     // Compare the existing data with the new data
     if (
       existingContainer.Size === Size &&
-      existingContainer.Username === Username &&
+      existingContainer.userName === userName &&
       existingContainer.Location === Location &&
       existingContainer.DateOrder === DateOrder &&
       existingContainer.BuyersName === BuyersName &&
@@ -48,7 +48,7 @@ async function saveContainer({
   const newData = {
     ContainerNo,
     Size,
-    Username,
+    userName,
     Location,
     DateOrder,
     BuyersName,
@@ -65,12 +65,12 @@ async function saveContainer({
 
   // Log activity data
   const activityLog = {
-    username: Username, 
+    userName: userName, 
     location: Location, 
     ContainerNo,
     Price,
     GrossSales,
-    message: `${Username} Has Created Data on Container Number: ${ContainerNo}`,
+    message: `${userName} Has Created Data on Container Number: ${ContainerNo}`,
     createdAt: new Date(),
   };
 
@@ -82,7 +82,7 @@ async function saveContainer({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { ContainerNo, Size, Username, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
+    const { ContainerNo, Size, userName, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
 
     // Validate required fields
     if (!Size || !BuyersName) {
@@ -91,7 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const result = await saveContainer({
-        ContainerNo, Size, Username, Location, DateOrder, BuyersName, 
+        ContainerNo, Size, userName, Location, DateOrder, BuyersName, 
         BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode
       });
 

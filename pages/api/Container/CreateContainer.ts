@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to add an account directly in this file
-async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, username, location }: {
+async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, location }: {
   Vendor: string;
   SpsicNo: string;
   DateArrived: string;
@@ -19,7 +19,7 @@ async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, Supplie
   Status: string;
   BoxType: string;
   Remarks: string;
-  username: string;
+  userName: string;
   location: string;
 }) {
   const db = await connectToDatabase();
@@ -33,10 +33,10 @@ async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, Supplie
 
   // Log activity data into the ActivityLogs collection
   const activityLog = {
-    username: username, 
+    userName: userName, 
     location: location, 
     SpsicNo: SpsicNo, 
-    message: `${username} Has Been Created Container Number: ${ContainerNo}`,
+    message: `${userName} Has Been Created Container Number: ${ContainerNo}`,
     ContainerNo: ContainerNo, 
     Boxes: Boxes, 
     createdAt: new Date(),
@@ -55,7 +55,7 @@ async function addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, Supplie
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, username, location } = req.body;
+    const { Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, location } = req.body;
 
     // Validate required fields
     if (!Vendor || !SpsicNo) {
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const result = await addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, username, location });
+      const result = await addContainer({ Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, location });
       res.status(200).json(result);
     } catch (error) {
       console.error("Error adding container:", error);

@@ -14,7 +14,7 @@ interface CreateDataFormProps {
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
     const [Size, setSize] = useState(post?.Size || "");
-    const [Username, setUsername] = useState("");
+    const [userName, setuserName] = useState("");
     const [Location, setLocation] = useState("");
     const [DateOrder, setDateOrder] = useState("");
     const [BuyersName, setBuyersName] = useState("");
@@ -45,7 +45,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             body: JSON.stringify({
                 ContainerNo,
                 Size,
-                Username,
+                userName,
                 Location,
                 DateOrder,
                 BuyersName,
@@ -79,11 +79,11 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     useEffect(() => {
-        fetchUsername();
+        fetchuserName();
         fetchData();
     }, [post]);
 
-    const fetchUsername = async () => {
+    const fetchuserName = async () => {
         const params = new URLSearchParams(window.location.search);
         const userId = params.get("id");
 
@@ -91,7 +91,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             try {
                 const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
                 const data = await response.json();
-                setUsername(data.name || "");
+                setuserName(data.name || "");
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
@@ -179,7 +179,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
         setContainerNo(data.ContainerNo);
         setSize(data.Size);
-        setUsername(data.Username);
+        setuserName(data.userName);
         setLocation(data.Location);
         setDateOrder(data.DateOrder);
         setBuyersName(data.BuyersName);
@@ -249,7 +249,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                     <OrderFormFields
                         ContainerNo={ContainerNo} setContainerNo={setContainerNo}
                         Size={Size} setSize={setSize}
-                        Username={Username} setUsername={setUsername}
+                        userName={userName} setuserName={setuserName}
                         Location={Location} setLocation={setLocation} DateOrder={DateOrder}
                         setDateOrder={setDateOrder} BuyersName={BuyersName} setBuyersName={setBuyersName}
                         BoxSales={BoxSales} setBoxSales={setBoxSales} handleBoxSalesChange={handleBoxSalesChange}
