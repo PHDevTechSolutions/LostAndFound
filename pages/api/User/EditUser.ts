@@ -16,6 +16,14 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         const accountCollection = db.collection('accounts');
 
         const updatedUser = {
+            Firstname, Lastname, Email, Location, UserName, Password, Role, updatedAt: new Date(),
+        };
+
+        // Update container data
+        await accountCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedUser });
+
+        // Activity log format
+        const activityLog = {
             Firstname,
             Lastname,
             Email,
@@ -25,11 +33,11 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
             Role,
             updatedAt: new Date(),
         };
+        await accountCollection.insertOne(activityLog);
 
-        await accountCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedUser });
         res.status(200).json({ success: true, message: 'Account updated successfully' });
     } catch (error) {
         console.error('Error updating account:', error);
-        res.status(500).json({ error: 'Failed to update account' });
+        res.status(500).json({ error: 'Failed to update user' });
     }
 }
