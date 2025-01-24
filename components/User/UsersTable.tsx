@@ -31,11 +31,11 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
             <table className="min-w-full bg-white border text-xs">
                 <thead>
                     <tr>
-                        <th className="w-1/4 text-center border px-4 py-2">Username</th>
-                        <th className="w-1/4 text-center border px-4 py-2">Password</th>
-                        <th className="w-1/4 text-center border px-4 py-2">Email</th>
-                        <th className="w-1/4 text-center border px-4 py-2">Role</th>
-                        <th className="w-1/4 text-center border px-4 py-2">Actions</th> 
+                        <th className="w-1/6 text-center border px-4 py-2">Username</th>
+                        <th className="w-1/6 text-center border px-4 py-2">Password</th>
+                        <th className="w-1/6 text-center border px-4 py-2">Email</th>
+                        <th className="w-1/6 text-center border px-4 py-2">Role</th>
+                        <th className="w-1/6 text-center border px-4 py-2">Actions</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -46,12 +46,12 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                                     className="bg-white-100 cursor-pointer"
                                     onClick={() => toggleRow(post._id)}
                                 >
-                                    <td className="w-1/4 text-center px-4 py-2 border">{post.UserName}</td>
-                                    <td className="w-1/4 text-center px-4 py-2 border">{post.Password}</td>
-                                    <td className="w-1/4 text-center px-4 py-2 border">{post.Email}</td>
-                                    <td className="w-1/4 text-center px-4 py-2 border">{post.Role}</td>
+                                    <td className="text-center px-4 py-2 border">{post.UserName}</td>
+                                    <td className="text-center px-4 py-2 border">{post.Password}</td>
+                                    <td className="text-center px-4 py-2 border">{post.Email}</td>
+                                    <td className="text-center px-4 py-2 border">{post.Role}</td>
                                     {/* Add actions buttons */}
-                                    <td className=" w-1/4 px-4 py-2 border text-center">
+                                    <td className="px-4 py-2 border text-center">
                                         <button
                                             className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
                                             onClick={(e) => {
