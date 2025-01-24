@@ -6,13 +6,14 @@ import 'react-toastify/dist/ReactToastify.css';
 // Not For Creating Data
 interface AddUserFormProps {
     onCancel: () => void;
+    refreshUser: () => void;
     userName: string; 
     editPost?: any;
 
 }
 // End
 
-const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}) => {
+const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, refreshUser, userName, editPost}) => {
     const [Firstname, setFirstname] = useState(editPost ? editPost.Firstname : "");
     const [Lastname, setLastname] = useState(editPost ? editPost.Lastname : "");
     const [Email, setEmail] = useState(editPost ? editPost.Email : "");
@@ -26,6 +27,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}
 
         const url = editPost ? `/api/User/EditUser`  : `/api/User/CreateUser`;
         const method = editPost ? "PUT" : "POST";
+
         const response = await fetch(url, {
             method,
             headers: {
@@ -39,8 +41,8 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}
                 Location,
                 UserName,
                 Password,
-                Role
-              
+                Role,
+                id: editPost ? editPost._id : undefined,
             }),
         });
 
@@ -49,13 +51,13 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}
                 autoClose: 900,
                 onClose: () => {
                     onCancel();
+                    refreshUser();
                 }
             });
 
         } else {
             toast.error("User Added Unsuccessful", {
                 autoClose: 900,
-
             });
         }
 
@@ -80,7 +82,8 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}
                 setPassword={setPassword}
                 Role={Role}
                 setRole={setRole}
-            
+                editPost={editPost}
+    
                 />
                 <div className="flex justify-between">
                 <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editPost ? "Update" : "Submit"}</button>

@@ -15,10 +15,20 @@ interface UserFieldsProps{
     setPassword: (value: string) => void;
     Role: string;
     setRole: (value: string) => void;
-
+    editPost?: any;
 }
 
-const UserFields: React.FC<UserFieldsProps> = ({ Firstname, setFirstname, Lastname, setLastname, Email, setEmail, Location, setLocation, UserName, setUserName, Password, setPassword, Role, setRole }) => {
+const UserFields: React.FC<UserFieldsProps> = ({ 
+    Firstname, setFirstname, 
+    Lastname, setLastname, 
+    Email, setEmail, 
+    Location, setLocation, 
+    UserName, setUserName, 
+    Password, setPassword, 
+    Role, setRole,
+    editPost,
+}) => {
+
     return (
         <>
         <div className="flex flex-wrap -mx-4">

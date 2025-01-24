@@ -61,7 +61,7 @@ const ListofUser: React.FC = () => {
   const handleDelete = async () => {
     if (!postToDelete) return;
     try {
-      const response = await fetch(`/api/account/deleteAccount`, {
+      const response = await fetch(`/api/User/DeleteUser`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -96,8 +96,11 @@ const ListofUser: React.FC = () => {
                   <AddUserForm
                     onCancel={() => {
                       setShowForm(false);
+                      setEditPost(null);
                     }}
                     userName={userName}
+                    refreshUser={UsersAccounts}
+                    editPost={editPost}
                   />
                 ) : (
                   <>
