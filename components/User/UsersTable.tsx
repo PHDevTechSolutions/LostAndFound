@@ -40,7 +40,7 @@ const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit}
                         ))
                     ):(
                         <tr>
-                            <td colSpan={4}></td>
+                            <td colSpan={4} className="text-center px-4 py-2 border"></td>
                         </tr>
                     )}
                 </tbody>
