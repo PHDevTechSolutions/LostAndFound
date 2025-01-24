@@ -6,9 +6,10 @@ interface UsersTableProps{
     posts: any[];
     handleEdit: (post: any) => void;
     handleDelete: (postId: string) => void;
+    handleUsers: (postId: string) => void;
 }
 
-const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit}) => {
+const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit, handleUsers}) => {
     const [updatedPosts, setupdatesPosts] = useState<any[]>(posts);
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
     
@@ -51,18 +52,28 @@ const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit}
                                     <td className="px-4 py-2 border">{post.Email}</td>
                                     <td className="px-4 py-2 border">{post.Role}</td>
                                 </tr>
+
                                 <button
-                                            className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
-                                            onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="bg-red-700 text-white px-2 py-1 rounded text-xs"
-                                            onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
-                                        >
-                                            Delete
-                                        </button>
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUsers(post._id);
+                    }}
+                    className="bg-gray-100 text-gray-900 text-gray-700 block w-full text-left px-4 py-2 text-xs" >
+                    Create Data
+                  </button>
+
+                  <button
+                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
+                    onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-700 text-white px-2 py-1 rounded text-xs"
+                    onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
+                  >
+                    Delete
+                  </button>
 
                             </React.Fragment>
                         ))
