@@ -10,10 +10,22 @@ interface UsersTableProps{
 
 const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit}) => {
     const [updatedPosts, setupdatesPosts] = useState<any[]>(posts);
+    const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
     
     useEffect(() => {
         setupdatesPosts(posts);
     }, [posts]);
+
+    const toggleRow = (postId: string) => {
+        const newExpandedRows = new Set(expandedRows);
+        if (newExpandedRows.has(postId)) {
+            newExpandedRows.delete(postId);
+        } else {
+            newExpandedRows.add(postId);
+        }
+        setExpandedRows(newExpandedRows);
+    };
+
 
     return (
         <div className=" overflow-x-auto">
@@ -30,12 +42,28 @@ const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit}
                     {updatedPosts.length > 0 ? (
                         updatedPosts.map((post) => (
                             <React.Fragment key={post._id}>
-                                <tr>
+                                <tr
+                                     className="bg-gray-10 cursor-pointer"
+                                     onClick={() => toggleRow(post._id)}
+                                >
                                     <td className="px-4 py-2 border">{post.UserName}</td>
                                     <td className="px-4 py-2 border">{post.Password}</td>
                                     <td className="px-4 py-2 border">{post.Email}</td>
                                     <td className="px-4 py-2 border">{post.Role}</td>
                                 </tr>
+                                <button
+                                            className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
+                                            onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="bg-red-700 text-white px-2 py-1 rounded text-xs"
+                                            onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
+                                        >
+                                            Delete
+                                        </button>
+
                             </React.Fragment>
                         ))
                     ):(
