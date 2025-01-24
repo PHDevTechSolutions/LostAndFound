@@ -35,7 +35,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                         <th className="w-1/4 text-center border px-4 py-2">Password</th>
                         <th className="w-1/4 text-center border px-4 py-2">Email</th>
                         <th className="w-1/4 text-center border px-4 py-2">Role</th>
-                        <th className="w-1/4 text-center border px-4 py-2">Actions</th> {/* Add column for actions */}
+                        <th className="w-1/4 text-center border px-4 py-2">Actions</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -43,7 +43,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                         updatedPosts.map((post) => (
                             <React.Fragment key={post._id}>
                                 <tr
-                                    className="bg-gray-100 cursor-pointer"
+                                    className="bg-white-100 cursor-pointer"
                                     onClick={() => toggleRow(post._id)}
                                 >
                                     <td className="px-4 py-2 border">{post.UserName}</td>
@@ -53,19 +53,19 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                                     {/* Add actions buttons */}
                                     <td className="px-4 py-2 border text-center">
                                         <button
-                                            className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
+                                            className="bg-blue-200 text-white px-3 py-1 rounded mr-2"
                                             onClick={(e) => {
-                                                e.stopPropagation(); // Prevent row toggle when clicking the button
-                                                handleEdit(post); // Trigger the edit function
+                                                e.stopPropagation(); 
+                                                handleEdit(post); 
                                             }}
                                         >
                                             Edit
                                         </button>
                                         <button
-                                            className="bg-red-500 text-white px-3 py-1 rounded"
+                                            className="bg-red-200 text-white px-3 py-1 rounded"
                                             onClick={(e) => {
-                                                e.stopPropagation(); // Prevent row toggle when clicking the button
-                                                handleDelete(post._id); // Trigger the delete function
+                                                e.stopPropagation(); 
+                                                handleDelete(post._id); 
                                             }}
                                         >
                                             Delete
@@ -77,7 +77,6 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                     ) : (
                         <tr>
                             <td colSpan={5} className="text-center px-4 py-2 border">
-                                No data available
                             </td>
                         </tr>
                     )}
