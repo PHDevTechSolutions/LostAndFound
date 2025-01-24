@@ -46,14 +46,14 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                                     className="bg-white-100 cursor-pointer"
                                     onClick={() => toggleRow(post._id)}
                                 >
-                                    <td className="px-4 py-2 border">{post.UserName}</td>
-                                    <td className="px-4 py-2 border">{post.Password}</td>
-                                    <td className="px-4 py-2 border">{post.Email}</td>
-                                    <td className="px-4 py-2 border">{post.Role}</td>
+                                    <td className="w-1/4 text-center px-4 py-2 border">{post.UserName}</td>
+                                    <td className="w-1/4 text-center px-4 py-2 border">{post.Password}</td>
+                                    <td className="w-1/4 text-center px-4 py-2 border">{post.Email}</td>
+                                    <td className="w-1/4 text-center px-4 py-2 border">{post.Role}</td>
                                     {/* Add actions buttons */}
-                                    <td className="px-4 py-2 border text-center">
+                                    <td className=" w-1/4 px-4 py-2 border text-center">
                                         <button
-                                            className="bg-blue-200 text-white px-3 py-1 rounded mr-2"
+                                            className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
                                             onClick={(e) => {
                                                 e.stopPropagation(); 
                                                 handleEdit(post); 
@@ -62,7 +62,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                                             Edit
                                         </button>
                                         <button
-                                            className="bg-red-200 text-white px-3 py-1 rounded"
+                                            className="bg-red-500 text-white px-3 py-1 rounded"
                                             onClick={(e) => {
                                                 e.stopPropagation(); 
                                                 handleDelete(post._id); 
