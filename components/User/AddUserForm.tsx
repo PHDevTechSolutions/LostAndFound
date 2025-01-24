@@ -84,6 +84,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}
                 />
                 <div className="flex justify-between">
                     <button className="bg-blue-500 text-white px-4 py-2 rounded text-xs" type="submit">Submit</button>
+                    <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
                 </div>
                 <ToastContainer className="text-xs" autoClose={900} />
             </form>
