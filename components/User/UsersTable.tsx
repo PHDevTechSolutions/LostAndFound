@@ -62,7 +62,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit
                                             Edit
                                         </button>
                                         <button
-                                            className="bg-red-500 text-white px-3 py-1 rounded"
+                                            className="bg-red-500 text-white px-3 py-1 rounded mr-2"
                                             onClick={(e) => {
                                                 e.stopPropagation(); 
                                                 handleDelete(post._id); 
