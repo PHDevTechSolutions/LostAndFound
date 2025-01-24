@@ -23,7 +23,6 @@ const ListofUser: React.FC = () => {
   const UsersAccounts = async () => {
     try {
       const response = await fetch("/api/User/FetchUser");
-      if (!response.ok) throw new Error("Failed to fetch users.");
       const data = await response.json();
       setPosts(data);
     } catch (error) {
@@ -98,8 +97,8 @@ const ListofUser: React.FC = () => {
                       setShowForm(false);
                       setEditPost(null);
                     }}
-                    userName={userName}
                     refreshUser={UsersAccounts}
+                    userName={userName}
                     editPost={editPost}
                   />
                 ) : (
@@ -151,6 +150,7 @@ const ListofUser: React.FC = () => {
                     </div>
                   </div>
                 )}
+                <ToastContainer className="text-xs" autoClose={1000} />
               </div>
             </div>
           )}

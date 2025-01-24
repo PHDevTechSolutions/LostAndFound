@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import UserFields from "./UserFields";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,7 +11,6 @@ interface AddUserFormProps {
     refreshUser: () => void;
     userName: string; 
     editPost?: any;
-
 }
 // End
 
@@ -47,26 +48,24 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, refreshUser, userNa
         });
 
         if (response.ok) {
-            toast.success("User Added Successfully", {
-                autoClose: 900,
-                onClose: () => {
-                    onCancel();
-                    refreshUser();
-                }
+            toast.success(editPost ? "Data updated successfully" : "Data added successfully", {
+              autoClose: 1000,
+              onClose: () => {
+                onCancel(); // Hide the form after submission
+                refreshUser(); // Refresh accounts after successful submission
+              }
             });
-
-        } else {
-            toast.error("User Added Unsuccessful", {
-                autoClose: 900,
+          } else {
+            toast.error(editPost ? "Failed to Update Data" : "Failed to Add Data", {
+              autoClose: 1000
             });
-        }
-
-    };
+          }
+        };
 
     return (
         <>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
-                <h2>Add New User </h2>
+            <h2 className="text-xs font-bold mb-4">{editPost ? "Edit User" : "Add User"}</h2>
                 <UserFields 
                 Firstname={Firstname}
                 setFirstname={setFirstname}
