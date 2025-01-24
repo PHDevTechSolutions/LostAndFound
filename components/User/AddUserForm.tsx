@@ -24,8 +24,8 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const url = `/api/User/CreateUser`;
-        const method = "POST";
+        const url = editPost ? `/api/User/EditUser`  : `/api/User/CreateUser`;
+        const method = editPost ? "PUT" : "POST";
         const response = await fetch(url, {
             method,
             headers: {
@@ -83,7 +83,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, userName, editPost}
             
                 />
                 <div className="flex justify-between">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded text-xs" type="submit">Submit</button>
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editPost ? "Update" : "Submit"}</button>
                     <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
                 </div>
                 <ToastContainer className="text-xs" autoClose={900} />
