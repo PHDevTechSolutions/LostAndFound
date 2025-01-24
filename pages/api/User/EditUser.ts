@@ -13,7 +13,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
 
     try {
         const db = await connectToDatabase();
-        const accountCollection = db.collection('accounts');
+        const accountCollection = db.collection('users');
 
         const updatedUser = {
             Firstname, Lastname, Email, Location, UserName, Password, Role, updatedAt: new Date(),
