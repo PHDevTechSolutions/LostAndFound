@@ -13,17 +13,14 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
 
     try {
         const db = await connectToDatabase();
-        const accountCollection = db.collection('users');
+        const userCollection = db.collection('users');
 
         const updatedUser = {
             Firstname, Lastname, Email, Location, UserName, Password, Role, updatedAt: new Date(),
         };
 
         // Update container data
-        await accountCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedUser });
-
-        await accountCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedUser });
-
+        await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedUser });
         res.status(200).json({ success: true, message: 'Account updated successfully' });
     } catch (error) {
         console.error('Error updating account:', error);
