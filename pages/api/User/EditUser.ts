@@ -22,18 +22,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         // Update container data
         await accountCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedUser });
 
-        // Activity log format
-        const activityLog = {
-            Firstname,
-            Lastname,
-            Email,
-            Location,
-            UserName,
-            Password,
-            Role,
-            updatedAt: new Date(),
-        };
-        await accountCollection.insertOne(activityLog);
+        await accountCollection.updateOne({ _id: new ObjectId(id) }, { $set: updatedUser });
 
         res.status(200).json({ success: true, message: 'Account updated successfully' });
     } catch (error) {
