@@ -2,17 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 
-interface UsersTableProps{
+interface UsersTableProps {
     posts: any[];
     handleEdit: (post: any) => void;
     handleDelete: (postId: string) => void;
-    handleUsers: (postId: string) => void;
 }
 
-const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit, handleUsers}) => {
+const UsersTable: React.FC<UsersTableProps> = ({ posts, handleDelete, handleEdit }) => {
     const [updatedPosts, setupdatesPosts] = useState<any[]>(posts);
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-    
+
     useEffect(() => {
         setupdatesPosts(posts);
     }, [posts]);
@@ -27,16 +26,16 @@ const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit,
         setExpandedRows(newExpandedRows);
     };
 
-
     return (
-        <div className=" overflow-x-auto">
+        <div className="overflow-x-auto">
             <table className="min-w-full bg-white border text-xs">
                 <thead>
                     <tr>
-                        <th className="w-1/2 text-center border px-4 py-2"> Username </th>
-                        <th className="w-1/2 text-center border px-4 py-2"> Password </th>
-                        <th className="w-1/2 text-center border px-4 py-2"> Email </th>
-                        <th className="w-1/2 text-center border px-4 py-2"> Role </th>
+                        <th className="w-1/4 text-center border px-4 py-2">Username</th>
+                        <th className="w-1/4 text-center border px-4 py-2">Password</th>
+                        <th className="w-1/4 text-center border px-4 py-2">Email</th>
+                        <th className="w-1/4 text-center border px-4 py-2">Role</th>
+                        <th className="w-1/4 text-center border px-4 py-2">Actions</th> {/* Add column for actions */}
                     </tr>
                 </thead>
                 <tbody>
@@ -44,48 +43,48 @@ const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit,
                         updatedPosts.map((post) => (
                             <React.Fragment key={post._id}>
                                 <tr
-                                     className="bg-gray-10 cursor-pointer"
-                                     onClick={() => toggleRow(post._id)}
+                                    className="bg-gray-100 cursor-pointer"
+                                    onClick={() => toggleRow(post._id)}
                                 >
                                     <td className="px-4 py-2 border">{post.UserName}</td>
                                     <td className="px-4 py-2 border">{post.Password}</td>
                                     <td className="px-4 py-2 border">{post.Email}</td>
                                     <td className="px-4 py-2 border">{post.Role}</td>
+                                    {/* Add actions buttons */}
+                                    <td className="px-4 py-2 border text-center">
+                                        <button
+                                            className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent row toggle when clicking the button
+                                                handleEdit(post); // Trigger the edit function
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="bg-red-500 text-white px-3 py-1 rounded"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent row toggle when clicking the button
+                                                handleDelete(post._id); // Trigger the delete function
+                                            }}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
                                 </tr>
-
-                                <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleUsers(post._id);
-                    }}
-                    className="bg-gray-100 text-gray-900 text-gray-700 block w-full text-left px-4 py-2 text-xs" >
-                    Create Data
-                  </button>
-
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
-                    onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-700 text-white px-2 py-1 rounded text-xs"
-                    onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
-                  >
-                    Delete
-                  </button>
-
                             </React.Fragment>
                         ))
-                    ):(
+                    ) : (
                         <tr>
-                            <td colSpan={4} className="text-center px-4 py-2 border"></td>
+                            <td colSpan={5} className="text-center px-4 py-2 border">
+                                No data available
+                            </td>
                         </tr>
                     )}
                 </tbody>
             </table>
         </div>
     );
-
 };
+
 export default UsersTable;
