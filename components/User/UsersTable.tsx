@@ -21,7 +21,9 @@ const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit}
                 <thead>
                     <tr>
                         <th className="w-1/2 text-center border px-4 py-2"> Username </th>
+                        <th className="w-1/2 text-center border px-4 py-2"> Password </th>
                         <th className="w-1/2 text-center border px-4 py-2"> Email </th>
+                        <th className="w-1/2 text-center border px-4 py-2"> Role </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,13 +32,15 @@ const UsersTable: React.FC<UsersTableProps> =({ posts, handleDelete, handleEdit}
                             <React.Fragment key={post._id}>
                                 <tr>
                                     <td className="px-4 py-2 border">{post.UserName}</td>
+                                    <td className="px-4 py-2 border">{post.Password}</td>
                                     <td className="px-4 py-2 border">{post.Email}</td>
+                                    <td className="px-4 py-2 border">{post.Role}</td>
                                 </tr>
                             </React.Fragment>
                         ))
                     ):(
                         <tr>
-                            <td colSpan={2}></td>
+                            <td colSpan={4}></td>
                         </tr>
                     )}
                 </tbody>
