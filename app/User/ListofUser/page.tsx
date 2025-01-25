@@ -23,7 +23,6 @@ const ListofUser: React.FC = () => {
   const UsersAccounts = async () => {
     try {
       const response = await fetch("/api/User/FetchUser");
-      if (!response.ok) throw new Error("Failed to fetch users.");
       const data = await response.json();
       setPosts(data);
     } catch (error) {
@@ -61,7 +60,7 @@ const ListofUser: React.FC = () => {
   const handleDelete = async () => {
     if (!postToDelete) return;
     try {
-      const response = await fetch(`/api/account/deleteAccount`, {
+      const response = await fetch(`/api/User/DeleteUser`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -96,8 +95,11 @@ const ListofUser: React.FC = () => {
                   <AddUserForm
                     onCancel={() => {
                       setShowForm(false);
+                      setEditPost(null);
                     }}
+                    refreshUser={UsersAccounts}
                     userName={userName}
+                    editPost={editPost}
                   />
                 ) : (
                   <>
@@ -148,6 +150,7 @@ const ListofUser: React.FC = () => {
                     </div>
                   </div>
                 )}
+                <ToastContainer className="text-xs" autoClose={1000} />
               </div>
             </div>
           )}
