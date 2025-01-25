@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Table from "./OrderTable";
 import OrderFormFields from "./OrderFormFields";
+import { FetchUsername } from "../FetchUsername";
 
 interface CreateDataFormProps {
     post: any;
@@ -21,31 +22,48 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BuyersName, setBuyersName] = useState("");
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
-    const [Boxes, setBoxes] = useState(post?.Boxes || 0);
-    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || 0);
+    const [Boxes, setBoxes] = useState(post?.Boxes || "");
+    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || "");
     const [GrossSales, setGrossSales] = useState("");
     const [PlaceSales, setPlaceSales] = useState("");
     const [PaymentMode, setPaymentMode] = useState("");
     const [editData, setEditData] = useState<any>(null);
     const [tableData, setTableData] = useState<any[]>([]);
 
+    //Fetch Username at Data
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("id");
+        if (userId) {
+            FetchUsername(userId, setuserName); // Use the function
+        }
+        fetchData();
+    }, [post]);
+
+    //Handle Submit
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // Validate ContainerNo
         if (!ContainerNo) {
             toast.error("Container No is required", { autoClose: 1000 });
             return;
         }
-
+    
+        let remainingBoxes = parseInt(Boxes) || 0;
+        let newBoxSales = parseInt(BoxSales) || 0;
+        
+        // Only auto-calculate remainingBoxes on create (if not editing)
+        if (!editData) {
+            const currentBoxes = parseInt(OriginalBoxes) || 0;
+            remainingBoxes = currentBoxes - newBoxSales;
+        }
+    
+        // Determine the URL and method (POST for create, PUT for update)
         const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
         const method = editData ? "PUT" : "POST";
-        let remainingBoxes = parseInt(Boxes) || 0;
-
-        if (!editData) {
-            // Subtract boxes only if creating new data
-            const sales = parseInt(BoxSales) || 0;
-            remainingBoxes = parseInt(OriginalBoxes) - sales;
-        }
-
+    
+        // Send the request to the server
         const response = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
@@ -65,18 +83,33 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 id: editData ? editData._id : undefined,
             }),
         });
-
+    
+        // Parse the response
         const data = await response.json();
-
+    
         if (response.ok) {
             toast.success(editData ? "Data updated successfully" : "Data added successfully", {
                 autoClose: 1000,
-                onClose: () => {
-                    updateBoxesInDatabase(post._id, remainingBoxes);
+                onClose: async () => {
+                    // Reset the form after success
                     handleReset();
+    
+                    // After adding or updating, update boxes in the database if necessary
+                    if (!editData) {
+                        // Handle creation scenario, update boxes in the DB (not just on BoxSales change)
+                        try {
+                            await updateBoxesInDatabase(post._id, remainingBoxes);
+                        } catch (error) {
+                            toast.error('Failed to update boxes in the database', { autoClose: 1000 });
+                        }
+                    }
+    
+                    // Refetch the data to update the table (this should reflect new data)
+                    await fetchData();
                 },
             });
         } else {
+            // Handle errors and duplicate entries
             if (data.message === "Duplicate entry with the same data.") {
                 toast.error("Duplicate entry with the same data.", { autoClose: 1000 });
             } else {
@@ -84,27 +117,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             }
         }
     };
-
-    //Fetch Username at Data
-    useEffect(() => {
-        fetchuserName();
-        fetchData();
-    }, [post]);
-
-    const fetchuserName = async () => {
-        const params = new URLSearchParams(window.location.search);
-        const userId = params.get("id");
-
-        if (userId) {
-            try {
-                const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
-                const data = await response.json();
-                setuserName(data.name || "");
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            }
-        }
-    };
+    
 
     //Fetch Data on Table
     const fetchData = async () => {
@@ -114,7 +127,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setTableData(filteredData);
         fetchUpdatedData();
     };
-
+    //Fetch Data on Table
     const fetchUpdatedData = async () => {
         const response = await fetch(`/api/Container/GetContainer?id=${post._id}`);
         const data = await response.json();
@@ -133,7 +146,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
             if (response.ok) {
                 toast.success('Boxes updated in database', { autoClose: 1000 });
-                fetchData(); // Ensure this function is defined and correctly updates your state or table
+                fetchData();
             } else {
                 toast.error('Failed to update boxes in database', { autoClose: 1000 });
             }
@@ -143,63 +156,10 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         }
     };
 
-    //Delete Data
-    const handleDelete = async (id: string) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this record?");
-        if (!confirmDelete) return;
-    
-        try {
-            // Fetch the data to be deleted
-            const fetchResponse = await fetch(`/api/Container/GetContainer?id=${id}`);
-            if (!fetchResponse.ok) {
-                toast.error("Failed to fetch data to delete", { autoClose: 1000 });
-                return;
-            }
-    
-            const fetchData = await fetchResponse.json();
-            const boxValueToDelete = fetchData.Boxes || 0;
-            const currentBoxes = parseInt(Boxes) || 0;
-            const updatedBoxes = currentBoxes + boxValueToDelete;
-    
-            // Delete the data
-            const deleteResponse = await fetch(`/api/Container/RemoveContainer?id=${id}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-            });
-    
-            if (deleteResponse.ok) {
-                // Update remaining boxes after deletion
-                await updateBoxesInDatabase(post._id, updatedBoxes);
-                toast.success("Data deleted successfully", {
-                    autoClose: 1000,
-                    onClose: fetchData,
-                });
-            } else {
-                toast.error("Failed to delete data", { autoClose: 1000 });
-            }
-        } catch (error) {
-            console.error("Error deleting data:", error);
-            toast.error("An error occurred while deleting data", { autoClose: 1000 });
-        }
-    };
-    
-
-    //Reset Form Fields After Save
-    const handleReset = () => {
-        setLocation("");
-        setDateOrder("");
-        setBuyersName("");
-        setBoxSales("");
-        setPrice("");
-        setGrossSales("");
-        setPlaceSales("");
-        setPaymentMode("");
-        setEditData(null);
-    };
-
-    // Edit Fields
+    //Edit Fields
     const handleEdit = (data: any) => {
         let updatedBoxes = parseInt(OriginalBoxes) || 0;
+
         setContainerNo(data.ContainerNo);
         setSize(data.Size);
         setuserName(data.userName);
@@ -216,12 +176,46 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(data);
     };
 
+    //Delete Data
+    const handleDelete = async (id: string) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this record?");
+        if (!confirmDelete) return;
+
+        const response = await fetch(`/api/Container/RemoveContainer`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+        });
+
+        if (response.ok) {
+            toast.success("Data deleted successfully", {
+                autoClose: 1000,
+                onClose: fetchData,
+            });
+        } else {
+            toast.error("Failed to delete data", { autoClose: 1000 });
+        }
+    };
+
+    //Reset Form Fields After Save
+    const handleReset = () => {
+        setLocation("");
+        setDateOrder("");
+        setBuyersName("");
+        setBoxSales("");
+        setPrice("");
+        setGrossSales("");
+        setPlaceSales("");
+        setPaymentMode("");
+        setEditData(null);
+    };
+
     // Function to Subtract the Quantity on Remaining Boxes
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
         const price = parseFloat(Price) || 0;
         const currentBoxes = parseInt(OriginalBoxes) || 0; // Use original boxes for calculation
-
+    
         if (sales > currentBoxes) {
             toast.error("Box sales cannot exceed available boxes.", { autoClose: 1000 });
             setBoxSales("");
@@ -229,14 +223,14 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             setBoxes(OriginalBoxes); // Reset boxes to original if error
             return;
         }
-
+    
         const remainingBoxes = currentBoxes - sales;
         setBoxSales(sales.toString());
         setGrossSales((sales * price).toString());
         setBoxes(remainingBoxes.toString());
     };
+    
 
-    // Function to handle price change
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const price = parseFloat(e.target.value) || 0;
         const sales = parseInt(BoxSales) || 0;
@@ -246,6 +240,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     const filteredData = tableData.filter((data) => data.Size === Size); // Filter by Size
+
     const calculateTotals = () => {
         let totalBoxSales = 0;
         let totalPrice = 0;
