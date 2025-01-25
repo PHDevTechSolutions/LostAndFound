@@ -11,6 +11,7 @@ interface CreateDataFormProps {
     onCancel: () => void;
 }
 
+// Post
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
     const [Size, setSize] = useState(post?.Size || "");
@@ -20,8 +21,8 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BuyersName, setBuyersName] = useState("");
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
-    const [Boxes, setBoxes] = useState(post?.Boxes || "");
-    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || "");
+    const [Boxes, setBoxes] = useState(post?.Boxes || 0);
+    const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || 0);
     const [GrossSales, setGrossSales] = useState("");
     const [PlaceSales, setPlaceSales] = useState("");
     const [PaymentMode, setPaymentMode] = useState("");
@@ -37,7 +38,13 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
         const url = editData ? `/api/Container/UpdateContainer` : `/api/Container/SaveContainer`;
         const method = editData ? "PUT" : "POST";
-        const remainingBoxes = parseInt(Boxes) || 0;
+        let remainingBoxes = parseInt(Boxes) || 0;
+
+        if (!editData) {
+            // Subtract boxes only if creating new data
+            const sales = parseInt(BoxSales) || 0;
+            remainingBoxes = parseInt(OriginalBoxes) - sales;
+        }
 
         const response = await fetch(url, {
             method,
@@ -78,6 +85,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         }
     };
 
+    //Fetch Username at Data
     useEffect(() => {
         fetchuserName();
         fetchData();
@@ -98,6 +106,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         }
     };
 
+    //Fetch Data on Table
     const fetchData = async () => {
         const response = await fetch("/api/Container/GetAllContainer");
         const data = await response.json();
@@ -113,6 +122,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setOriginalBoxes(data.Boxes);
     };
 
+    //Update Boxes ( Remaining Boxes ) Quantity
     const updateBoxesInDatabase = async (id: string, remainingBoxes: number) => {
         try {
             const response = await fetch('/api/Container/UpdateBoxes', {
@@ -123,7 +133,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
 
             if (response.ok) {
                 toast.success('Boxes updated in database', { autoClose: 1000 });
-                fetchData();
+                fetchData(); // Ensure this function is defined and correctly updates your state or table
             } else {
                 toast.error('Failed to update boxes in database', { autoClose: 1000 });
             }
@@ -133,26 +143,48 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         }
     };
 
+    //Delete Data
     const handleDelete = async (id: string) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this record?");
         if (!confirmDelete) return;
-
-        const response = await fetch(`/api/Container/RemoveContainer`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id }),
-        });
-
-        if (response.ok) {
-            toast.success("Data deleted successfully", {
-                autoClose: 1000,
-                onClose: fetchData,
+    
+        try {
+            // Fetch the data to be deleted
+            const fetchResponse = await fetch(`/api/Container/GetContainer?id=${id}`);
+            if (!fetchResponse.ok) {
+                toast.error("Failed to fetch data to delete", { autoClose: 1000 });
+                return;
+            }
+    
+            const fetchData = await fetchResponse.json();
+            const boxValueToDelete = fetchData.Boxes || 0;
+            const currentBoxes = parseInt(Boxes) || 0;
+            const updatedBoxes = currentBoxes + boxValueToDelete;
+    
+            // Delete the data
+            const deleteResponse = await fetch(`/api/Container/RemoveContainer?id=${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
             });
-        } else {
-            toast.error("Failed to delete data", { autoClose: 1000 });
+    
+            if (deleteResponse.ok) {
+                // Update remaining boxes after deletion
+                await updateBoxesInDatabase(post._id, updatedBoxes);
+                toast.success("Data deleted successfully", {
+                    autoClose: 1000,
+                    onClose: fetchData,
+                });
+            } else {
+                toast.error("Failed to delete data", { autoClose: 1000 });
+            }
+        } catch (error) {
+            console.error("Error deleting data:", error);
+            toast.error("An error occurred while deleting data", { autoClose: 1000 });
         }
     };
+    
 
+    //Reset Form Fields After Save
     const handleReset = () => {
         setLocation("");
         setDateOrder("");
@@ -165,18 +197,9 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(null);
     };
 
+    // Edit Fields
     const handleEdit = (data: any) => {
-        const originalBoxSales = parseInt(BoxSales) || 0;
-        const newBoxSales = parseInt(data.BoxSales) || 0;
-
         let updatedBoxes = parseInt(OriginalBoxes) || 0;
-
-        if (newBoxSales < originalBoxSales) {
-            updatedBoxes += originalBoxSales - newBoxSales;
-        } else if (newBoxSales > originalBoxSales) {
-            updatedBoxes -= newBoxSales - originalBoxSales;
-        }
-
         setContainerNo(data.ContainerNo);
         setSize(data.Size);
         setuserName(data.userName);
@@ -193,6 +216,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setEditData(data);
     };
 
+    // Function to Subtract the Quantity on Remaining Boxes
     const handleBoxSalesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const sales = parseInt(e.target.value) || 0;
         const price = parseFloat(Price) || 0;
@@ -212,6 +236,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setBoxes(remainingBoxes.toString());
     };
 
+    // Function to handle price change
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const price = parseFloat(e.target.value) || 0;
         const sales = parseInt(BoxSales) || 0;
@@ -221,7 +246,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     const filteredData = tableData.filter((data) => data.Size === Size); // Filter by Size
-
     const calculateTotals = () => {
         let totalBoxSales = 0;
         let totalPrice = 0;
@@ -237,8 +261,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     };
 
     const { totalBoxSales, totalPrice, totalGrossSales } = calculateTotals();
-
-
 
     return (
         <div className="container mx-auto p-4">
