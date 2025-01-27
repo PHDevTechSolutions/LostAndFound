@@ -59,18 +59,9 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
         <form onSubmit={handleSubmit}>
             <input id="containerNo" type="hidden" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
             <input id="Size" type="hidden" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
-            <div className="mb-4">
-                <input type="hidden" id="Username" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
-            </div>
-            <div className="mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="Location">Warehouse Location</label>
-                <select id="Location" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
-                    <option value="">Select Location</option>
-                    <option value="Navotas">Navotas</option>
-                    <option value="Sambat">Sambat</option>
-                    <option value="Minalin">Minalin</option>
-                </select>
-            </div>
+            <input type="hidden" id="Username" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" disabled />
+            <input type="hidden" id="Location" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
+        
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date</label>
                 <input type="date" id="DateOrder" value={DateOrder} onChange={(e) => setDateOrder(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />

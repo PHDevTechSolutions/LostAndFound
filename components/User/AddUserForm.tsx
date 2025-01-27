@@ -9,19 +9,19 @@ import 'react-toastify/dist/ReactToastify.css';
 interface AddUserFormProps {
     onCancel: () => void;
     refreshUser: () => void;
-    userName: string; 
+    userName: any; 
     editPost?: any;
 }
 // End
 
-const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, refreshUser, userName, editPost}) => {
+const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, refreshUser, editPost}) => {
     const [Firstname, setFirstname] = useState(editPost ? editPost.Firstname : "");
     const [Lastname, setLastname] = useState(editPost ? editPost.Lastname : "");
     const [Email, setEmail] = useState(editPost ? editPost.Email : "");
     const [Location, setLocation] = useState(editPost ? editPost.Location : "");
-    const [UserName, setUserName] = useState(editPost ? editPost.UserName : "");
+    const [userName, setuserName] = useState(editPost ? editPost.userName : "");
     const [Password, setPassword] = useState(editPost ? editPost.Password : "");
-    const [Role, setRole] = useState(editPost ? editPost.Role : "");
+    const [Role, setRole] = useState(editPost ? editPost.role : "");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,7 +40,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, refreshUser, userNa
                 Lastname,
                 Email,
                 Location,
-                UserName,
+                userName,
                 Password,
                 Role,
                 id: editPost ? editPost._id : undefined,
@@ -71,7 +71,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, refreshUser, userNa
                 Lastname={Lastname} setLastname={setLastname}
                 Email={Email} setEmail={setEmail}
                 Location={Location} setLocation={setLocation}
-                UserName={UserName} setUserName={setUserName}
+                userName={userName} setuserName={setuserName}
                 Password={Password} setPassword={setPassword}
                 Role={Role} setRole={setRole}
                 editPost={editPost}

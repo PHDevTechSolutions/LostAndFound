@@ -17,7 +17,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
     const [Size, setSize] = useState(post?.Size || "");
     const [userName, setuserName] = useState("");
-    const [Location, setLocation] = useState("");
+    const [Location, setLocation] = useState(post?.Location || "");
     const [DateOrder, setDateOrder] = useState("");
     const [BuyersName, setBuyersName] = useState("");
     const [BoxSales, setBoxSales] = useState("");

@@ -14,6 +14,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     setSearchTerm,
     postsPerPage,
     setPostsPerPage,
+
 }) => {
     return (
         <div className="flex flex-wrap gap-2 mb-4 items-center">
@@ -21,7 +22,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 type="text"
                 placeholder="Search..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value.toLocaleLowerCase())}
+                onChange={(e) => setSearchTerm(e.target.value.toLocaleUpperCase())}
                 className="border px-3 py-2 rounded text-xs w-full md:w-auto flex-grow capitalize"
             />
             <select

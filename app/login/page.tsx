@@ -11,15 +11,15 @@ import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!Email || !Password) {
       toast.error("All fields are required!"); // Show error toast if fields are empty
       return;
     }
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ Email, Password }),
       });
 
       const result = await response.json();
@@ -68,7 +68,7 @@ const Login: React.FC = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                value={email}
+                value={Email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -78,7 +78,7 @@ const Login: React.FC = () => {
               <input
                 type="password"
                 placeholder="6+ Characters, 1 Capital letter"
-                value={password}
+                value={Password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

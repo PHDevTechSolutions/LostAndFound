@@ -50,6 +50,7 @@ const ContainerList: React.FC = () => {
     useEffect(() => {
         fetchDatabase();
     }, []);
+    
 
     // Filter Data based on search term and city address
     const filteredAccounts = posts.filter((post) => {
@@ -126,7 +127,7 @@ const ContainerList: React.FC = () => {
         <SessionChecker>
             <ParentLayout>
                 <UserFetcher>
-                    {(userName) => (
+                    {(user) => (
                         <div className="container mx-auto p-4">
                             <div className="grid grid-cols-1 md:grid-cols-1">
                                 {showCreateForm ? (
@@ -141,7 +142,8 @@ const ContainerList: React.FC = () => {
                                             setEditData(null);
                                         }}
                                         refreshPosts={fetchDatabase}  // Pass the refreshPosts callback
-                                        userName={userName}
+                                        userName={user ? user.userName : ""}
+                                        Location={user ? user.Location : ""}
                                         editData={editData}
                                     />
                                 ) : (
@@ -166,6 +168,7 @@ const ContainerList: React.FC = () => {
                                                 handleEdit={handleEdit}
                                                 handleDelete={confirmDelete}
                                                 handleCreateData={handleCreateData}
+                                                Role={user ? user.Role : ""}
                                             />
 
                                             <Pagination

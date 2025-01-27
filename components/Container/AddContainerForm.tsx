@@ -1,41 +1,42 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import FormFields from "./ContainerFormFields";
 
 interface AddContainerProps { 
   onCancel: () => void; 
-  refreshPosts: () => void;  // Add a refreshPosts callback
-  userName: string;  // The logged-in user's name passed as a prop
-  editData?: any; // Optional prop for the post being edited
+  refreshPosts: () => void;  
+  userName: string;  
+  editData?: any; 
+  Location: string;
 }
 
-const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, userName, editData }) => {
-  const [Vendor, setVendor] = useState(editData ? editData.Vendor : "");
-  const [SpsicNo, setSpsicNo] = useState(editData ? editData.SpsicNo: "");
-  const [DateArrived, setDateArrived] = useState(editData ? editData.DateArrived: "");
-  const [DateSoldout, setDateSoldout] = useState(editData ? editData.DateSoldout: "");
-  const [SupplierName, setSupplierName] = useState(editData ? editData.SupplierName: "");
-  const [ContainerNo, setContainerNo] = useState(editData ? editData.ContainerNo: "");
-  const [Country, setCountry] = useState(editData ? editData.Country: "");
-  const [Boxes, setBoxes] = useState(editData ? editData.Boxes: "");
-  const [TotalQuantity, setTotalQuantity] = useState(editData ? editData.TotalQuantity: "");
-  const [TotalGrossSales, setTotalGrossSales] = useState(editData ? editData.TotalGrossSales: "");
-  const [Commodity, setCommodity] = useState(editData ? editData.Commodity: "");
-  const [Size, setSize] = useState(editData ? editData.Size: "");
-  const [Freezing, setFreezing] = useState(editData ? editData.Freezing: "");
-  const [Status, setStatus] = useState(editData ? editData.Status: "");
-  const [BoxType, setBoxType] = useState(editData ? editData.BoxType: "");
-  const [Remarks, setRemarks] = useState(editData ? editData.Remarks: "");
+const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, userName, editData, Location: propLocation }) => {
+  const [Location, setLocation] = useState(editData?.Location || propLocation || "");
+  const [Vendor, setVendor] = useState(editData?.Vendor || "");
+  const [SpsicNo, setSpsicNo] = useState(editData?.SpsicNo || "");
+  const [DateArrived, setDateArrived] = useState(editData?.DateArrived || "");
+  const [DateSoldout, setDateSoldout] = useState(editData?.DateSoldout || "");
+  const [SupplierName, setSupplierName] = useState(editData?.SupplierName || "");
+  const [ContainerNo, setContainerNo] = useState(editData?.ContainerNo || "");
+  const [Country, setCountry] = useState(editData?.Country || "");
+  const [Boxes, setBoxes] = useState(editData?.Boxes || "");
+  const [TotalQuantity, setTotalQuantity] = useState(editData?.TotalQuantity || "");
+  const [TotalGrossSales, setTotalGrossSales] = useState(editData?.TotalGrossSales || "");
+  const [Commodity, setCommodity] = useState(editData?.Commodity || "");
+  const [Size, setSize] = useState(editData?.Size || "");
+  const [Freezing, setFreezing] = useState(editData?.Freezing || "");
+  const [Status, setStatus] = useState(editData?.Status || "");
+  const [BoxType, setBoxType] = useState(editData?.BoxType || "");
+  const [Remarks, setRemarks] = useState(editData?.Remarks || "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const location = "Warehouse A"; // Can be dynamically set based on user session or context
-    const url = editData ? `/api/Container/EditContainer` : `/api/Container/CreateContainer`; // API endpoint changes based on edit or add
-    const method = editData ? "PUT" : "POST"; // HTTP method changes based on edit or add
+    const url = editData ? `/api/Container/EditContainer` : `/api/Container/CreateContainer`;
+    const method = editData ? "PUT" : "POST";
 
     const response = await fetch(url, {
       method,
@@ -43,10 +44,11 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
-        userName: userName,  // Pass the dynamic username
-        location,  // Pass the static location or dynamic one as needed
-        id: editData ? editData._id : undefined, // Send post ID if editing
+        Location, 
+        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes,
+        TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
+        userName, 
+        id: editData?._id, 
       }),
     });
 
@@ -54,13 +56,13 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       toast.success(editData ? "Data updated successfully" : "Data added successfully", {
         autoClose: 1000,
         onClose: () => {
-          onCancel(); // Hide the form after submission
-          refreshPosts(); // Refresh accounts after successful submission
-        }
+          onCancel();
+          refreshPosts();
+        },
       });
     } else {
       toast.error(editData ? "Failed to Update Data" : "Failed to Add Data", {
-        autoClose: 1000
+        autoClose: 1000,
       });
     }
   };
@@ -70,6 +72,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
         <h2 className="text-xs font-bold mb-4">{editData ? "Edit Container" : "Add Container"}</h2>
         <FormFields
+          Location={Location} setLocation={setLocation} 
           Vendor={Vendor} setVendor={setVendor}
           SpsicNo={SpsicNo} setSpsicNo={setSpsicNo}
           DateArrived={DateArrived} setDateArrived={setDateArrived}
@@ -78,9 +81,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           ContainerNo={ContainerNo} setContainerNo={setContainerNo}
           setCountry={setCountry} Country={Country}
           setTotalQuantity={setTotalQuantity} TotalQuantity={TotalQuantity}
-
           setTotalGrossSales={setTotalGrossSales} TotalGrossSales={TotalGrossSales}
-
           setBoxes={setBoxes} Boxes={Boxes}
           setCommodity={setCommodity} Commodity={Commodity}
           setSize={setSize} Size={Size}
@@ -91,8 +92,12 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           editData={editData}
         />
         <div className="flex justify-between">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editData ? "Update" : "Submit"}</button>
-          <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">
+            {editData ? "Update" : "Submit"}
+          </button>
+          <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>
+            Cancel
+          </button>
         </div>
       </form>
       <ToastContainer className="text-xs" autoClose={1000} />

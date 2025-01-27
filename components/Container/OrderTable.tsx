@@ -63,9 +63,8 @@ const Table: React.FC<TableProps> = React.memo(
 
       // Add headers
       worksheet.addRow([`Vendor: ${post?.Vendor || "N/A"}`]);
-      worksheet.addRow([]);
+      worksheet.addRow([`Container No: ${post?.ContainerNo || "N/A"}`]);
       worksheet.addRow([
-        "ContainerNo",
         "Size",
         "Username",
         "Location",
@@ -81,9 +80,8 @@ const Table: React.FC<TableProps> = React.memo(
       // Add data
       filteredData.forEach((data) => {
         worksheet.addRow([
-          data.ContainerNo || "",
           data.Size || "",
-          data.Username || "",
+          data.userName || "",
           data.Location || "",
           data.DateOrder || "",
           data.BuyersName || "",

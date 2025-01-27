@@ -9,7 +9,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         return;
     }
 
-    const { id, Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, location } = req.body;
+    const { id, Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, Location } = req.body;
 
     try {
         const db = await connectToDatabase();
@@ -26,7 +26,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         // Activity log format
         const activityLog = {
             userName: userName, 
-            location: location, 
+            Location: Location, 
             SpsicNo: SpsicNo,
             message: `${userName} Has Updated Container Number: ${ContainerNo}`,
             ContainerNo: ContainerNo,

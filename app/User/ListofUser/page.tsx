@@ -4,8 +4,14 @@ import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
+
+// Components
 import AddUserForm from "../../../components/User/AddUserForm";
 import UsersTable from "../../../components/User/UsersTable";
+import SearchFilters from "../../../components/User/SearchFilters";
+import Pagination from "../../../components/User/Pagination";
+
+// Toast Notifications
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,13 +20,13 @@ const ListofUser: React.FC = () => {
   const [editPost, setEditPost] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCityAddress, setSelectedCityAddress] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(5);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState<string | null>(null);
 
-  const UsersAccounts = async () => {
+  // Fetch users data from API
+  const fetchUsers = async () => {
     try {
       const response = await fetch("/api/User/FetchUser");
       const data = await response.json();
@@ -31,12 +37,11 @@ const ListofUser: React.FC = () => {
     }
   };
 
-  const filteredAccounts = posts.filter((post) => {
-    return (
-      (post?.UserName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post?.Email?.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  });
+  // Filter users by search term
+  const filteredAccounts = posts.filter((post) =>
+    [post?.Firstname, post?.Firstname]
+      .some((field) => field?.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -44,7 +49,7 @@ const ListofUser: React.FC = () => {
   const totalPages = Math.ceil(filteredAccounts.length / postsPerPage);
 
   useEffect(() => {
-    UsersAccounts();
+    fetchUsers();
   }, []);
 
   const handleEdit = (post: any) => {
@@ -59,12 +64,11 @@ const ListofUser: React.FC = () => {
 
   const handleDelete = async () => {
     if (!postToDelete) return;
+
     try {
       const response = await fetch(`/api/User/DeleteUser`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: postToDelete }),
       });
 
@@ -90,14 +94,14 @@ const ListofUser: React.FC = () => {
           {(userName) => (
             <div className="container mx-auto p-4">
               <ToastContainer />
-              <div className="grid grid-cols-1 md:grid-cols-1">
+              <div className="grid grid-cols-1">
                 {showForm ? (
                   <AddUserForm
                     onCancel={() => {
                       setShowForm(false);
                       setEditPost(null);
                     }}
-                    refreshUser={UsersAccounts}
+                    refreshUser={fetchUsers}
                     userName={userName}
                     editPost={editPost}
                   />
@@ -112,16 +116,29 @@ const ListofUser: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="mb-4 p-4 bg-white shadow-md rounded-lg ">
-                      {currentPosts.length > 0 ? (
-                        <UsersTable
-                          posts={currentPosts}
-                          handleEdit={handleEdit}
-                          handleDelete={confirmDelete}
-                        />
-                      ) : (
-                        <p>No users found.</p>
-                      )}
+                    <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
+                      <h2 className="text-lg font-bold mb-2">List of Users</h2>
+                      <SearchFilters
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        postsPerPage={postsPerPage}
+                        setPostsPerPage={setPostsPerPage}
+                      />
+                      <UsersTable
+                        posts={currentPosts}
+                        handleEdit={handleEdit}
+                        handleDelete={confirmDelete}
+                      />
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        setCurrentPage={setCurrentPage}
+                      />
+                      <div className="text-xs mt-2">
+                        Showing {indexOfFirstPost + 1} to{" "}
+                        {Math.min(indexOfLastPost, filteredAccounts.length)} of{" "}
+                        {filteredAccounts.length} entries
+                      </div>
                     </div>
                   </>
                 )}
@@ -129,7 +146,9 @@ const ListofUser: React.FC = () => {
                 {showDeleteModal && (
                   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white p-4 rounded shadow-lg">
-                      <h2 className="text-xs font-bold mb-4">Confirm Deletion</h2>
+                      <h2 className="text-xs font-bold mb-4">
+                        Confirm Deletion
+                      </h2>
                       <p className="text-xs">
                         Are you sure you want to delete this account?
                       </p>
@@ -150,7 +169,6 @@ const ListofUser: React.FC = () => {
                     </div>
                   </div>
                 )}
-                <ToastContainer className="text-xs" autoClose={1000} />
               </div>
             </div>
           )}

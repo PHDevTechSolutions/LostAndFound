@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 interface FormFieldsProps {
+  //Location Tagging
+  Location: string;
+  setLocation: (value: string) => void;
+
   Vendor: string;
   setVendor: (value: string) => void;
   SpsicNo: string;
@@ -39,6 +43,10 @@ interface FormFieldsProps {
 }
 
 const ContainerFormFields: React.FC<FormFieldsProps> = ({
+  //Location Tagging
+  Location,
+  setLocation,
+
   Vendor,
   setVendor,
   SpsicNo,
@@ -75,32 +83,33 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
   setRemarks,
   editData,
 }) => {
-  
-  const totalQuantityValue = TotalQuantity ?? 0; 
+
+  const totalQuantityValue = TotalQuantity ?? 0;
   const boxesValue = Boxes ?? 0;
 
   useEffect(() => {
     if (totalQuantityValue !== boxesValue) {
-      setBoxes(totalQuantityValue); 
+      setBoxes(totalQuantityValue);
     }
   }, [totalQuantityValue, setBoxes, boxesValue]);
 
   const handleTotalQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setTotalQuantity(value); 
+    setTotalQuantity(value);
     setBoxes(value);
   };
 
   const handleBoxesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value); 
+    const value = Number(e.target.value);
     setBoxes(value);
-    setTotalQuantity(value); 
+    setTotalQuantity(value);
   };
 
   return (
     <>
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+          <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded capitalize text-xs" disabled />
           <label className="block text-xs font-bold mb-2" htmlFor="Vendor">Vendor</label>
           <input type="text" id="Vendor" value={Vendor || ""} onChange={(e) => setVendor(e.target.value)} className="w-full px-3 py-2 border rounded capitalize text-xs" required />
         </div>

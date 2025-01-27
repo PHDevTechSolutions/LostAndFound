@@ -5,7 +5,7 @@ export const FetchUsername = async (userId: string, setUserName: React.Dispatch<
         try {
             const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
             const data = await response.json();
-            setUserName(data.name || "");
+            setUserName(data.userName || "");
         } catch (error) {
             console.error("Error fetching user data:", error);
         }

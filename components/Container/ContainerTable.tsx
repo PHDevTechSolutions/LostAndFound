@@ -1,6 +1,3 @@
-
-"use client";
-
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import io from "socket.io-client";
 import { Menu } from "@headlessui/react";
@@ -13,15 +10,21 @@ interface ContainerTableProps {
   handleEdit: (post: any) => void;
   handleDelete: (postId: string) => void;
   handleCreateData: (postId: string) => void;
+  Role: string; // Pass the role here
 }
 
-const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData }) => {
+const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData, Role }) => {
   const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setUpdatedPosts(posts);
   }, [posts]);
+
+  useEffect(() => {
+    console.log("Role in ContainerTable:", Role);
+  }, [Role]);
+
 
   useEffect(() => {
     const newPostListener = (newPost: any) => {
@@ -108,17 +111,22 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
                         </button>
                       )}
                     </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
-                          className={`${active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                            } block w-full text-left px-4 py-2 text-xs`}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </Menu.Item>
+
+                    {/* Conditionally render the Delete button based on the role */}
+                    {Role !== "Staff" && (
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
+                            className={`${active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                              } block w-full text-left px-4 py-2 text-xs`}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </Menu.Item>
+                    )}
+
                   </div>
                 </Menu.Items>
               </Menu>
@@ -161,12 +169,16 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
                   >
                     Edit
                   </button>
-                  <button
-                    className="bg-red-700 text-white px-2 py-1 rounded text-xs"
-                    onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
-                  >
-                    Delete
-                  </button>
+
+                  {/* Conditionally render the Delete button based on the role */}
+                  {Role !== "Staff" && (
+                    <button
+                      className="bg-red-700 text-white px-2 py-1 rounded text-xs"
+                      onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>
@@ -174,7 +186,7 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
         </React.Fragment>
       );
     });
-  }, [updatedPosts, expandedRows, toggleRow, handleCreateData, handleEdit, handleDelete]);
+  }, [updatedPosts, expandedRows, toggleRow, handleCreateData, handleEdit, handleDelete, Role]);
 
   return (
     <div>
@@ -198,7 +210,7 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
         <tbody>
           {memoizedRows.length > 0 ? memoizedRows : (
             <tr>
-              <td colSpan={10} className="py-2 px-4 border text-center">No accounts available</td>
+              <td colSpan={10} className="py-2 px-4 border text-center">No records found</td>
             </tr>
           )}
         </tbody>

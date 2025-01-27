@@ -6,10 +6,10 @@ import { serialize } from "cookie";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { email, password } = req.body;
+    const { Email, Password } = req.body;
 
     // Validate user credentials
-    const result = await validateUser({ email, password });
+    const result = await validateUser({ Email, Password });
 
     if (result.success && result.user) {
       const userId = result.user._id.toString();
