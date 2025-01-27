@@ -5,22 +5,15 @@ import { PiShippingContainer } from "react-icons/pi";
 import { FaUsersGear, FaPlus, FaMinus } from "react-icons/fa6";
 import { IoCogSharp } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
-  isOpen,
-  onClose,
-}) => {
+const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose, }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [userId, setUserId] = useState<string | null>(null);
-  const [userDetails, setUserDetails] = useState({
-    Firstname: "",
-    Lastname: "",
-    Location: "",
-    Role: "",
-  });
+  const [userDetails, setUserDetails] = useState({Firstname: "", Lastname: "", Location: "", Role: "",});
   const router = useRouter();
 
   useEffect(() => {
@@ -56,9 +49,9 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   };
 
   const handleToggle = (section: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
+    setOpenSections((prevSections: any) => ({
+      ...prevSections,
+      [section]: !prevSections[section],
     }));
   };
 
@@ -112,10 +105,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   return (
     <div className="relative">
       {/* Sidebar Overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 transition-opacity duration-300" />
-      )}
-
+  
       <div
         className={`fixed inset-y-0 left-0 z-50 h-screen bg-gray-100 text-dark border-1 shadow transition-all duration-300 flex flex-col ${
           collapsed ? "w-16" : "w-64"

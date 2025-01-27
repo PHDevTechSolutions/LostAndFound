@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosMenu } from 'react-icons/io';
 
-const Navbar: React.FC<{ onToggleSidebar: () => void; isSidebarOpen: boolean }> = ({ onToggleSidebar, isSidebarOpen }) => {
+const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -38,30 +38,22 @@ const Navbar: React.FC<{ onToggleSidebar: () => void; isSidebarOpen: boolean }> 
   };
 
   return (
-    <div className="relative">
-      {/* Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 transition-opacity duration-300" />
-      )}
-
-      <div className="flex justify-between items-center p-4 bg-gray-100 text-dark shadow-md z-50 relative">
-        <div className="flex items-center">
-          <button onClick={onToggleSidebar} className="p-2">
-            <IoIosMenu size={24} />
-          </button>
-          <h1 className="ml-2 text-xs">Dashboard</h1>
-        </div>
-        <div className="flex items-center text-xs">
-          <span className="mr-4 capitalize">Hello, {userName}</span>
-          <button className="bg-red-500 px-2 py-2 text-white rounded" onClick={() => setShowLogoutModal(true)}>
-            Logout
-          </button>
-        </div>
+    <div className="flex justify-between items-center p-4 bg-gray-100 text-dark shadow-md">
+      <div className="flex items-center">
+        <button onClick={onToggleSidebar} className="p-2">
+          <IoIosMenu size={24} />
+        </button>
+        <h1 className="ml-2 text-xs">Dashboard</h1>
+      </div>
+      <div className="flex items-center text-xs">
+        <span className="mr-4 capitalize">Hello, {userName}</span>
+        <button className="bg-red-500 px-2 py-2 text-white rounded" onClick={() => setShowLogoutModal(true)}>
+          Logout
+        </button>
       </div>
 
-      {/* Logout Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800">
             <p className="mb-4 text-xs">Are you sure you want to logout?</p>
             <div className="flex justify-center space-x-4">
