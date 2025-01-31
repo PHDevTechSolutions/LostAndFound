@@ -6,9 +6,9 @@ import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
 
 // Pages
-import SearchFilters from "../../../components/Container/SearchFilters";
+import SearchFilters from "../../../components/Pediente/SearchFilters";
 import PedienteTable from "../../../components/Pediente/PedienteTable";
-import Pagination from "../../../components/Container/Pagination";
+import Pagination from "../../../components/Pediente/Pagination";
 
 // Toasts
 import { ToastContainer, toast } from "react-toastify";
@@ -57,8 +57,8 @@ const ContainerList: React.FC = () => {
             post.BuyersName.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.PlaceSales.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const dateArrive = new Date(post.DateArrived).getTime();
-        const dateSoldout = new Date(post.DateSoldout).getTime();
+        const dateArrive = new Date(post.DateOrder).getTime();
+        const dateSoldout = new Date(post.DateOrder).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
 
