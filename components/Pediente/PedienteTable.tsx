@@ -5,13 +5,33 @@ import { BsPlusCircle, BsThreeDotsVertical } from "react-icons/bs";
 
 const socket = io("http://localhost:3001");
 
+interface Post {
+    _id: string;
+    BuyersName: string;
+    PlaceSales: string;
+    ContainerNo: string;
+    Size: string;
+    BoxSales: number;
+    Price: number;
+    Payment?: number;
+}
+
 interface PedienteTableProps {
     posts: any[];
     handleEdit: (post: any) => void;
     handleDelete: (postId: string) => void;
     handleCreateData: (postId: string) => void;
-    Role: string; // Pass the role heres
+    Role: string; // Pass the role here
 }
+
+const groupByBuyer = (posts: Post[]) => {
+    return posts.reduce((acc, post) => {
+        const { BuyersName } = post;
+        if (!acc[BuyersName]) acc[BuyersName] = [];
+        acc[BuyersName].push(post);
+        return acc;
+    }, {} as Record<string, Post[]>);
+};
 
 const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData, Role }) => {
     const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
@@ -20,11 +40,6 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
     useEffect(() => {
         setUpdatedPosts(posts);
     }, [posts]);
-
-    useEffect(() => {
-        console.log("Role in ContainerTable:", Role);
-    }, [Role]);
-
 
     useEffect(() => {
         const newPostListener = (newPost: any) => {
@@ -56,34 +71,40 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
         return new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(amount);
     };
 
-
-    // Memoizing the table rows to prevent unnecessary recomputation
+    // Memoizing the table rows and summing grouped data
     const memoizedRows = useMemo(() => {
+        const groupedPosts = groupByBuyer(updatedPosts);
         let totalQty = 0;
         let totalAmount = 0;
         let totalPayment = 0;
         let totalBalance = 0;
 
-        const rows = updatedPosts.map((post) => {
-            const total = post.BoxSales * post.Price; // Calculate total per row
-            const balance = total - (post.Payment || 0); // Calculate balance
+        const rows = Object.entries(groupedPosts).map(([buyer, posts]) => {
+            let groupTotalQty = 0;
+            let groupTotalAmount = 0;
+            let groupTotalPayment = 0;
+            let groupTotalBalance = 0;
 
-            // Accumulate totals for the current visible rows
-            totalQty += Number(post.BoxSales) || 0;
-            totalAmount += total;
-            totalPayment += post.Payment || 0;
-            totalBalance += balance;
+            const buyerRows = posts.map((post) => {
+                const total = post.BoxSales * post.Price;
+                const balance = total - (post.Payment || 0);
 
-            return (
-                <React.Fragment key={post._id}>
-                    <tr
-                        className="bg-gray-10 cursor-pointer"
-                        onClick={() => toggleRow(post._id)}
-                    >
-                        <td className="px-4 py-2 border capitalize"><BsPlusCircle className="inline-block mr-2 md:hidden" />  {post.BuyersName}</td>
+                // Group level totals
+                groupTotalQty += Number(post.BoxSales) || 0;
+                groupTotalAmount += total;
+                groupTotalPayment += post.Payment || 0;
+                groupTotalBalance += balance;
+
+                totalQty += Number(post.BoxSales) || 0;
+                totalAmount += total;
+                totalPayment += post.Payment || 0;
+                totalBalance += balance;
+
+                return (
+                    <tr key={post._id}>
+                        <td className="px-4 py-2 border capitalize">{post.BuyersName}</td>
                         <td className="px-4 py-2 border hidden md:table-cell">{post.PlaceSales}</td>
                         <td className="px-4 py-2 border hidden md:table-cell">{post.ContainerNo}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell"></td>
                         <td className="px-4 py-2 border hidden md:table-cell">{post.Size}</td>
                         <td className="px-4 py-2 border hidden md:table-cell">{post.BoxSales}</td>
                         <td className="px-4 py-2 border hidden md:table-cell">{formatCurrency(post.Price)}</td>
@@ -110,8 +131,6 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
                                                 </button>
                                             )}
                                         </Menu.Item>
-
-                                        {/* Conditionally render the Delete button based on the role */}
                                         {Role !== "Staff" && (
                                             <Menu.Item>
                                                 {({ active }) => (
@@ -125,46 +144,34 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
                                                 )}
                                             </Menu.Item>
                                         )}
-
                                     </div>
                                 </Menu.Items>
                             </Menu>
                         </td>
                     </tr>
-                    {expandedRows.has(post._id) && (
-                        <tr className="bg-gray-10 md:hidden">
-                            <td className="px-4 py-2" colSpan={6}>
-                                <div><strong>Buy and Sell:</strong> {post.BuyersName}</div>
-                                <div><strong>Breakdown:</strong> {post.PlaceSales}</div>
-                                <div><strong>Container Van:</strong> {post.ContainerNo}</div>
-                                <div><strong>Commodity:</strong></div>
-                                <div><strong>Size :</strong> {post.Size}</div>
-                                <div><strong>Qty :</strong> {post.BoxSales}</div>
-                                <div><strong>Sales Price :</strong> {post.Price}</div>
-                                <div className="mt-2">
-                                    <button
-                                        className="bg-blue-500 text-white px-2 py-1 rounded mr-2 text-xs"
-                                        onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
-                                    >
-                                        Edit
-                                    </button>
+                );
+            });
 
-                                    {/* Conditionally render the Delete button based on the role */}
-                                    {Role !== "Staff" && (
-                                        <button
-                                            className="bg-red-700 text-white px-2 py-1 rounded text-xs"
-                                            onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
-                                        >
-                                            Delete
-                                        </button>
-                                    )}
-                                </div>
-                            </td>
-                        </tr>
-                    )}
+            return (
+                <React.Fragment key={buyer}>
+                    {/* Grouped Buyer Row */}
+                    <tr className="bg-gray-200 font-semibold">
+                        <td colSpan={10} className="px-4 py-2 uppercase">{buyer}</td>
+                    </tr>
+                    {buyerRows}
+                    {/* Group Total Row */}
+                    <tr className="bg-gray-300">
+                        <td className="px-4 py-2 text-right" colSpan={5}>Group Total:</td>
+                        <td className="px-4 py-2">{groupTotalQty}</td>
+                        <td className="px-4 py-2">{formatCurrency(groupTotalAmount)}</td>
+                        <td className="px-4 py-2">{formatCurrency(groupTotalPayment)}</td>
+                        <td className="px-4 py-2">{formatCurrency(groupTotalBalance)}</td>
+                        <td className="px-4 py-2"></td>
+                    </tr>
                 </React.Fragment>
             );
         });
+
         return { rows, totalQty, totalAmount, totalPayment, totalBalance };
     }, [updatedPosts, expandedRows, toggleRow, handleCreateData, handleEdit, handleDelete, Role]);
 
@@ -172,36 +179,19 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 
     return (
         <div>
-            {/* Desktop View - Float Right */}
-            <div className="bg-white p-4 mb-2 rounded-sm shadow-md text-xs font-bold w-56 md:flex md:flex-col md:items-start md:float-right hidden md:block">
-                <span className="mb-1">Beginning Balance: {formatCurrency(100000)}</span>
-                <span className="mb-1">Add Receivable: {formatCurrency(0)}</span>
-                <span className="mb-1">Less Collection: {formatCurrency(totalPayment)}</span>
-                <span>Ending Balance: {formatCurrency(totalBalance)}</span>
-            </div>
-
-            {/* Mobile View - Centered */}
-            <div className="bg-white p-4 rounded-lg shadow-md text-xs font-bold w-full text-center block md:hidden">
-                <div className="mb-1">Beginning Balance: {formatCurrency(100000)}</div>
-                <div className="mb-1">Add Receivable: {formatCurrency(0)}</div>
-                <div className="mb-1">Less Collection: {formatCurrency(totalPayment)}</div>
-                <div>Ending Balance: {formatCurrency(totalBalance)}</div>
-            </div>
-
             <table className="min-w-full bg-white border text-xs">
                 <thead>
                     <tr>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Buy and Sell</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Breakdown</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Container Van</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Commodity</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Size</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Qty</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Sales Price</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Total</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Payment</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Balance</th>
-                        <th className="w-1/7 text-left border px-4 py-2 hidden md:table-cell whitespace-nowrap">Actions</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Buy and Sell</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Breakdown</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Container Van</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Size</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Qty</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Sales Price</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Total</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Payment</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Balance</th>
+                        <th className="w-1/7 text-left border px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -214,12 +204,11 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
                 <tfoot className="bg-gray-200 font-bold">
                     <tr>
                         <td className="px-4 py-2 border text-right" colSpan={5}>Grand Total:</td>
-                        <td className="px-4 py-2 border">{totalQty}</td>
-                        <td className="px-4 py-2 border"></td>
-                        <td className="px-4 py-2 border">{formatCurrency(totalAmount)}</td>
-                        <td className="px-4 py-2 border">{formatCurrency(totalPayment)}</td>
-                        <td className="px-4 py-2 border">{formatCurrency(totalBalance)}</td>
-                        <td className="px-4 py-2 border"></td>
+                        <td className="px-4 py-2">{totalQty}</td>
+                        <td className="px-4 py-2">{formatCurrency(totalAmount)}</td>
+                        <td className="px-4 py-2">{formatCurrency(totalPayment)}</td>
+                        <td className="px-4 py-2">{formatCurrency(totalBalance)}</td>
+                        <td className="px-4 py-2"></td>
                     </tr>
                 </tfoot>
             </table>
