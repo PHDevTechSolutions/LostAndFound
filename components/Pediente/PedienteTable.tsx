@@ -7,6 +7,7 @@ const socket = io("http://localhost:3001");
 
 interface Post {
     _id: string;
+    DateOrder: string;
     BuyersName: string;
     PlaceSales: string;
     ContainerNo: string;
@@ -102,6 +103,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 
                 return (
                     <tr key={post._id}>
+                        <td className="px-4 py-2 border capitalize">{post.DateOrder}</td>
                         <td className="px-4 py-2 border capitalize">{post.BuyersName}</td>
                         <td className="px-4 py-2 border hidden md:table-cell">{post.PlaceSales}</td>
                         <td className="px-4 py-2 border hidden md:table-cell">{post.ContainerNo}</td>
@@ -179,9 +181,26 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 
     return (
         <div>
+            {/* Desktop View - Float Right */}
+            <div className="bg-white p-4 mb-2 rounded-sm shadow-md text-xs font-bold w-56 md:flex md:flex-col md:items-start md:float-right hidden md:block">
+                <span className="mb-1">Beginning Balance: {formatCurrency(100000)}</span>
+                <span className="mb-1">Add Receivable: {formatCurrency(0)}</span>
+                <span className="mb-1">Less Collection: {formatCurrency(totalPayment)}</span>
+                <span>Ending Balance: {formatCurrency(totalBalance)}</span>
+            </div>
+
+            {/* Mobile View - Centered */}
+            <div className="bg-white p-4 rounded-lg shadow-md text-xs font-bold w-full text-center block md:hidden">
+                <div className="mb-1">Beginning Balance: {formatCurrency(100000)}</div>
+                <div className="mb-1">Add Receivable: {formatCurrency(0)}</div>
+                <div className="mb-1">Less Collection: {formatCurrency(totalPayment)}</div>
+                <div>Ending Balance: {formatCurrency(totalBalance)}</div>
+            </div>
+
             <table className="min-w-full bg-white border text-xs">
                 <thead>
                     <tr>
+                        <th className="w-1/7 text-left border px-4 py-2">Date</th>
                         <th className="w-1/7 text-left border px-4 py-2">Buy and Sell</th>
                         <th className="w-1/7 text-left border px-4 py-2">Breakdown</th>
                         <th className="w-1/7 text-left border px-4 py-2">Container Van</th>
