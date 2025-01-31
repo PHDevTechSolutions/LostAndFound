@@ -80,7 +80,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining Boxes</label>
-                <input type="number" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
+                <input type="number" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"  />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>

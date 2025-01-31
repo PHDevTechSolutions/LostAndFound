@@ -25,7 +25,7 @@ const ActivityTable: React.FC<ContainerTableProps> = ({ posts }) => {
             {/* Card Body with Post Details */}
             <div className="text-xs capitalize font-semibold text-gray-700 space-y-2">
               <div>Username: {post.userName}</div>
-              <div>Location: {post.location}</div>
+              <div>Location: {post.Location}</div>
               {post.Price && <div>Price: {post.Price}</div>}
               {post.GrossSales && <div>Gross Sales: {post.GrossSales}</div>}
               <div>Message: {post.message}</div>

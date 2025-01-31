@@ -10,7 +10,7 @@ interface ContainerTableProps {
   handleEdit: (post: any) => void;
   handleDelete: (postId: string) => void;
   handleCreateData: (postId: string) => void;
-  Role: string; // Pass the role here
+  Role: string; // Pass the role heres
 }
 
 const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData, Role }) => {

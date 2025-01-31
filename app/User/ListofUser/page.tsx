@@ -39,7 +39,7 @@ const ListofUser: React.FC = () => {
 
   // Filter users by search term
   const filteredAccounts = posts.filter((post) =>
-    [post?.Firstname, post?.Firstname]
+    [post?.Firstname, post?.Lastname]
       .some((field) => field?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
@@ -91,7 +91,7 @@ const ListofUser: React.FC = () => {
     <SessionChecker>
       <ParentLayout>
         <UserFetcher>
-          {(userName) => (
+          {(user) => (
             <div className="container mx-auto p-4">
               <ToastContainer />
               <div className="grid grid-cols-1">
@@ -102,7 +102,7 @@ const ListofUser: React.FC = () => {
                       setEditPost(null);
                     }}
                     refreshUser={fetchUsers}
-                    userName={userName}
+                    userName={user ? user.userName : ""}
                     editPost={editPost}
                   />
                 ) : (
@@ -128,6 +128,7 @@ const ListofUser: React.FC = () => {
                         posts={currentPosts}
                         handleEdit={handleEdit}
                         handleDelete={confirmDelete}
+                        Role={user ? user.Role : ""}
                       />
                       <Pagination
                         currentPage={currentPage}

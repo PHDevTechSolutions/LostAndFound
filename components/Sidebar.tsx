@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { PiShippingContainer } from "react-icons/pi";
+import { PiShippingContainer, PiWarehouse } from "react-icons/pi";
 import { FaUsersGear, FaPlus, FaMinus } from "react-icons/fa6";
 import { IoCogSharp } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa";
+
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,8 +34,8 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
         setUserDetails({
           Firstname: data.Firstname || "JJ Venture",
           Lastname: data.Lastname || "Sources Inc",
-          Location: data.Location || "Navotas",
-          Role: data.Role || "Super Admin",
+          Location: data.Location || "",
+          Role: data.Role || "",
         });
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -67,6 +68,20 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
         {
           title: "Activity Logs",
           href: `/Container/ActivityLog${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
+        },
+        {
+          title: "Pediente",
+          href: `/Container/Pediente${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
+        },
+      ],
+    },
+    {
+      title: "Warehouse",
+      icon: PiWarehouse,
+      subItems: [
+        {
+          title: "List of Items",
+          href: `/Container/ContainerList${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
       ],
     },
@@ -144,7 +159,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
             <div key={index} className="w-full">
               <button
                 onClick={() => handleToggle(item.title)}
-                className={`flex items-center w-full p-4 hover:bg-gray-700 hover:text-white transition-all ${collapsed ? "justify-center" : ""}`}
+                className={`flex items-center w-full p-4 hover:rounded-md hover:bg-gray-700 hover:text-white transition-all ${collapsed ? "justify-center" : ""}`}
               >
                 <item.icon size={18} />
                 {!collapsed && <span className="ml-2">{item.title}</span>}
@@ -166,7 +181,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
                         key={subIndex}
                         href={subItem.href}
                         prefetch={true}
-                        className="flex items-center w-full p-4 bg-gray-200 hover:bg-gray-700 hover:text-white transition-all"
+                        className="flex items-center w-full p-4 hover:rounded-md hover:bg-gray-700 hover:text-white transition-all"
                       >
                         {/* Adding small circle icon for each submenu item */}
                         <FaRegCircle size={10} className="mr-2 ml-2" />

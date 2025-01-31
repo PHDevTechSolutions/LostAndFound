@@ -9,7 +9,7 @@ export default async function updateProfile(req: NextApiRequest, res: NextApiRes
     return;
   }
 
-  const { id, Firstname, Lastname, Email, Location } = req.body;
+  const { id, Firstname, Lastname, Email, Location, Role } = req.body;
 
   if (!id) {
     return res.status(400).json({ error: "User ID is required" });
@@ -24,6 +24,7 @@ export default async function updateProfile(req: NextApiRequest, res: NextApiRes
       Lastname,
       Email,
       Location,
+      Role,
       updatedAt: new Date(),
     };
 
