@@ -88,7 +88,11 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
-                <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required />
+                <select id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
+                    <option value="">Select Place of Order</option>
+                    <option value="BELEN STORAGE">BELEN STORAGE</option>
+                    <option value="BELEN PWESTO">BELEN PWESTO</option>
+                </select>
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>

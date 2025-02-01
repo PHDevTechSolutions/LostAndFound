@@ -70,7 +70,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
           href: `/Container/ActivityLog${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
         {
-          title: "Pediente",
+          title: "Pendiente",
           href: `/Container/Pediente${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
       ],
