@@ -6,6 +6,7 @@ import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
 
 // Pages
+import PedienteForm from "../../../components/Pediente/PedienteForm";
 import SearchFilters from "../../../components/Pediente/SearchFilters";
 import PedienteTable from "../../../components/Pediente/PedienteTable";
 import Pagination from "../../../components/Pediente/Pagination";
@@ -14,12 +15,11 @@ import Pagination from "../../../components/Pediente/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const ContainerList: React.FC = () => {
+const PedientePage: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
-    const [editData, setEditData] = useState<any>(null);
+    const [editPost, setEditPost] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-
     const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
         start: "",
         end: "",
@@ -29,7 +29,6 @@ const ContainerList: React.FC = () => {
     const [postsPerPage, setPostsPerPage] = useState(5);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState<string | null>(null);
-
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [postForCreate, setPostForCreate] = useState<any>(null);
 
@@ -77,7 +76,7 @@ const ContainerList: React.FC = () => {
 
     // Edit post function
     const handleEdit = (post: any) => {
-        setEditData(post);
+        setEditPost(post);
         setShowForm(true);
     };
 
@@ -128,35 +127,47 @@ const ContainerList: React.FC = () => {
                     {(user) => (
                         <div className="container mx-auto p-4">
                             <div className="grid grid-cols-1 md:grid-cols-1">
-                                <>
-                                    <h2 className="text-lg font-bold mb-2">Pediente</h2>
-                                    <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
-                                            searchTerm={searchTerm}
-                                            setSearchTerm={setSearchTerm}
-                                            postsPerPage={postsPerPage}
-                                            setPostsPerPage={setPostsPerPage}
-                                            dateRange={dateRange}
-                                            setDateRange={setDateRange}
-                                        />
-                                        <PedienteTable
-                                            posts={currentPosts}
-                                            handleEdit={handleEdit}
-                                            handleDelete={confirmDelete}
-                                            handleCreateData={handleCreateData}
-                                            Role={user ? user.Role : ""}
-                                        />
+                                {showForm ? (
+                                    <PedienteForm
+                                        onCancel={() => {
+                                            setShowForm(false);
+                                            setEditPost(null);
+                                        }}
+                                        refreshUser={fetchDatabase}
+                                        userName={user ? user.userName : ""}
+                                        editPost={editPost}
+                                    />
+                                ) : (
+                                    <>
+                                        <h2 className="text-lg font-bold mb-2">Pediente</h2>
+                                        <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
+                                            <SearchFilters
+                                                searchTerm={searchTerm}
+                                                setSearchTerm={setSearchTerm}
+                                                postsPerPage={postsPerPage}
+                                                setPostsPerPage={setPostsPerPage}
+                                                dateRange={dateRange}
+                                                setDateRange={setDateRange}
+                                            />
+                                            <PedienteTable
+                                                posts={currentPosts}
+                                                handleEdit={handleEdit}
+                                                handleDelete={confirmDelete}
+                                                handleCreateData={handleCreateData}
+                                                Role={user ? user.Role : ""}
+                                            />
 
-                                        <Pagination
-                                            currentPage={currentPage}
-                                            totalPages={totalPages}
-                                            setCurrentPage={setCurrentPage}
-                                        />
-                                        <div className="text-xs mt-2">
-                                            Showing {indexOfFirstPost + 1} to {Math.min(indexOfLastPost, filteredAccounts.length)} of {filteredAccounts.length} entries
+                                            <Pagination
+                                                currentPage={currentPage}
+                                                totalPages={totalPages}
+                                                setCurrentPage={setCurrentPage}
+                                            />
+                                            <div className="text-xs mt-2">
+                                                Showing {indexOfFirstPost + 1} to {Math.min(indexOfLastPost, filteredAccounts.length)} of {filteredAccounts.length} entries
+                                            </div>
                                         </div>
-                                    </div>
-                                </>
+                                    </>
+                                )}
                             </div>
                         </div>
                     )}
@@ -166,4 +177,4 @@ const ContainerList: React.FC = () => {
     );
 };
 
-export default ContainerList;
+export default PedientePage;

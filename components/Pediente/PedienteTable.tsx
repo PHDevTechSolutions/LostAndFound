@@ -14,7 +14,7 @@ interface Post {
     Size: string;
     BoxSales: number;
     Price: number;
-    Payment?: number;
+    PayAmount: number;
 }
 
 interface PedienteTableProps {
@@ -41,6 +41,13 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
     useEffect(() => {
         setUpdatedPosts(posts);
     }, [posts]);
+
+    useEffect(() => {
+        // Filter posts to include only those with paymentmode === 'PDC'
+        const filteredPosts = posts.filter(post => post.PaymentMode === "PDC");
+        setUpdatedPosts(filteredPosts);
+    }, [posts]);
+    
 
     useEffect(() => {
         const newPostListener = (newPost: any) => {
@@ -88,32 +95,32 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 
             const buyerRows = posts.map((post) => {
                 const total = post.BoxSales * post.Price;
-                const balance = total - (post.Payment || 0);
+                const balance = total - (post.PayAmount || 0);
 
                 // Group level totals
                 groupTotalQty += Number(post.BoxSales) || 0;
                 groupTotalAmount += total;
-                groupTotalPayment += post.Payment || 0;
+                groupTotalPayment += post.PayAmount || 0;
                 groupTotalBalance += balance;
 
                 totalQty += Number(post.BoxSales) || 0;
                 totalAmount += total;
-                totalPayment += post.Payment || 0;
+                totalPayment += Number(post.PayAmount) || 0;
                 totalBalance += balance;
 
                 return (
                     <tr key={post._id}>
-                        <td className="px-4 py-2 border capitalize">{post.DateOrder}</td>
-                        <td className="px-4 py-2 border capitalize">{post.BuyersName}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{post.PlaceSales}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{post.ContainerNo}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{post.Size}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{post.BoxSales}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{formatCurrency(post.Price)}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{formatCurrency(total)}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{formatCurrency(post.Payment || 0)}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">{formatCurrency(balance)}</td>
-                        <td className="px-4 py-2 border hidden md:table-cell">
+                        <td className="px-4 py-2  capitalize">{post.DateOrder}</td>
+                        <td className="px-4 py-2  capitalize">{post.BuyersName}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{post.PlaceSales}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{post.ContainerNo}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{post.Size}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{post.BoxSales}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.Price)}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(total)}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.PayAmount || 0)}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(balance)}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">
                             <Menu as="div" className="relative inline-block text-left">
                                 <div>
                                     <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
@@ -157,14 +164,14 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
             return (
                 <React.Fragment key={buyer}>
                     {/* Grouped Buyer Row */}
-                    <tr className="bg-gray-200 font-semibold">
-                        <td colSpan={10} className="px-4 py-2 uppercase">{buyer}</td>
+                    <tr className="bg-gray-100 font-semibold">
+                        <td colSpan={11} className="px-4 py-2 uppercase">{buyer}</td>
                     </tr>
                     {buyerRows}
                     {/* Group Total Row */}
                     <tr className="bg-gray-300">
                         <td className="px-4 py-2 text-right" colSpan={5}>Group Total:</td>
-                        <td className="px-4 py-2">{groupTotalQty}</td>
+                        <td className="px-4 py-2" colSpan={2}>{groupTotalQty}</td>
                         <td className="px-4 py-2">{formatCurrency(groupTotalAmount)}</td>
                         <td className="px-4 py-2">{formatCurrency(groupTotalPayment)}</td>
                         <td className="px-4 py-2">{formatCurrency(groupTotalBalance)}</td>
@@ -200,30 +207,30 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
             <table className="min-w-full bg-white border text-xs">
                 <thead>
                     <tr>
-                        <th className="w-1/7 text-left border px-4 py-2">Date</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Buy and Sell</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Breakdown</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Container Van</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Size</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Qty</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Sales Price</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Total</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Payment</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Balance</th>
-                        <th className="w-1/7 text-left border px-4 py-2">Actions</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Date</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Buy and Sell</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Breakdown</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Container Van</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Size</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Qty</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Sales Price</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Total</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Payment</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Balance</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {rows.length > 0 ? rows : (
                         <tr>
-                            <td colSpan={10} className="py-2 px-4 border text-center">No records found</td>
+                            <td colSpan={11} className="py-2 px-4 border text-center">No records found</td>
                         </tr>
                     )}
                 </tbody>
                 <tfoot className="bg-gray-200 font-bold">
                     <tr>
                         <td className="px-4 py-2 border text-right" colSpan={5}>Grand Total:</td>
-                        <td className="px-4 py-2">{totalQty}</td>
+                        <td className="px-4 py-2" colSpan={2}>{totalQty}</td>
                         <td className="px-4 py-2">{formatCurrency(totalAmount)}</td>
                         <td className="px-4 py-2">{formatCurrency(totalPayment)}</td>
                         <td className="px-4 py-2">{formatCurrency(totalBalance)}</td>
