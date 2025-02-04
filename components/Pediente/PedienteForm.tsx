@@ -30,7 +30,7 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
     const [BalanceAmount, setBalanceAmount] = useState(editPost ? editPost.BalanceAmount : "");
     const [Status, setStatus] = useState<string>(editPost ? editPost.Status : "");
 
-    const [paymentHistory, setPaymentHistory] = useState<{ amount: string; status: string; date: string; containerNo: string; buyersName: string; }[]>([]);
+    const [paymentHistory, setPaymentHistory] = useState<{ amount: string; status: string; date: string; containerNo: string; buyersName: string; _id: string; }[]>([]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

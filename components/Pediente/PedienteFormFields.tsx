@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { ObjectId } from 'mongodb';
 
 interface Payment {
     amount: string;
@@ -7,6 +6,7 @@ interface Payment {
     date: string;
     containerNo: string;
     buyersName: string;
+    _id: string;
 }
 
 interface PedienteFormFieldsProps {
@@ -65,14 +65,14 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
 
     useEffect(() => {
         // Calculate the total payment amount based on payment history
-        const totalPayment = paymentHistory.reduce((total, payment) => total + parseFloat(payment.amount || "0"), 0);
+        const totalPayment = filteredPaymentHistory.reduce((total, payment) => total + parseFloat(payment.amount || "0"), 0);
         
         // Set PayAmount as the total amount from the payment history
         setPayAmount(totalPayment.toFixed(2));
     }, [paymentHistory, setPayAmount]);
 
     const handleAddPayment = () => {
-        if (!BalanceAmount) {
+        if (!BalanceAmount || !Status) {
             alert("Please enter a valid payment amount and select a status.");
             return;
         }
@@ -83,13 +83,14 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
             date: new Date().toLocaleDateString(),
             containerNo: ContainerNo,  // Include ContainerNo
             buyersName: BuyersName,    // Include BuyersName
+            _id: editPost?._id,
         };
 
         const updatedHistory = [...paymentHistory, newPayment];
         setPaymentHistory(updatedHistory);
         localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
-        setBalanceAmount("");
-        setStatus("");
+        setBalanceAmount(""); // Clear BalanceAmount after adding payment
+        setStatus(""); // Reset status field
     };
 
     const handleUpdatePayment = () => {
@@ -119,22 +120,20 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
 
         setPaymentHistory(updatedHistory);
         localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
-        setBalanceAmount("");
-        setStatus("");
+        setBalanceAmount(""); // Clear BalanceAmount after update
+        setStatus(""); // Reset status field
     };
 
     const handleDeletePayment = (index: number) => {
-        // Create a copy of the current paymentHistory
         const updatedHistory = [...paymentHistory];
         updatedHistory.splice(index, 1);
 
-        // Update the state and localStorage
         setPaymentHistory(updatedHistory);
         localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
     };
 
     const filteredPaymentHistory = paymentHistory.filter(payment => 
-        payment.buyersName === BuyersName && payment.containerNo === ContainerNo
+        payment._id === editPost?._id
     );
 
     return (
@@ -149,7 +148,6 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                     <input type="text" id="BuyersName" value={BuyersName} onChange={(e) => setBuyersName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-100" readOnly />
                 </div>
             </div>
-
             <div className="flex flex-wrap -mx-4">
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
@@ -181,17 +179,20 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                     <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
             </div>
+
             <div className="flex flex-wrap -mx-4">
-                <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
+                <div className="w-full sm:w-1/4 md:w-1/4 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="BalanceAmount">Enter Amount</label>
-                    <input type="text" id="BalanceAmount" value={BalanceAmount} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+                    <input type="text" id="BalanceAmount" value={BalanceAmount ?? ""} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+                    
                 </div>
-                <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="Role">Total Pay Amount</label>
-                    <input type="text" id="PayAmount" value={PayAmount} onChange={(e) => setPayAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly required />
+                <div className="w-full sm:w-1/4 md:w-1/4 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="PayAmount">Total Pay Amount</label>
+                    <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => setPayAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly required />
+
                 </div>
-                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="Role">Status</label>
+                <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="Status">Status</label>
                     <select id="Status" value={Status ?? ""} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
                         <option value="">Select Status</option>
                         <option value="Paid Balance">Paid Balance</option>
@@ -202,7 +203,7 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
 
             <div className="flex justify-between mb-2">
                 <button onClick={handleAddPayment} className="bg-green-800 text-white px-4 py-2 rounded text-xs">Add Payment</button>
-                <button type="submit" onClick={editPost ? handleUpdatePayment : undefined} className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editPost ? "Update" : "Submit"}</button>
+                <button type="submit" onClick={editPost ? handleUpdatePayment : undefined} className="bg-blue-500 text-white px-4 py-2 rounded text-xs">{editPost ? "Update Balance" : "Submit"}</button>
             </div>
 
             {/* Payment History Table */}
@@ -216,7 +217,7 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                                 <th className="border px-2 py-1">Amount</th>
                                 <th className="border px-2 py-1">Status</th>
                                 <th className="border px-2 py-1">Container No</th>
-                                <th className="border px-2 py-1">Buyers's Name</th>
+                                <th className="border px-2 py-1">Buyer's Name</th>
                                 <th className="border px-2 py-1">Actions</th>
                             </tr>
                         </thead>
@@ -229,9 +230,8 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                                     <td className="border px-2 py-1">{payment.containerNo}</td>
                                     <td className="border px-2 py-1 capitalize">{payment.buyersName}</td>
                                     <td className="border px-2 py-1 text-center">
-                                        {/* Delete Icon/Button */}
                                         <button
-                                            type="button" // Ensure the button does not trigger form submission
+                                            type="button"
                                             onClick={() => handleDeletePayment(index)}
                                             className="text-red-500 hover:text-red-700"
                                         >
@@ -258,14 +258,13 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                             <tr>
                                 <td colSpan={1} className="border px-2 py-1 text-right font-bold">Total Amount:</td>
                                 <td className="border px-2 py-1 font-bold">
-                                    {paymentHistory.reduce((total, payment) => total + parseFloat(payment.amount || "0"), 0).toFixed(2)}
+                                {filteredPaymentHistory.reduce((total, payment) => total + parseFloat(payment.amount || "0"), 0).toFixed(2)}
                                 </td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             )}
-
         </>
     )
 }
