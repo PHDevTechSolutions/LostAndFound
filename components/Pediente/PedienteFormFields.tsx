@@ -71,21 +71,25 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
         setPayAmount(totalPayment.toFixed(2));
     }, [paymentHistory, setPayAmount]);
 
+    const [isUpdatingBalance, setIsUpdatingBalance] = useState(false);
+
     const handleAddPayment = () => {
-        if (!BalanceAmount || !Status) {
-            alert("Please enter a valid payment amount and select a status.");
+        setIsUpdatingBalance(false);  // Reset to adding payment mode
+    
+        if (!BalanceAmount) {
+            alert("Please enter a valid payment amount.");
             return;
         }
-
+    
         const newPayment: Payment = {
             amount: BalanceAmount,
-            status: Status,
+            status: Status,  // Will be optional here
             date: new Date().toLocaleDateString(),
-            containerNo: ContainerNo,  // Include ContainerNo
-            buyersName: BuyersName,    // Include BuyersName
+            containerNo: ContainerNo,
+            buyersName: BuyersName,
             _id: editPost?._id,
         };
-
+    
         const updatedHistory = [...paymentHistory, newPayment];
         setPaymentHistory(updatedHistory);
         localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
@@ -94,30 +98,25 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
     };
 
     const handleUpdatePayment = () => {
+        setIsUpdatingBalance(true);  // Set to update balance mode
+    
         if (!BalanceAmount || !Status) {
+            alert("Please enter a valid payment amount and select a status.");
             return;
         }
-
-        // Check if PayAmount is a valid number
-        const amount = parseFloat(BalanceAmount);
-        if (isNaN(amount) || amount <= 0) {
-            alert("Please enter a valid payment amount.");
-            return;
-        }
-
+    
         const updatedHistory = [...paymentHistory];
         const lastPaymentIndex = updatedHistory.length - 1;
-
-        // Update the last payment amount and status
+    
         if (lastPaymentIndex >= 0) {
             updatedHistory[lastPaymentIndex] = {
                 ...updatedHistory[lastPaymentIndex],
                 amount: BalanceAmount,
                 status: Status,
-                date: new Date().toLocaleDateString(), // You can update the date if needed
+                date: new Date().toLocaleDateString(),
             };
         }
-
+    
         setPaymentHistory(updatedHistory);
         localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
         setBalanceAmount(""); // Clear BalanceAmount after update
@@ -188,7 +187,7 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/4 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="PayAmount">Total Pay Amount</label>
-                    <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => setPayAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly required />
+                    <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => setPayAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
 
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">

@@ -26,7 +26,7 @@ const PedientePage: React.FC = () => {
     });
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage, setPostsPerPage] = useState(5);
+    const [postsPerPage, setPostsPerPage] = useState(1000);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState<string | null>(null);
     const [showCreateForm, setShowCreateForm] = useState(false);
