@@ -26,7 +26,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [Boxes, setBoxes] = useState(post?.Boxes || "");
     const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || "");
     const [GrossSales, setGrossSales] = useState("");
-    const [PlaceSales, setPlaceSales] = useState("");
+    const [PlaceSales, setPlaceSales] = useState("BELEN STORAGE");
     const [PaymentMode, setPaymentMode] = useState("");
     const [editData, setEditData] = useState<any>(null);
     const [tableData, setTableData] = useState<any[]>([]);
