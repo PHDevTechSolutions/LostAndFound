@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import io from "socket.io-client";
 import { Menu } from "@headlessui/react";
 import { BsPlusCircle, BsThreeDotsVertical } from "react-icons/bs";
+import Form from "./Form";
 
 const socket = io("http://localhost:3001");
 
@@ -16,6 +17,7 @@ interface Post {
     BoxSales: number;
     Price: number;
     PayAmount: number;
+    Status: string;
 }
 
 interface PedienteTableProps {
@@ -48,7 +50,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
         const filteredPosts = posts.filter(post => post.PaymentMode === "PDC");
         setUpdatedPosts(filteredPosts);
     }, [posts]);
-    
+
 
     useEffect(() => {
         const newPostListener = (newPost: any) => {
@@ -122,6 +124,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
                         <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(total)}</td>
                         <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.PayAmount || 0)}</td>
                         <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(balance)}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{post.Status}</td>
                         <td className="px-4 py-2  hidden md:table-cell">
                             <Menu as="div" className="relative inline-block text-left">
                                 <div>
@@ -167,16 +170,17 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
                 <React.Fragment key={buyer}>
                     {/* Grouped Buyer Row */}
                     <tr className="bg-gray-100 font-semibold">
-                        <td colSpan={11} className="px-4 py-2 uppercase">{buyer}</td>
+                        <td colSpan={13} className="px-4 py-2 uppercase">{buyer}</td>
                     </tr>
                     {buyerRows}
                     {/* Group Total Row */}
                     <tr className="bg-gray-300">
-                        <td className="px-4 py-2 text-right" colSpan={5}>Group Total:</td>
+                        <td className="px-4 py-2 text-right" colSpan={6}>Group Total:</td>
                         <td className="px-4 py-2" colSpan={2}>{groupTotalQty}</td>
                         <td className="px-4 py-2">{formatCurrency(groupTotalAmount)}</td>
                         <td className="px-4 py-2">{formatCurrency(groupTotalPayment)}</td>
                         <td className="px-4 py-2">{formatCurrency(groupTotalBalance)}</td>
+                        <td className="px-4 py-2"></td>
                         <td className="px-4 py-2"></td>
                     </tr>
                 </React.Fragment>
@@ -188,59 +192,67 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 
     const { rows, totalQty, totalAmount, totalPayment, totalBalance } = memoizedRows;
 
+    const [isExpanded, setIsExpanded] = useState(false);
+    
+
+
     return (
         <div>
-            {/* Desktop View - Float Right */}
-            <div className="bg-white p-4 mb-2 rounded-sm shadow-md text-xs font-bold w-56 md:flex md:flex-col md:items-start md:float-right hidden md:block">
-                <span className="mb-1">Beginning Balance: {formatCurrency(100000)}</span>
-                <span className="mb-1">Add Receivable: {formatCurrency(0)}</span>
-                <span className="mb-1">Less Collection: {formatCurrency(totalPayment)}</span>
-                <span>Ending Balance: {formatCurrency(totalBalance)}</span>
-            </div>
+            <Form totalPayment={totalPayment} totalBalance={totalBalance} />
+            <>  
+                {/* Collapsible Toggle Button */}
+                <div className="text-center">
+                    <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="text-xs text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">
+                        {isExpanded ? "Hide Details ▲" : "Show Details ▼"}
+                    </button>
+                </div>
 
-            {/* Mobile View - Centered */}
-            <div className="bg-white p-4 rounded-lg shadow-md text-xs font-bold w-full text-center block md:hidden">
-                <div className="mb-1">Beginning Balance: {formatCurrency(100000)}</div>
-                <div className="mb-1">Add Receivable: {formatCurrency(0)}</div>
-                <div className="mb-1">Less Collection: {formatCurrency(totalPayment)}</div>
-                <div>Ending Balance: {formatCurrency(totalBalance)}</div>
-            </div>
+                {/* Collapsible Section */}
+                <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? "opacity-100" : "max-h-0 opacity-0"}`}>
+                    <div className="mt-4 p-4 border shadow-md rounded-md">
+                        <table className="min-w-full bg-white border text-xs">
+                            <thead>
+                                <tr>
+                                    <th className="w-1/7 text-left  px-4 py-2">Date</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Buy and Sell</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Breakdown</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Container Van</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Commodity</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Size</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Qty</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Sales Price</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Total Debt</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Payment</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Balance</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Status</th>
+                                    <th className="w-1/7 text-left  px-4 py-2">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows.length > 0 ? rows : (
+                                    <tr>
+                                        <td colSpan={13} className="py-2 px-4 border text-center">No records found</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            <tfoot className="bg-gray-200 font-bold">
+                                <tr>
+                                    <td className="px-4 py-2 border text-right" colSpan={6}>Grand Total:</td>
+                                    <td className="px-4 py-2" colSpan={2}>{totalQty}</td>
+                                    <td className="px-4 py-2">{formatCurrency(totalAmount)}</td>
+                                    <td className="px-4 py-2">{formatCurrency(totalPayment)}</td>
+                                    <td className="px-4 py-2">{formatCurrency(totalBalance)}</td>
+                                    <td className="px-4 py-2"></td>
+                                    <td className="px-4 py-2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </>
 
-            <table className="min-w-full bg-white border text-xs">
-                <thead>
-                    <tr>
-                        <th className="w-1/7 text-left  px-4 py-2">Date</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Buy and Sell</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Breakdown</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Container Van</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Commodity</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Size</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Qty</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Sales Price</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Total</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Payment</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Balance</th>
-                        <th className="w-1/7 text-left  px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.length > 0 ? rows : (
-                        <tr>
-                            <td colSpan={11} className="py-2 px-4 border text-center">No records found</td>
-                        </tr>
-                    )}
-                </tbody>
-                <tfoot className="bg-gray-200 font-bold">
-                    <tr>
-                        <td className="px-4 py-2 border text-right" colSpan={5}>Grand Total:</td>
-                        <td className="px-4 py-2" colSpan={2}>{totalQty}</td>
-                        <td className="px-4 py-2">{formatCurrency(totalAmount)}</td>
-                        <td className="px-4 py-2">{formatCurrency(totalPayment)}</td>
-                        <td className="px-4 py-2">{formatCurrency(totalBalance)}</td>
-                        <td className="px-4 py-2"></td>
-                    </tr>
-                </tfoot>
-            </table>
         </div>
     );
 });

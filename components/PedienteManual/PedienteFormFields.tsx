@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Select from 'react-select';
 
 interface Payment {
     amount: string;
@@ -20,12 +21,16 @@ interface PedienteFormFieldsProps {
     setPlaceSales: (value: string) => void;
     ContainerNo: string;
     setContainerNo: (value: string) => void;
+    Commodity: string;
+    setCommodity: (value: string) => void;
     Size: string;
     setSize: (value: string) => void;
     BoxSales: string;
     setBoxSales: (value: string) => void;
     Price: string;
     setPrice: (value: string) => void;
+    PaymentMode: string;
+    setPaymentMode: (value: string) => void;
     GrossSales: string;
     setGrossSales: (value: string) => void;
     PayAmount: string;
@@ -45,109 +50,99 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
     BuyersName, setBuyersName,
     PlaceSales, setPlaceSales,
     ContainerNo, setContainerNo,
+    Commodity, setCommodity,
     Size, setSize,
     BoxSales, setBoxSales,
     Price, setPrice,
     GrossSales, setGrossSales,
+    PaymentMode, setPaymentMode,
     PayAmount, setPayAmount,
     BalanceAmount, setBalanceAmount,
     Status, setStatus,
     paymentHistory, setPaymentHistory,
     editPost,
 }) => {
+    const [customerList, setCustomerList] = useState<any[]>([]);
 
     useEffect(() => {
-        const storedHistory = localStorage.getItem("paymentHistory");
-        if (storedHistory) {
-            setPaymentHistory(JSON.parse(storedHistory));
-        }
-    }, [setPaymentHistory]);
-
-    useEffect(() => {
-        // Calculate the total payment amount based on payment history
-        const totalPayment = filteredPaymentHistory.reduce((total, payment) => total + parseFloat(payment.amount || "0"), 0);
-        
-        // Set PayAmount as the total amount from the payment history
-        setPayAmount(totalPayment.toFixed(2));
-    }, [paymentHistory, setPayAmount]);
-
-    const [isUpdatingBalance, setIsUpdatingBalance] = useState(false);
-
-    const handleAddPayment = () => {
-        setIsUpdatingBalance(false);  // Reset to adding payment mode
-    
-        if (!BalanceAmount) {
-            alert("Please enter a valid payment amount.");
-            return;
-        }
-    
-        const newPayment: Payment = {
-            amount: BalanceAmount,
-            status: Status,  // Will be optional here
-            date: new Date().toLocaleDateString(),
-            containerNo: ContainerNo,
-            buyersName: BuyersName,
-            _id: editPost?._id,
+        const fetchCustomers = async () => {
+            try {
+                const response = await fetch('/api/customer');
+                const data = await response.json();
+                setCustomerList(data);
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+            }
         };
-    
-        const updatedHistory = [...paymentHistory, newPayment];
-        setPaymentHistory(updatedHistory);
-        localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
-        setBalanceAmount(""); // Clear BalanceAmount after adding payment
-        setStatus(""); // Reset status field
-    };
+        fetchCustomers();
+    }, []);
 
-    const handleUpdatePayment = () => {
-        setIsUpdatingBalance(true);  // Set to update balance mode
-    
-        if (!BalanceAmount || !Status) {
-            alert("Please enter a valid payment amount and select a status.");
-            return;
+    const customerOptions = customerList.map((customer) => ({
+        value: customer.BuyersName,  // Use the BuyersName or any other unique identifier
+        label: `${customer.BuyersName} | ${customer.ContainerNo} | ${customer.DateOrder} | ${customer.Size} | ${customer.GrossSales}`,
+    }));
+
+    const handleCustomerChange = async (selectedOption: any) => {
+        const selectedCustomer = selectedOption ? selectedOption.value : '';
+        setBuyersName(selectedCustomer);
+
+        if (selectedCustomer) {
+            try {
+                const response = await fetch(`/api/customer?BuyersName=${encodeURIComponent(selectedCustomer)}`);
+                if (response.ok) {
+                    const customerDetails = await response.json();
+                    setBuyersName(customerDetails.BuyersName || '');
+                    setDateOrder(customerDetails.DateOrder || '');
+                    setPlaceSales(customerDetails.PlaceSales || '');
+                    setContainerNo(customerDetails.ContainerNo || '');
+                    setCommodity(customerDetails.Commodity || '');
+                    setSize(customerDetails.Size || '');
+                    setBoxSales(customerDetails.BoxSales || '');
+                    setPrice(customerDetails.Price || '');
+                    setGrossSales(customerDetails.GrossSales || '');
+                    setPaymentMode(customerDetails.PaymentMode || '');
+
+                } else {
+                    console.error(`Customer not found: ${selectedCustomer}`);
+                    resetFields();
+                }
+            } catch (error) {
+                console.error('Error fetching customer details:', error);
+                resetFields();
+            }
+        } else {
+            resetFields();
         }
-    
-        const updatedHistory = [...paymentHistory];
-        const lastPaymentIndex = updatedHistory.length - 1;
-    
-        if (lastPaymentIndex >= 0) {
-            updatedHistory[lastPaymentIndex] = {
-                ...updatedHistory[lastPaymentIndex],
-                amount: BalanceAmount,
-                status: Status,
-                date: new Date().toLocaleDateString(),
-            };
-        }
-    
-        setPaymentHistory(updatedHistory);
-        localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
-        setBalanceAmount(""); // Clear BalanceAmount after update
-        setStatus(""); // Reset status field
     };
 
-    const handleDeletePayment = (index: number) => {
-        const updatedHistory = [...paymentHistory];
-        updatedHistory.splice(index, 1);
-
-        setPaymentHistory(updatedHistory);
-        localStorage.setItem("paymentHistory", JSON.stringify(updatedHistory));
+    const resetFields = () => {
+        setBuyersName('');
+        setDateOrder('');
+        setPlaceSales('');
+        setContainerNo('');
+        setCommodity('');
+        setSize('');
+        setBoxSales('');
+        setPrice('');
+        setGrossSales('');
+        setPaymentMode('');
     };
-
-    const filteredPaymentHistory = paymentHistory.filter(payment => 
-        payment._id === editPost?._id
-    );
 
     return (
         <>
             <div className="flex flex-wrap -mx-4">
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="BuyersName">Buyers Name</label>
+                    {editPost ? (
+                        <input type="text" id="BuyersName" value={BuyersName} readOnly className="w-full px-3 py-2 border bg-gray-50 rounded text-xs" />
+                    ) : (
+                        <Select id="BuyersName" options={customerOptions} onChange={handleCustomerChange} className="w-full text-xs capitalize" placeholder="Select Company" isClearable />
+                    )}
+                </div>
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date Order</label>
                     <input type="text" id="DateOrder" value={DateOrder} onChange={(e) => setDateOrder(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-100" readOnly />
                 </div>
-                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="BuyersName">Buyers Name</label>
-                    <input type="text" id="BuyersName" value={BuyersName} onChange={(e) => setBuyersName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-100" readOnly />
-                </div>
-            </div>
-            <div className="flex flex-wrap -mx-4">
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
                     <input type="email" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
@@ -156,9 +151,10 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                     <label className="block text-xs font-bold mb-2" htmlFor="ContainerNo">Container No</label>
                     <input type="email" id="ContainerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
-            </div>
-
-            <div className="flex flex-wrap -mx-4">
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="Commodity">Commodity</label>
+                    <input type="email" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Size">Size</label>
                     <input type="text" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-100" readOnly />
@@ -167,28 +163,25 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                     <label className="block text-xs font-bold mb-2" htmlFor="BoxSales">BoxSales</label>
                     <input type="text" id="BoxSales" value={BoxSales} onChange={(e) => setBoxSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
-            </div>
-            <div className="flex flex-wrap -mx-4">
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="Price">Price</label>
+                    <label className="block text-xs font-bold mb-2" htmlFor="Price">Sales Price</label>
                     <input type="text" id="Price" value={Price} onChange={(e) => setPrice(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">GrossSales</label>
+                    <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Total Debt</label>
                     <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
-            </div>
-
-            <div className="flex flex-wrap -mx-4">
-                <div className="w-full sm:w-1/4 md:w-1/4 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="BalanceAmount">Enter Amount</label>
-                    <input type="text" id="BalanceAmount" value={BalanceAmount ?? ""} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
-                    
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>
+                    <input type="text" id="PaymentMode" value={PaymentMode} onChange={(e) => setPaymentMode(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
-                <div className="w-full sm:w-1/4 md:w-1/4 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="PayAmount">Total Pay Amount</label>
+                <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="BalanceAmount">Input Payment</label>
+                    <input type="text" id="BalanceAmount" value={BalanceAmount ?? ""} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+                </div>
+                <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="PayAmount">Balance</label>
                     <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => setPayAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
-
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Status">Status</label>
@@ -200,7 +193,7 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default PedienteFormFields;

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useEffect } from "react";
 
 interface OrderFormFieldsProps {
     ContainerNo: string;
@@ -55,6 +55,12 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
         setPlaceSales("");
         setPaymentMode("");
     };
+
+    useEffect(() => {
+        if (!PlaceSales) {
+            setPlaceSales("Belen Storage");
+        }
+    }, []);
 
     return (
         <form onSubmit={handleSubmit}>

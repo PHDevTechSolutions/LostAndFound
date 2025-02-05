@@ -22,10 +22,12 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
     const [BuyersName, setBuyersName] = useState(editPost ? editPost.BuyersName : "");
     const [PlaceSales, setPlaceSales] = useState(editPost ? editPost.PlaceSales : "");
     const [ContainerNo, setContainerNo] = useState(editPost ? editPost.ContainerNo : "");
+    const [Commodity, setCommodity] = useState(editPost ? editPost.Commodity : "");
     const [Size, setSize] = useState(editPost ? editPost.Size : "");
     const [BoxSales, setBoxSales] = useState(editPost ? editPost.BoxSales : "");
     const [Price, setPrice] = useState(editPost ? editPost.Price : "");
     const [GrossSales, setGrossSales] = useState(editPost ? editPost.GrossSales : "");
+    const [PaymentMode, setPaymentMode] = useState(editPost ? editPost.GrossSales : "");
     const [PayAmount, setPayAmount] = useState(editPost ? editPost.PayAmount : "");
     const [BalanceAmount, setBalanceAmount] = useState(editPost ? editPost.BalanceAmount : "");
     const [Status, setStatus] = useState<string>(editPost ? editPost.Status : "");
@@ -50,10 +52,12 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
                 BuyersName,
                 PlaceSales,
                 ContainerNo,
+                Commodity,
                 Size,
                 BoxSales,
                 Price,
                 GrossSales,
+                PaymentMode,
                 PayAmount,
                 BalanceAmount,
                 Status,
@@ -86,11 +90,13 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
                     BuyersName={BuyersName} setBuyersName={setBuyersName}
                     PlaceSales={PlaceSales} setPlaceSales={setPlaceSales}
                     ContainerNo={ContainerNo} setContainerNo={setContainerNo}
+                    Commodity={Commodity} setCommodity={setCommodity}
                     Size={Size} setSize={setSize}
                     BoxSales={BoxSales} setBoxSales={setBoxSales}
                     Price={Price} setPrice={setPrice}
                     GrossSales={GrossSales} setGrossSales={setGrossSales}
                     PayAmount={PayAmount} setPayAmount={setPayAmount}
+                    PaymentMode={PaymentMode} setPaymentMode={setPaymentMode}
                     BalanceAmount={BalanceAmount} setBalanceAmount={setBalanceAmount}
                     Status={Status} setStatus={setStatus}
                     paymentHistory={paymentHistory} setPaymentHistory={setPaymentHistory}
