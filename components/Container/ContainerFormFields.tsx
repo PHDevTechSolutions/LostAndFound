@@ -4,9 +4,6 @@ interface FormFieldsProps {
   //Location Tagging
   Location: string;
   setLocation: (value: string) => void;
-
-  Vendor: string;
-  setVendor: (value: string) => void;
   SpsicNo: string;
   setSpsicNo: (value: string) => void;
   DateArrived: string;
@@ -46,9 +43,6 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
   //Location Tagging
   Location,
   setLocation,
-
-  Vendor,
-  setVendor,
   SpsicNo,
   setSpsicNo,
   DateArrived,
@@ -115,39 +109,30 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
     <>
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-          <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded capitalize text-xs" disabled />
-          <label className="block text-xs font-bold mb-2" htmlFor="Vendor">Vendor</label>
-          <input type="text" id="Vendor" value={Vendor || ""} onChange={(e) => setVendor(e.target.value)} className="w-full px-3 py-2 border rounded capitalize text-xs" required />
-        </div>
-        <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="SPSIC No">SPSIC No.</label>
           <input type="text" id="SpsicNo" value={SpsicNo || ""} onChange={(e) => setSpsicNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
         </div>
-      </div>
 
-      <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Date Arrived">Date Arrived</label>
           <input type="date" id="DateArrived" value={DateArrived || ""} onChange={(e) => setDateArrived(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
         </div>
+
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Date Soldout">Date Soldout</label>
           <input type="date" id="DateSoldout" value={DateSoldout || ""} onChange={(e) => setDateSoldout(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
         </div>
-      </div>
 
-      <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Supplier Name">Supplier</label>
           <input type="text" id="SupplierName" value={SupplierName || ""} onChange={(e) => setSupplierName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
         </div>
+
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Container No">Container No.</label>
           <input type="text" id="ContainerNo" value={ContainerNo || ""} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" />
         </div>
-      </div>
 
-      <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Country">Country</label>
           <select id="Country" value={Country || ""} onChange={(e) => setCountry(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
@@ -174,9 +159,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
             <option value="White Box Lapad">White Box Lapad</option>
           </select>
         </div>
-      </div>
 
-      <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Commodity">Commodity</label>
           <select id="Commodity" value={Commodity || ""} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
@@ -191,13 +174,12 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
             <option value="Yellow Tail">Yellow Tail</option>
           </select>
         </div>
+
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Size">Size</label>
           <input type="text" id="Size" value={Size || ""} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
-      </div>
 
-      <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Type of Freezing</label>
           <select id="Freezing" value={Freezing || ""} onChange={(e) => setFreezing(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
@@ -213,9 +195,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
           <input type="hidden" id="Boxes" value={boxesValue} onChange={handleBoxesChange} className="w-full px-3 py-2 border rounded text-xs" disabled />
           <input type="hidden" id="TotalGrossSales" value={TotalGrossSales || ""} onChange={(e) => setTotalGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
-      </div>
 
-      <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Status">Status</label>
           <select id="Status" value={Status || ""} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
@@ -224,10 +204,12 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
             <option value="Soldout">Soldout</option>
           </select>
         </div>
+      </div>
 
-        <div className="w-full sm:w-1/1 md:w-1/2 px-4 mb-4">
+      <div className="flex flex-wrap -mx-4">
+        <div className="w-full sm:w-1/1 md:w-1/1 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Remarks">Remarks</label>
-          <textarea id="Remarks" value={Remarks || ""} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" rows={2}></textarea>
+          <textarea id="Remarks" value={Remarks || ""} onChange={(e) => setRemarks(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" rows={3}></textarea>
         </div>
       </div>
     </>

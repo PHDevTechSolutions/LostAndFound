@@ -16,6 +16,7 @@ interface CreateDataFormProps {
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
     const [Size, setSize] = useState(post?.Size || "");
+    const [Commodity, setCommodity] = useState(post?.Commodity || "");
     const [userName, setuserName] = useState("");
     const [Location, setLocation] = useState(post?.Location || "");
     const [DateOrder, setDateOrder] = useState("");
@@ -70,6 +71,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             body: JSON.stringify({
                 ContainerNo,
                 Size,
+                Commodity,
                 userName,
                 Location,
                 DateOrder,
@@ -161,6 +163,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         let updatedBoxes = parseInt(OriginalBoxes) || 0;
 
         setContainerNo(data.ContainerNo);
+        setCommodity(data.Commodity)
         setSize(data.Size);
         setuserName(data.userName);
         setLocation(data.Location);
@@ -266,6 +269,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                     <OrderFormFields
                         ContainerNo={ContainerNo} setContainerNo={setContainerNo}
                         Size={Size} setSize={setSize}
+                        Commodity={Commodity} setCommodity={setCommodity}
                         userName={userName} setuserName={setuserName}
                         Location={Location} setLocation={setLocation} DateOrder={DateOrder}
                         setDateOrder={setDateOrder} BuyersName={BuyersName} setBuyersName={setBuyersName}
@@ -281,7 +285,6 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 {/* Table Section */}
                 <div className="bg-white border border-dashed border-gray-300 shadow-md rounded-lg p-4 flex-grow basis-[70%]">
                     <div className="flex flex-col items-start gap-2">
-                        <h2 className="text-xs font-semibold text-gray-700">{post?.Vendor}</h2>
                         <h2 className="text-xs font-semibold text-gray-700 mb-6">
                             Container Van No. {post?.ContainerNo}
                         </h2>

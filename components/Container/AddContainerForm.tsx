@@ -15,7 +15,6 @@ interface AddContainerProps {
 
 const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, userName, editData, Location: propLocation }) => {
   const [Location, setLocation] = useState(editData?.Location || propLocation || "");
-  const [Vendor, setVendor] = useState(editData?.Vendor || "");
   const [SpsicNo, setSpsicNo] = useState(editData?.SpsicNo || "");
   const [DateArrived, setDateArrived] = useState(editData?.DateArrived || "");
   const [DateSoldout, setDateSoldout] = useState(editData?.DateSoldout || "");
@@ -44,8 +43,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Location, 
-        Vendor, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes,
+        Location, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes,
         TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
         userName, 
         id: editData?._id, 
@@ -73,7 +71,6 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         <h2 className="text-xs font-bold mb-4">{editData ? "Edit Container" : "Add Container"}</h2>
         <FormFields
           Location={Location} setLocation={setLocation} 
-          Vendor={Vendor} setVendor={setVendor}
           SpsicNo={SpsicNo} setSpsicNo={setSpsicNo}
           DateArrived={DateArrived} setDateArrived={setDateArrived}
           DateSoldout={DateSoldout} setDateSoldout={setDateSoldout}

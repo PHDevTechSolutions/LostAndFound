@@ -9,7 +9,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         return;
     }
 
-    const { id, ContainerNo, Size, Username, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
+    const { id, ContainerNo, Size, Commodity, Username, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
 
     try {
         const db = await connectToDatabase();
@@ -17,7 +17,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         const activityCollection = db.collection("ActivityLogs");
 
         const updatedAccount = {
-            ContainerNo, Size, Username, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, updatedAt: new Date(),
+            ContainerNo, Size, Commodity, Username, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, updatedAt: new Date(),
         };
 
         // Update the container order data

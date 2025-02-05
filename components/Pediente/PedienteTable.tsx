@@ -11,6 +11,7 @@ interface Post {
     BuyersName: string;
     PlaceSales: string;
     ContainerNo: string;
+    Commodity: string;
     Size: string;
     BoxSales: number;
     Price: number;
@@ -114,6 +115,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
                         <td className="px-4 py-2  capitalize">{post.BuyersName}</td>
                         <td className="px-4 py-2  hidden md:table-cell">{post.PlaceSales}</td>
                         <td className="px-4 py-2  hidden md:table-cell">{post.ContainerNo}</td>
+                        <td className="px-4 py-2  hidden md:table-cell">{post.Commodity}</td>
                         <td className="px-4 py-2  hidden md:table-cell">{post.Size}</td>
                         <td className="px-4 py-2  hidden md:table-cell">{post.BoxSales}</td>
                         <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.Price)}</td>
@@ -211,6 +213,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
                         <th className="w-1/7 text-left  px-4 py-2">Buy and Sell</th>
                         <th className="w-1/7 text-left  px-4 py-2">Breakdown</th>
                         <th className="w-1/7 text-left  px-4 py-2">Container Van</th>
+                        <th className="w-1/7 text-left  px-4 py-2">Commodity</th>
                         <th className="w-1/7 text-left  px-4 py-2">Size</th>
                         <th className="w-1/7 text-left  px-4 py-2">Qty</th>
                         <th className="w-1/7 text-left  px-4 py-2">Sales Price</th>

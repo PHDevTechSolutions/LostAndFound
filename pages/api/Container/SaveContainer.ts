@@ -3,11 +3,12 @@ import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to save container data
 async function saveContainer({
-  ContainerNo, Size, userName, Location, DateOrder, BuyersName,
+  ContainerNo, Size, Commodity, userName, Location, DateOrder, BuyersName,
   BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode
 }: {
   ContainerNo: string;
   Size: string;
+  Commodity: string;
   userName: string;
   Location: string;
   DateOrder: string;
@@ -28,6 +29,7 @@ async function saveContainer({
   if (existingContainer) {
     // Compare the existing data with the new data
     if (
+      existingContainer.Commmodity === Commodity &&
       existingContainer.Size === Size &&
       existingContainer.userName === userName &&
       existingContainer.Location === Location &&
@@ -48,6 +50,7 @@ async function saveContainer({
   const newData = {
     ContainerNo,
     Size,
+    Commodity,
     userName,
     Location,
     DateOrder,
@@ -82,7 +85,7 @@ async function saveContainer({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { ContainerNo, Size, userName, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
+    const { ContainerNo, Size, Commodity, userName, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
 
     // Validate required fields
     if (!Size || !BuyersName) {
@@ -91,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const result = await saveContainer({
-        ContainerNo, Size, userName, Location, DateOrder, BuyersName, 
+        ContainerNo, Size, Commodity, userName, Location, DateOrder, BuyersName, 
         BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode
       });
 

@@ -7,6 +7,8 @@ interface OrderFormFieldsProps {
     setContainerNo: React.Dispatch<React.SetStateAction<string>>;
     Size: string;
     setSize: React.Dispatch<React.SetStateAction<string>>;
+    Commodity: string;
+    setCommodity: React.Dispatch<React.SetStateAction<string>>;
     userName: string;
     setuserName: React.Dispatch<React.SetStateAction<string>>;
     Location: string;
@@ -35,7 +37,7 @@ interface OrderFormFieldsProps {
 }
 
 const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
-    ContainerNo, setContainerNo, Size, setSize,
+    ContainerNo, setContainerNo, Commodity, setCommodity, Size, setSize,
     userName, setuserName, Location, setLocation,
     DateOrder, setDateOrder, BuyersName, setBuyersName,
     BoxSales, setBoxSales, handleBoxSalesChange, Price, setPrice,
@@ -45,7 +47,6 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
 }) => {
 
     const handleReset = () => {
-        setLocation("");
         setDateOrder("");
         setBuyersName("");
         setBoxSales("");
@@ -57,8 +58,9 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
 
     return (
         <form onSubmit={handleSubmit}>
-            <input id="containerNo" type="hidden" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
-            <input id="Size" type="hidden" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
+            <input type="hidden" id="containerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
+            <input type="hidden" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
+            <input type="hidden" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             <input type="hidden" id="Username" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" disabled />
             <input type="hidden" id="Location" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
         
@@ -88,11 +90,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
-                <select id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
-                    <option value="">Select Place of Order</option>
-                    <option value="BELEN STORAGE">BELEN STORAGE</option>
-                    <option value="BELEN PWESTO">BELEN PWESTO</option>
-                </select>
+                <input id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>
