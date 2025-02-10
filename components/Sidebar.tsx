@@ -76,16 +76,6 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
       ],
     },
     {
-      title: "Warehouse",
-      icon: PiWarehouse,
-      subItems: [
-        {
-          title: "List of Items",
-          href: `/Container/ContainerList${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
-        },
-      ],
-    },
-    {
       title: "Users",
       icon: FaUsersGear,
       subItems: [

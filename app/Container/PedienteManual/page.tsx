@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
@@ -87,7 +89,7 @@ const PedientePage: React.FC = () => {
     const handleDelete = async () => {
         if (!postToDelete) return;
         try {
-            const response = await fetch(`/api/Container/DeleteContainer`, {
+            const response = await fetch(`/api/PedienteManual/DeletePediente`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -97,13 +99,13 @@ const PedientePage: React.FC = () => {
 
             if (response.ok) {
                 setPosts(posts.filter((post) => post._id !== postToDelete));
-                toast.success("Data deleted successfully.");
+                toast.success("Account deleted successfully.");
             } else {
-                toast.error("Failed to delete data.");
+                toast.error("Failed to delete account.");
             }
         } catch (error) {
-            toast.error("Failed to delete data.");
-            console.error("Error deleting data:", error);
+            toast.error("Failed to delete account.");
+            console.error("Error deleting account:", error);
         } finally {
             setShowDeleteModal(false);
             setPostToDelete(null);
@@ -115,6 +117,51 @@ const PedientePage: React.FC = () => {
         setPostForCreate(selectedPost); // Pass the selected post details
         setShowCreateForm(true);
         setShowForm(false); // Ensure other forms are closed
+    };
+
+
+    const exportToExcel = async () => {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Frozen Pendiente");
+    
+        // Add headers to the worksheet
+        worksheet.columns = [
+            { header: "Date Order", key: "DateOrder" },
+            { header: "Buyers Name", key: "BuyersName" },
+            { header: "Place Sales", key: "PlaceSales" },
+            { header: "Container Number", key: "ContainerNo" },
+            { header: "Commmodity", key: "Commodity" },
+            { header: "Size", key: "Size" },
+            { header: "Box Sales", key: "BoxSales" },
+            { header: "Price", key: "Price" },
+            { header: "Pay Amount", key: "PayAmount" },
+            { header: "Status", key: "Status" }
+        ];
+
+        // Filter data to include only records with "PO Received" remarks
+        const filteredData = filteredAccounts.filter(post => post.PaymentMode === "PDC");
+    
+        // Add data to the worksheet
+        filteredData.forEach((post) => {
+            worksheet.addRow({
+                DateOrder: new Date(post.DateOrder).toLocaleString(), // Format the date as needed
+                BuyersName: post.BuyersName,
+                PlaceSales: post.PlaceSales,
+                ContainerNo: post.ContainerNo,
+                Commodity: post.Commodity,
+                Size: post.Size,
+                BoxSales: post.BoxSales,
+                Price: post.Price,
+                PayAmount: post.PayAmount,
+                Status: post.Status,
+                PaymentMode: post.PaymentMode
+            });
+        });
+    
+        // Create the Excel file and trigger the download
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: "application/octet-stream" });
+        saveAs(blob, "frozen_pediente.xlsx");
     };
 
     return (
@@ -140,8 +187,9 @@ const PedientePage: React.FC = () => {
                                             <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
                                                 Add Balance
                                             </button>
+                                            <button onClick={exportToExcel} className="mb-4 px-4 py-2 bg-green-700 text-white text-xs rounded">Export to Excel</button>
                                         </div>
-                                        <h2 className="text-lg font-bold mb-2">Pediente (Daily)</h2>
+                                        <h2 className="text-lg font-bold mb-2">Pediente Frozen</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <SearchFilters
                                                 searchTerm={searchTerm}
@@ -172,6 +220,20 @@ const PedientePage: React.FC = () => {
                                         </div>
                                     </>
                                 )}
+                                {showDeleteModal && (
+                                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                                        <div className="bg-white p-4 rounded shadow-lg">
+                                            <h2 className="text-xs font-bold mb-4">Confirm Deletion</h2>
+                                            <p className="text-xs">Are you sure you want to delete this account?</p>
+                                            <div className="mt-4 flex justify-end">
+                                                <button className="bg-red-500 text-white text-xs px-4 py-2 rounded mr-2" onClick={handleDelete}>Delete</button>
+                                                <button className="bg-gray-300 text-xs px-4 py-2 rounded" onClick={() => setShowDeleteModal(false)}>Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <ToastContainer className="text-xs" autoClose={1000} />
                             </div>
                         </div>
                     )}

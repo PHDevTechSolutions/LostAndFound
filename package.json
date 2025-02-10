@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@types/draft-js": "^0.11.18",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
