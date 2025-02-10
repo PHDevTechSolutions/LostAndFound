@@ -189,7 +189,7 @@ const PedientePage: React.FC = () => {
                                             </button>
                                             <button onClick={exportToExcel} className="mb-4 px-4 py-2 bg-green-700 text-white text-xs rounded">Export to Excel</button>
                                         </div>
-                                        <h2 className="text-lg font-bold mb-2">Pediente Frozen</h2>
+                                        <h2 className="text-lg font-bold mb-2">Pendiente Frozen</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <SearchFilters
                                                 searchTerm={searchTerm}

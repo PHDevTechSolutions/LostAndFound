@@ -6,15 +6,30 @@ import { BsPlusCircle, BsThreeDotsVertical } from "react-icons/bs";
 const socket = io("http://localhost:3001");
 
 interface ContainerTableProps {
-  posts: any[];
-  handleEdit: (post: any) => void;
+  posts: Post[];
+  handleEdit: (post: Post) => void;
   handleDelete: (postId: string) => void;
   handleCreateData: (postId: string) => void;
-  Role: string; // Pass the role heres
+  Role: string; // Pass the role here
+}
+
+interface Post {
+  _id: string;
+  SpsicNo: string;
+  DateArrived: string;
+  DateSoldout: string;
+  SupplierName: string;
+  ContainerNo: string;
+  TotalQuantity: number;
+  Boxes: number;
+  BoxType: string;
+  Size: string;
+  Status: string;
+  Remaining: number;
 }
 
 const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData, Role }) => {
-  const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
+  const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -25,9 +40,8 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
     console.log("Role in ContainerTable:", Role);
   }, [Role]);
 
-
   useEffect(() => {
-    const newPostListener = (newPost: any) => {
+    const newPostListener = (newPost: Post) => {
       setUpdatedPosts((prevPosts) => {
         if (prevPosts.find(post => post._id === newPost._id)) return prevPosts;  // Prevent adding duplicate posts
         return [newPost, ...prevPosts];
@@ -54,13 +68,20 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
 
   // Memoizing the table rows to prevent unnecessary recomputation
   const memoizedRows = useMemo(() => {
-    return updatedPosts.map((post) => {
+    let totalBeginning = 0;
+    let totalSalesBox = 0;
+    let totalRemaining = 0;
+
+    const rows = updatedPosts.map((post) => {
       const salesBox = post.TotalQuantity - post.Boxes; // Calculate Sales Box value dynamically
+      totalBeginning += post.TotalQuantity || 0; // Sum Beginning
+      totalSalesBox += salesBox; // Sum Sales Box
+      totalRemaining += post.Boxes || 0; // Sum Remaining
 
       return (
         <React.Fragment key={post._id}>
           <tr
-            className="bg-gray-10 cursor-pointer"
+            className="bg-gray-100 cursor-pointer"
             onClick={() => toggleRow(post._id)}
           >
             <td className="px-4 py-2 border">
@@ -126,14 +147,13 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
                         )}
                       </Menu.Item>
                     )}
-
                   </div>
                 </Menu.Items>
               </Menu>
             </td>
           </tr>
           {expandedRows.has(post._id) && (
-            <tr className="bg-gray-10 md:hidden">
+            <tr className="bg-gray-100 md:hidden">
               <td className="px-4 py-2" colSpan={6}>
                 <div>
                   <strong>SPSIC No. :</strong> {post.SpsicNo}
@@ -186,7 +206,9 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
         </React.Fragment>
       );
     });
-  }, [updatedPosts, expandedRows, toggleRow, handleCreateData, handleEdit, handleDelete, Role]);
+
+    return { rows, totalBeginning, totalSalesBox, totalRemaining };
+  }, [updatedPosts, expandedRows, toggleRow]);
 
   return (
     <div>
@@ -208,12 +230,21 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
           </tr>
         </thead>
         <tbody>
-          {memoizedRows.length > 0 ? memoizedRows : (
+          {memoizedRows.rows.length > 0 ? memoizedRows.rows : (
             <tr>
-              <td colSpan={10} className="py-2 px-4 border text-center">No records found</td>
+              <td colSpan={12} className="py-2 px-4 border text-center">No records found</td>
             </tr>
           )}
         </tbody>
+        <tfoot>
+          <tr>
+            <td className="border font-bold text-right px-4 py-2" colSpan={5}>Total:</td>
+            <td className="border font-bold px-4 py-2">{memoizedRows.totalBeginning.toLocaleString()}</td>
+            <td className="border font-bold px-4 py-2">{memoizedRows.totalSalesBox.toLocaleString()}</td>
+            <td className="border font-bold px-4 py-2">{memoizedRows.totalRemaining.toLocaleString()}</td>
+            <td className="border font-bold px-4 py-2" colSpan={3}></td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   );

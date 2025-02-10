@@ -5,6 +5,7 @@ import { PiShippingContainer, PiWarehouse } from "react-icons/pi";
 import { FaUsersGear, FaPlus, FaMinus } from "react-icons/fa6";
 import { IoCogSharp } from "react-icons/io5";
 import { FaRegCircle } from "react-icons/fa";
+import { MdOutlineSpaceDashboard } from "react-icons/md";
 
 
 import Link from "next/link";
@@ -145,6 +146,9 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
 
         {/* Menu Section */}
         <div className="flex flex-col items-center rounded-md flex-grow overflow-y-auto text-xs p-2">
+        <div className="w-full">
+          <Link href={`/dashboard${userId ? `?id=${encodeURIComponent(userId)}` : ''}`} className="flex items-center w-full p-4 hover:bg-gray-700 rounded hover: rounded-md hover:text-white transition-all"><MdOutlineSpaceDashboard size={22} className="mr-1"/>Dashboard</Link>
+        </div>
           {filteredMenuItems.map((item, index) => (
             <div key={index} className="w-full">
               <button
