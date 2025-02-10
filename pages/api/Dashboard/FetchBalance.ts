@@ -30,15 +30,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {
           $group: {
             _id: null, // Sum the GrossSales
-            totalGrossSalesToday: { $sum: "$BalanceAmount" },
+            totalBalanceToday: { $sum: "$BalanceAmount" },
           },
         },
       ])
       .toArray();
 
-    const grossSalesToday = result.length > 0 ? result[0].totalGrossSalesToday : 0;
+    const BalanceToday = result.length > 0 ? result[0].totalBalanceToday : 0;
 
-    res.status(200).json({ totalGrossSalesToday: grossSalesToday });
+    res.status(200).json({ totalBalanceToday: BalanceToday });
   } catch (error) {
     console.error("Error fetching receivable data:", error);
     res.status(500).json({ success: false, message: "Error fetching receivable data", error });
