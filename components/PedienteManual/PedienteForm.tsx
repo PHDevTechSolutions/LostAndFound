@@ -17,7 +17,7 @@ interface PedienteFormProps {
 
 const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, editPost }) => {
     const [userName, setuserName] = useState(editPost ? editPost.userName : "");
-
+    const [DatePediente, setDatePediente] = useState(editPost ? editPost.DatePediente:  "");
     const [DateOrder, setDateOrder] = useState(editPost ? editPost.DateOrder : "");
     const [BuyersName, setBuyersName] = useState(editPost ? editPost.BuyersName : "");
     const [PlaceSales, setPlaceSales] = useState(editPost ? editPost.PlaceSales : "");
@@ -32,12 +32,10 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
     const [BalanceAmount, setBalanceAmount] = useState(editPost ? editPost.BalanceAmount : "");
     const [Status, setStatus] = useState<string>(editPost ? editPost.Status : "");
 
-    const [paymentHistory, setPaymentHistory] = useState<{ amount: string; status: string; date: string; containerNo: string; buyersName: string; _id: string; }[]>([]);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const url = editPost ? `/api/Pediente/EditPediente` : `/api/User/CreateUser`;
+        const url = editPost ? `/api/PedienteManual/EditPediente` : `/api/PedienteManual/CreatePediente`;
         const method = editPost ? "PUT" : "POST";
 
         const response = await fetch(url, {
@@ -48,6 +46,7 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
             },
             body: JSON.stringify({
                 userName,
+                DatePediente,
                 DateOrder,
                 BuyersName,
                 PlaceSales,
@@ -86,6 +85,7 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
                 <h2 className="text-xs font-bold mb-4">{editPost ? "Edit Buyer's Information" : "Add User"}</h2>
                 <UserFields
                     userName={userName} setuserName={setuserName}
+                    DatePediente={DatePediente} setDatePediente={setDatePediente}
                     DateOrder={DateOrder} setDateOrder={setDateOrder}
                     BuyersName={BuyersName} setBuyersName={setBuyersName}
                     PlaceSales={PlaceSales} setPlaceSales={setPlaceSales}
@@ -99,7 +99,6 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
                     PaymentMode={PaymentMode} setPaymentMode={setPaymentMode}
                     BalanceAmount={BalanceAmount} setBalanceAmount={setBalanceAmount}
                     Status={Status} setStatus={setStatus}
-                    paymentHistory={paymentHistory} setPaymentHistory={setPaymentHistory}
                     editPost={editPost}
                 />
                 <div className="flex justify-between">

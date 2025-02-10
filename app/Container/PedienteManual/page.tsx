@@ -7,8 +7,8 @@ import UserFetcher from "../../../components/UserFetcher";
 
 // Pages
 import PedienteForm from "../../../components/PedienteManual/PedienteForm";
-import SearchFilters from "../../../components/Pediente/SearchFilters";
-import PedienteTable from "../../../components/Pediente/PedienteTable";
+import SearchFilters from "../../../components/PedienteManual/SearchFilters";
+import PedienteTable from "../../../components/PedienteManual/PedienteTable";
 import Pagination from "../../../components/Pediente/Pagination";
 
 // Toasts
@@ -20,10 +20,9 @@ const PedientePage: React.FC = () => {
     const [editPost, setEditPost] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
-        start: "",
-        end: "",
-    });
+
+    const [startDate, setStartDate] = useState("");  // Start date for filtering
+    const [endDate, setEndDate] = useState("");  // End date for filtering
 
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(1000);
@@ -35,7 +34,7 @@ const PedientePage: React.FC = () => {
     // Fetch Data from the API
     const fetchDatabase = async () => {
         try {
-            const response = await fetch("/api/Pediente/FetchPediente");
+            const response = await fetch("/api/PedienteManual/FetchPediente");
             const data = await response.json();
             setPosts(data);
         } catch (error) {
@@ -55,18 +54,16 @@ const PedientePage: React.FC = () => {
             post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.BuyersName.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.PlaceSales.toLowerCase().includes(searchTerm.toLowerCase());
-
-        const dateArrive = new Date(post.DateOrder).getTime();
-        const dateSoldout = new Date(post.DateOrder).getTime();
-        const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
-        const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-
-        const inDateRange =
-            (!rangeStart || dateArrive >= rangeStart) &&
-            (!rangeEnd || dateSoldout <= rangeEnd);
-
-        return inSearchTerm && inDateRange;
+    
+        const postDate = new Date(post.DatePediente).toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+    
+        const isDateInRange =
+            (!startDate || postDate >= startDate) &&
+            (!endDate || postDate <= endDate);
+    
+        return inSearchTerm && isDateInRange;
     });
+    
 
     // Pagination logic
     const indexOfLastPost = currentPage * postsPerPage;
@@ -151,8 +148,10 @@ const PedientePage: React.FC = () => {
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}
                                                 setPostsPerPage={setPostsPerPage}
-                                                dateRange={dateRange}
-                                                setDateRange={setDateRange}
+                                                startDate={startDate}
+                                                setStartDate={setStartDate}
+                                                endDate={endDate}
+                                                setEndDate={setEndDate}
                                             />
                                             <PedienteTable
                                                 posts={currentPosts}

@@ -11,41 +11,27 @@ interface Payment {
 }
 
 interface PedienteFormFieldsProps {
-    userName: string;
-    setuserName: (value: string) => void;
-    DateOrder: string;
-    setDateOrder: (value: string) => void;
-    BuyersName: string;
-    setBuyersName: (value: string) => void;
-    PlaceSales: string;
-    setPlaceSales: (value: string) => void;
-    ContainerNo: string;
-    setContainerNo: (value: string) => void;
-    Commodity: string;
-    setCommodity: (value: string) => void;
-    Size: string;
-    setSize: (value: string) => void;
-    BoxSales: string;
-    setBoxSales: (value: string) => void;
-    Price: string;
-    setPrice: (value: string) => void;
-    PaymentMode: string;
-    setPaymentMode: (value: string) => void;
-    GrossSales: string;
-    setGrossSales: (value: string) => void;
-    PayAmount: string;
-    setPayAmount: (value: string) => void;
-    BalanceAmount: string;
-    setBalanceAmount: (value: string) => void;
-    Status: string;
-    setStatus: (value: string) => void;
-    paymentHistory: Payment[];
-    setPaymentHistory: React.Dispatch<React.SetStateAction<Payment[]>>;
+    userName: string; setuserName: (value: string) => void;
+    DatePediente: string; setDatePediente: (value: string) => void;
+    DateOrder: string; setDateOrder: (value: string) => void;
+    BuyersName: string; setBuyersName: (value: string) => void;
+    PlaceSales: string; setPlaceSales: (value: string) => void;
+    ContainerNo: string; setContainerNo: (value: string) => void;
+    Commodity: string; setCommodity: (value: string) => void;
+    Size: string; setSize: (value: string) => void;
+    BoxSales: string; setBoxSales: (value: string) => void;
+    Price: string; setPrice: (value: string) => void;
+    PaymentMode: string; setPaymentMode: (value: string) => void;
+    GrossSales: string; setGrossSales: (value: string) => void;
+    PayAmount: string; setPayAmount: (value: string) => void;
+    BalanceAmount: string; setBalanceAmount: (value: string) => void;
+    Status: string; setStatus: (value: string) => void;
     editPost?: any;
 }
 
 const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
     userName, setuserName,
+    DatePediente, setDatePediente,
     DateOrder, setDateOrder,
     BuyersName, setBuyersName,
     PlaceSales, setPlaceSales,
@@ -59,10 +45,15 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
     PayAmount, setPayAmount,
     BalanceAmount, setBalanceAmount,
     Status, setStatus,
-    paymentHistory, setPaymentHistory,
     editPost,
 }) => {
     const [customerList, setCustomerList] = useState<any[]>([]);
+
+    useEffect(() => {
+        // Set default date to today's date in yyyy-mm-dd format
+        const today = new Date().toISOString().split('T')[0];
+        setDatePediente(today);
+    }, []);
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -128,9 +119,21 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
         setPaymentMode('');
     };
 
+    useEffect(() => {
+        const payAmountNum = parseFloat(PayAmount) || 0;
+        const grossSalesNum = parseFloat(GrossSales) || 0;
+        const balance = grossSalesNum - payAmountNum;
+    
+        setBalanceAmount(balance.toFixed(2)); // Keep 2 decimal places
+      }, [PayAmount, GrossSales, setBalanceAmount]);
+
     return (
         <>
             <div className="flex flex-wrap -mx-4">
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="DatePediente">Date</label>
+                    <input type="date" id="DatePediente" value={DatePediente} onChange={(e) => setDatePediente(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+                </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="BuyersName">Buyers Name</label>
                     {editPost ? (
@@ -145,15 +148,15 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
-                    <input type="email" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="ContainerNo">Container No</label>
-                    <input type="email" id="ContainerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="ContainerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Commodity">Commodity</label>
-                    <input type="email" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Size">Size</label>
@@ -176,17 +179,18 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                     <input type="text" id="PaymentMode" value={PaymentMode} onChange={(e) => setPaymentMode(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="BalanceAmount">Input Payment</label>
-                    <input type="text" id="BalanceAmount" value={BalanceAmount ?? ""} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+                    <label className="block text-xs font-bold mb-2" htmlFor="PayAmount">Payment Amount</label>
+                    <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => {const value = e.target.value;if (/^\d*\.?\d*$/.test(value)) {setPayAmount(value);}}}  className="w-full px-3 py-2 border rounded text-xs"  />
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="PayAmount">Balance</label>
-                    <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => setPayAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                    <label className="block text-xs font-bold mb-2" htmlFor="BalanceAmount">Total Balance</label>
+                    <input type="text" id="BalanceAmount" value={BalanceAmount ?? ""} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Status">Status</label>
                     <select id="Status" value={Status ?? ""} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
                         <option value="">Select Status</option>
+                        <option value="New Debt">New Debt</option>
                         <option value="Paid Balance">Paid Balance</option>
                         <option value="Fully Paid">Fully Paid</option>
                     </select>
