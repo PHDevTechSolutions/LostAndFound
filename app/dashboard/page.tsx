@@ -13,6 +13,7 @@ import CardInventory from "../../components/Dashboard/CardInventory";
 import CardSoldout from "../../components/Dashboard/CardSoldout";
 
 import ChartPendiente from "../../components/Dashboard/ChartPendiente";
+import CardSales from "../../components/Dashboard/CardSales";
 
 interface SalesData {
   _id: string;
@@ -62,20 +63,10 @@ const DashboardPage: React.FC = () => {
           {/* Containers Cards Section */}
           <div className="mb-4">
             <h3 className="text-xl font-semibold mb-2">Containers</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <CardInventory />
               <CardSoldout />
-            </div>
-          </div>
-
-          {/* Frozen Pendiente Cards Section */}
-          <div className="mb-4">
-            <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              <BeginningBalanceCard />
-              <AddReceivable />
-              <LessCollection />
-              <EndingBalance />
+              <CardSales />
             </div>
           </div>
 
@@ -89,8 +80,21 @@ const DashboardPage: React.FC = () => {
           <div className="mb-4">
             {/* Dashboard Chart */}
           <DashboardChart filteredData={getFilteredData()} />
-          <ChartPendiente />
+          </div>
 
+           {/* Frozen Pendiente Cards Section */}
+           <div className="mb-4">
+            <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <BeginningBalanceCard />
+              <AddReceivable />
+              <LessCollection />
+              <EndingBalance />
+            </div>
+          </div>
+          
+          <div className="mb-4">
+          <ChartPendiente />
           </div>
         </div>
       </ParentLayout>
