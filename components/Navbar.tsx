@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosMenu } from 'react-icons/io';
@@ -38,7 +36,7 @@ const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) 
   };
 
   return (
-    <div className="flex justify-between items-center p-4 bg-gray-100 text-dark shadow-md">
+    <div className="flex justify-between items-center p-4 bg-gray-100 text-dark shadow-md relative">
       <div className="flex items-center">
         <button onClick={onToggleSidebar} className="p-2">
           <IoIosMenu size={24} />
@@ -53,7 +51,7 @@ const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) 
       </div>
 
       {showLogoutModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800">
             <p className="mb-4 text-xs">Are you sure you want to logout?</p>
             <div className="flex justify-center space-x-4">

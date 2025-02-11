@@ -104,6 +104,12 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
       // Staff can only see Containers and Settings
       return item.title === "Containers" || item.title === "Settings";
     }
+    if (userDetails.Role === "Directors") {
+      // Directors can only see Dashboard, Containers, and Pendiente
+      return (
+        item.title === "Containers" || item.title === "Pendiente" || item.title === "Dashboard" || item.title === "Settings"
+      );
+    }
     // Admin and Super Admin can see all items
     return true;
   });

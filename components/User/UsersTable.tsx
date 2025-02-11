@@ -6,10 +6,10 @@ import { BsPlusCircle, BsThreeDotsVertical } from "react-icons/bs";
 const socket = io("http://localhost:3001");
 
 interface UsersTableProps {
-  posts: any[];
+  posts: any[];  // Make sure your posts contain 'Role' field
   handleEdit: (post: any) => void;
   handleDelete: (postId: string) => void;
-  Role: string; // Role can be null
+  Role: string;  // Role can be null
 }
 
 const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, handleDelete, Role }) => {
@@ -21,11 +21,15 @@ const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, h
   }, [posts]);
 
   useEffect(() => {
-    console.log("Role in UsersTable:", Role);
+    console.log("Role in UsersTable:", Role); // Debugging the Role
   }, [Role]);
 
   useEffect(() => {
+    // Debugging posts data to ensure it contains expected fields
+    console.log("Posts data:", posts);
+    
     const newPostListener = (newPost: any) => {
+      console.log("Received new post:", newPost); // Debugging socket data
       setUpdatedPosts((prevPosts) => {
         if (prevPosts.find((post) => post._id === newPost._id)) return prevPosts; // Prevent duplicate posts
         return [newPost, ...prevPosts];
@@ -36,7 +40,7 @@ const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, h
     return () => {
       socket.off("newPost", newPostListener);
     };
-  }, []);
+  }, [posts]);
 
   const toggleRow = useCallback((postId: string) => {
     setExpandedRows((prev) => {
@@ -52,14 +56,20 @@ const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, h
 
   // Filter posts based on the Role
   const filteredPosts = useMemo(() => {
+    console.log("Filtered posts based on Role:", Role); // Debugging filtering logic
     if (Role === "Admin") {
       return updatedPosts.filter((post) => post.Role === "Staff");
     }
-    if (Role === "Super Admin") { // Super Admin
+    if (Role === "Super Admin") {
       return updatedPosts.filter((post) => post.Role === "Staff" || post.Role === "Admin");
     }
     return [];
   }, [updatedPosts, Role]);
+
+  // Debugging filtered posts
+  useEffect(() => {
+    console.log("Filtered Posts Length:", filteredPosts.length);
+  }, [filteredPosts]);
 
   // Memoize rows to avoid unnecessary re-renders
   const memoizedRows = useMemo(() => {

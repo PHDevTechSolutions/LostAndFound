@@ -76,6 +76,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
                  <option>Select Role</option>   
                  <option value="Admin">Admin</option>
                  <option value="Staff">Staff</option>
+                 <option value="Directors">Directors</option>
             </select>
           </div> 
         </div> 
