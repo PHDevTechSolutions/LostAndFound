@@ -4,14 +4,18 @@ import React, { useState, useEffect } from "react";
 import { motion, animate } from "framer-motion";
 import { FaWallet } from "react-icons/fa";
 
-const BeginningBalanceCard: React.FC = () => {
+interface BeginningBalanceProps { 
+  Location: string;
+}
+
+const BeginningBalanceCard: React.FC<BeginningBalanceProps> = ({ Location }) => {
   const [beginningBalance, setBeginningBalance] = useState<number>(0);
   const [displayBalance, setDisplayBalance] = useState<number>(0);
 
   useEffect(() => {
     const fetchBeginningBalance = async () => {
       try {
-        const response = await fetch("/api/Dashboard/FetchPediente");
+        const response = await fetch(`/api/Dashboard/FetchPediente?location=${Location}`);
         if (!response.ok) throw new Error("Failed to fetch beginning balance");
 
         const result = await response.json();
@@ -30,7 +34,7 @@ const BeginningBalanceCard: React.FC = () => {
     };
 
     fetchBeginningBalance();
-  }, []);
+  }, [Location]);
 
   return (
     <motion.div

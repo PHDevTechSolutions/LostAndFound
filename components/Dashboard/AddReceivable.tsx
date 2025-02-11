@@ -7,9 +7,10 @@ import { FaHandHoldingUsd  } from "react-icons/fa";
 interface AddReceivableProps {
   selectedMonth: string;
   selectedYear: string;
+  Location: string;
 }
 
-const AddReceivable: React.FC<AddReceivableProps> = ({ selectedMonth, selectedYear }) => {
+const AddReceivable: React.FC<AddReceivableProps> = ({ selectedMonth, selectedYear, Location }) => {
   const [totalGrossSalesToday, setTotalGrossSalesToday] = useState<number>(0);
   const [displayReceivable, setDisplayReceivable] = useState<number>(0);
 

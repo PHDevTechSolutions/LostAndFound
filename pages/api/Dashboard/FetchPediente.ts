@@ -6,6 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
+  const { location } = req.query; // Extract the location from the query string
+
   try {
     const db = await connectToDatabase();
     const pedienteCollection = db.collection("pediente");
@@ -28,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {
           $match: {
             DatePediente: { $gte: yesterday, $lt: today }, // Get only records from yesterday
+            Location: location,
           },
         },
         {
