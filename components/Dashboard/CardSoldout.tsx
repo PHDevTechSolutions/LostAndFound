@@ -1,33 +1,58 @@
-import React from "react";
-import { FaCheckCircle, FaPlus } from "react-icons/fa";
+"use client";
 
-interface CardSoldoutProps {
-  soldOutCount: number;
-  isSoldOutCardOpen: boolean;
-  setIsSoldOutCardOpen: (isOpen: boolean) => void;
-}
+import React, { useState, useEffect } from "react";
+import { motion, animate } from "framer-motion";
+import { FaRegTimesCircle } from "react-icons/fa";
 
-const CardSoldout: React.FC<CardSoldoutProps> = ({
-  soldOutCount,
-  isSoldOutCardOpen,
-  setIsSoldOutCardOpen,
-}) => {
+const CardSoldout: React.FC = () => {
+  const [soldoutCount, setSoldoutCount] = useState<number>(0);
+  const [displaySoldoutCount, setDisplaySoldoutCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchSoldoutCount = async () => {
+      try {
+        const response = await fetch("/api/Dashboard/FetchSoldout");
+        if (!response.ok) throw new Error("Failed to fetch soldout count");
+
+        const result = await response.json();
+        const soldoutTotal = result.SoldoutTotal || 0;
+
+        // Animate the number transition
+        animate(displaySoldoutCount, soldoutTotal, {
+          duration: 1.5,
+          onUpdate: (val) => setDisplaySoldoutCount(Math.floor(val)),
+        });
+
+        setSoldoutCount(soldoutTotal);
+      } catch (error) {
+        console.error("Error fetching soldout count:", error);
+      }
+    };
+
+    fetchSoldoutCount();
+  }, []);
+
   return (
-    <div className="bg-gradient-to-r from-red-500 to-yellow-500 shadow-md rounded-lg p-4 flex items-center justify-between">
-      <div className="flex items-center">
-        <FaCheckCircle className="text-white text-4xl mr-4" />
-        <div>
-          <h2 className="text-lg font-bold text-white mb-2">{soldOutCount}</h2>
-          <p className="text-sm text-white">Number of Containers Sold Out</p>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+    >
+      {/* Background Icon */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+        <FaRegTimesCircle className="text-gray-300 text-9xl" />
       </div>
-      <button
-        className="text-white text-2xl"
-        onClick={() => setIsSoldOutCardOpen(!isSoldOutCardOpen)} // Toggle the collapsible card
+
+      {/* Content */}
+      <h3 className="text-xs font-semibold text-gray-600">Total Number of Containers in Soldout</h3>
+      <motion.p 
+        className="text-3xl font-bold text-gray-800"
+        key={displaySoldoutCount} // Re-render when value updates
       >
-        <FaPlus />
-      </button>
-    </div>
+        {displaySoldoutCount.toLocaleString()}
+      </motion.p>
+    </motion.div>
   );
 };
 

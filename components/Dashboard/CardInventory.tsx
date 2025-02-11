@@ -1,19 +1,58 @@
-import React from "react";
-import { FaBoxes } from "react-icons/fa";
+"use client";
 
-interface CardInventoryProps {
-  inventoryCount: number;
-}
+import React, { useState, useEffect } from "react";
+import { motion, animate } from "framer-motion";
+import { FaBox } from "react-icons/fa";
 
-const CardInventory: React.FC<CardInventoryProps> = ({ inventoryCount }) => {
+const CardInventory: React.FC = () => {
+  const [inventoryCount, setInventoryCount] = useState<number>(0);
+  const [displayInventoryCount, setDisplayInventoryCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchInventoryCount = async () => {
+      try {
+        const response = await fetch("/api/Dashboard/FetchInventory");
+        if (!response.ok) throw new Error("Failed to fetch inventory count");
+
+        const result = await response.json();
+        const inventoryTotal = result.inventoryTotal || 0;
+
+        // Animate the number transition
+        animate(displayInventoryCount, inventoryTotal, {
+          duration: 1.5,
+          onUpdate: (val) => setDisplayInventoryCount(Math.floor(val)),
+        });
+
+        setInventoryCount(inventoryTotal);
+      } catch (error) {
+        console.error("Error fetching inventory count:", error);
+      }
+    };
+
+    fetchInventoryCount();
+  }, []);
+
   return (
-    <div className="bg-gradient-to-r from-green-400 to-blue-500 shadow-md rounded-lg p-4 flex items-center">
-      <FaBoxes className="text-white text-4xl mr-4" />
-      <div>
-        <h2 className="text-lg font-bold text-white mb-2">{inventoryCount}</h2>
-        <p className="text-sm text-white">Number of Containers in Inventory</p>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+    >
+      {/* Background Icon */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+        <FaBox className="text-gray-300 text-9xl" />
       </div>
-    </div>
+
+      {/* Content */}
+      <h3 className="text-xs font-semibold text-gray-600">Total Number of Containers in Inventory</h3>
+      <motion.p 
+        className="text-3xl font-bold text-gray-800"
+        key={displayInventoryCount} // Re-render when value updates
+      >
+        {displayInventoryCount.toLocaleString()}
+      </motion.p>
+    </motion.div>
   );
 };
 

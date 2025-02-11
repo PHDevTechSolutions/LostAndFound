@@ -9,6 +9,10 @@ import BeginningBalanceCard from "../../components/Dashboard/BeginningBalanceCar
 import AddReceivable from "../../components/Dashboard/AddReceivable";
 import LessCollection from "../../components/Dashboard/LessCollection";
 import EndingBalance from "../../components/Dashboard/EndingBalance";
+import CardInventory from "../../components/Dashboard/CardInventory";
+import CardSoldout from "../../components/Dashboard/CardSoldout";
+
+import ChartPendiente from "../../components/Dashboard/ChartPendiente";
 
 interface SalesData {
   _id: string;
@@ -20,6 +24,7 @@ const DashboardPage: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>("All");
   const [selectedYear, setSelectedYear] = useState<string>("All");
 
+  // Fetch sales data only once when the component mounts
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
@@ -34,27 +39,44 @@ const DashboardPage: React.FC = () => {
     };
 
     fetchSalesData();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
-  const filteredData = salesData.filter(item => {
-    const month = new Date(item._id).getMonth() + 1;
-    const year = new Date(item._id).getFullYear();
-    return (
-      (selectedMonth === "All" || month === parseInt(selectedMonth, 10)) &&
-      (selectedYear === "All" || year === parseInt(selectedYear, 10))
-    );
-  });
+  // Filter sales data based on selected month and year
+  const getFilteredData = () => {
+    return salesData.filter(item => {
+      const month = new Date(item._id).getMonth() + 1;
+      const year = new Date(item._id).getFullYear();
+      return (
+        (selectedMonth === "All" || month === parseInt(selectedMonth, 10)) &&
+        (selectedYear === "All" || year === parseInt(selectedYear, 10))
+      );
+    });
+  };
+
+  
 
   return (
     <SessionChecker>
       <ParentLayout>
         <div className="container mx-auto p-4">
-          {/* Cards Section */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            <BeginningBalanceCard />
-            <AddReceivable />
-            <LessCollection />
-            <EndingBalance />
+          {/* Containers Cards Section */}
+          <div className="mb-4">
+            <h3 className="text-xl font-semibold mb-2">Containers</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
+              <CardInventory />
+              <CardSoldout />
+            </div>
+          </div>
+
+          {/* Frozen Pendiente Cards Section */}
+          <div className="mb-4">
+            <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <BeginningBalanceCard />
+              <AddReceivable />
+              <LessCollection />
+              <EndingBalance />
+            </div>
           </div>
 
           {/* Filters Section */}
@@ -64,9 +86,12 @@ const DashboardPage: React.FC = () => {
             selectedYear={selectedYear}
             setSelectedYear={setSelectedYear}
           />
+          <div className="mb-4">
+            {/* Dashboard Chart */}
+          <DashboardChart filteredData={getFilteredData()} />
+          <ChartPendiente />
 
-          {/* Pass filtered data as props to DashboardChart */}
-          <DashboardChart filteredData={filteredData} />
+          </div>
         </div>
       </ParentLayout>
     </SessionChecker>
