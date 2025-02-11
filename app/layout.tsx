@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "JJ Venture Sources, Inc",
   description: "Created in NextJs Developed By PH Dev-Tech Solutions",
+  icons: {
+    icon: "/jjv.png", // Favicon for the tab bar
+  },
 };
 
 export default function RootLayout({
@@ -26,6 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Favicon for the browser tab */}
+        <link rel="icon" href="/jjv.png" type="image/png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
