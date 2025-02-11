@@ -96,6 +96,7 @@ const DashboardPage: React.FC = () => {
           <div className="mb-4">
           <ChartPendiente />
           </div>
+
         </div>
       </ParentLayout>
     </SessionChecker>
