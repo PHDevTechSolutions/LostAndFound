@@ -1,33 +1,58 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion, animate } from "framer-motion";
+import { FaBalanceScale } from "react-icons/fa";
 
 const EndingBalance: React.FC = () => {
-  const [totalBalanceToday, settotalBalanceToday] = useState<number>(0);
+  const [totalBalanceToday, setTotalBalanceToday] = useState<number>(0);
+  const [displayBalance, setDisplayBalance] = useState<number>(0);
 
   useEffect(() => {
-    const EndingBalance = async () => {
+    const fetchEndingBalance = async () => {
       try {
         const response = await fetch("/api/Dashboard/FetchBalance");
-        if (!response.ok) throw new Error("Failed to fetch collection");
+        if (!response.ok) throw new Error("Failed to fetch balance");
 
         const result = await response.json();
-        const BalanceToday = result.totalBalanceToday || 0;
+        const balanceToday = result.totalBalanceToday || 0;
 
-        settotalBalanceToday(BalanceToday);
+        // Animate the number transition
+        animate(displayBalance, balanceToday, {
+          duration: 1.5,
+          onUpdate: (val) => setDisplayBalance(Math.floor(val)),
+        });
+
+        setTotalBalanceToday(balanceToday);
       } catch (error) {
-        console.error("Error fetching receivable:", error);
+        console.error("Error fetching balance:", error);
       }
     };
 
-    EndingBalance();
+    fetchEndingBalance();
   }, []);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 text-center">
-      <h3 className="text-xs font-semibold">Ending Balance</h3>
-      <p className="text-2xl font-bold">₱{totalBalanceToday.toLocaleString()}</p>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+    >
+      {/* Background Icon */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+        <FaBalanceScale className="text-gray-300 text-9xl" />
+      </div>
+
+      {/* Content */}
+      <h3 className="text-xs font-semibold text-gray-600">Ending Balance</h3>
+      <motion.p 
+        className="text-3xl font-bold text-blue-600"
+        key={displayBalance} // Re-render when value updates
+      >
+        ₱{displayBalance.toLocaleString()}
+      </motion.p>
+    </motion.div>
   );
 };
 

@@ -1,33 +1,58 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion, animate } from "framer-motion";
+import { FaMoneyBillWave } from "react-icons/fa";
 
 const LessCollection: React.FC = () => {
-  const [totalCollectionToday, settotalCollectionToday] = useState<number>(0);
+  const [totalCollectionToday, setTotalCollectionToday] = useState<number>(0);
+  const [displayCollection, setDisplayCollection] = useState<number>(0);
 
   useEffect(() => {
-    const lessCollection = async () => {
+    const fetchCollection = async () => {
       try {
         const response = await fetch("/api/Dashboard/FetchCollection");
         if (!response.ok) throw new Error("Failed to fetch collection");
 
         const result = await response.json();
-        const CollectionToday = result.totalCollectionToday || 0;
+        const collectionToday = result.totalCollectionToday || 0;
 
-        settotalCollectionToday(CollectionToday);
+        // Animate the number transition
+        animate(displayCollection, collectionToday, {
+          duration: 1.5,
+          onUpdate: (val) => setDisplayCollection(Math.floor(val)),
+        });
+
+        setTotalCollectionToday(collectionToday);
       } catch (error) {
-        console.error("Error fetching receivable:", error);
+        console.error("Error fetching collection:", error);
       }
     };
 
-    lessCollection();
+    fetchCollection();
   }, []);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 text-center">
-      <h3 className="text-xs font-semibold">Less Collection</h3>
-      <p className="text-2xl font-bold">₱{totalCollectionToday.toLocaleString()}</p>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+    >
+      {/* Background Icon */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+        <FaMoneyBillWave className="text-gray-300 text-9xl" />
+      </div>
+
+      {/* Content */}
+      <h3 className="text-xs font-semibold text-gray-600">Less Collection</h3>
+      <motion.p 
+        className="text-3xl font-bold text-red-600"
+        key={displayCollection} // Re-render when value updates
+      >
+        ₱{displayCollection.toLocaleString()}
+      </motion.p>
+    </motion.div>
   );
 };
 

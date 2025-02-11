@@ -238,11 +238,11 @@ const ContainerTable: React.FC<ContainerTableProps> = React.memo(({ posts, handl
         </tbody>
         <tfoot>
           <tr>
-            <td className="border font-bold text-right px-4 py-2" colSpan={5}>Total:</td>
-            <td className="border font-bold px-4 py-2">{memoizedRows.totalBeginning.toLocaleString()}</td>
-            <td className="border font-bold px-4 py-2">{memoizedRows.totalSalesBox.toLocaleString()}</td>
-            <td className="border font-bold px-4 py-2">{memoizedRows.totalRemaining.toLocaleString()}</td>
-            <td className="border font-bold px-4 py-2" colSpan={3}></td>
+            <td className="border font-bold hidden md:table-cell text-right px-4 py-2" colSpan={5}>Total:</td>
+            <td className="border font-bold hidden md:table-cell px-4 py-2">{memoizedRows.totalBeginning.toLocaleString()}</td>
+            <td className="border font-bold hidden md:table-cell px-4 py-2">{memoizedRows.totalSalesBox.toLocaleString()}</td>
+            <td className="border font-bold hidden md:table-cell px-4 py-2">{memoizedRows.totalRemaining.toLocaleString()}</td>
+            <td className="border font-bold hidden md:table-cell px-4 py-2" colSpan={3}></td>
           </tr>
         </tfoot>
       </table>

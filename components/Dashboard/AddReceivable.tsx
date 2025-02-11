@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion, animate } from "framer-motion";
+import { FaHandHoldingUsd  } from "react-icons/fa";
 
 const AddReceivable: React.FC = () => {
   const [totalGrossSalesToday, setTotalGrossSalesToday] = useState<number>(0);
+  const [displayReceivable, setDisplayReceivable] = useState<number>(0);
 
   useEffect(() => {
     const fetchReceivable = async () => {
@@ -13,6 +16,12 @@ const AddReceivable: React.FC = () => {
 
         const result = await response.json();
         const grossSalesToday = result.totalGrossSalesToday || 0;
+
+        // Animate the number transition
+        animate(displayReceivable, grossSalesToday, {
+          duration: 1.5,
+          onUpdate: (val) => setDisplayReceivable(Math.floor(val)),
+        });
 
         setTotalGrossSalesToday(grossSalesToday);
       } catch (error) {
@@ -24,10 +33,26 @@ const AddReceivable: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 text-center">
-      <h3 className="text-xs font-semibold">Add Receivable</h3>
-      <p className="text-2xl font-bold">₱{totalGrossSalesToday.toLocaleString()}</p>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+    >
+      {/* Background Icon */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+        <FaHandHoldingUsd className="text-gray-300 text-9xl" />
+      </div>
+
+      {/* Content */}
+      <h3 className="text-xs font-semibold text-gray-600">Add Receivable</h3>
+      <motion.p 
+        className="text-3xl font-bold text-green-600"
+        key={displayReceivable} // Re-render when value updates
+      >
+        ₱{displayReceivable.toLocaleString()}
+      </motion.p>
+    </motion.div>
   );
 };
 
