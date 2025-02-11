@@ -54,27 +54,32 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
     setMenuVisible((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
+  // Sort posts by DateArrived in descending order
+  const sortedPosts = updatedPosts.sort((a, b) => {
+    return new Date(b.DateArrived).getTime() - new Date(a.DateArrived).getTime();
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-      {updatedPosts.length > 0 ? (
-        updatedPosts.map((post) => {
+      {sortedPosts.length > 0 ? (
+        sortedPosts.map((post) => {
           // Determine card color and animation class based on status
           const cardClasses =
             post.Status === "Inventory"
-              ? "bg-blue-500 border-blue-500"
+              ? "bg-blue-300 border-blue-500"
               : post.Status === "Soldout"
-              ? "bg-orange-500 border-orange-500"
-              : "bg-white border-gray-200";
-  
+                ? "bg-orange-300 border-orange-500"
+                : "bg-white border-gray-200";
+
           return (
             <div
               key={post._id}
               className={`relative ${cardClasses} border rounded-xl shadow-md p-4 transition-all duration-500 ease-in-out`}
             >
               {/* Card Header */}
-              <div className="bg-gray-100 p-3 rounded-t-lg flex justify-between items-center">
-                <h3 className="text-xs font-semibold text-gray-800">
-                  SPSIC No.{post.SpsicNo}
+              <div className="bg-gray-100 p-3 shadow-lg rounded-lg flex justify-between items-center">
+                <h3 className="text-xs font-semibold text-gray-800 text-center">
+                  {post.SpsicNo}
                 </h3>
                 <button
                   onClick={() => toggleMenu(post._id)}
@@ -83,9 +88,9 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
                   <BsThreeDotsVertical size={20} />
                 </button>
               </div>
-  
+
               {/* Card Body */}
-              <div className="p-3 text-xs">
+              <div className="p-3 text-xs capitalize">
                 <p>
                   <strong>Arrived:</strong> {post.DateArrived} /{" "}
                   <strong>Soldout:</strong> {post.DateSoldout}
@@ -115,14 +120,22 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
                   <strong>Size:</strong> {post.Size}
                 </p>
               </div>
-  
+
               {/* Card Footer */}
-              <div className="bg-gray-100 p-3 rounded-b-lg flex justify-between items-center text-xs">
-                <p>
-                  <strong>Status:</strong> {post.Status}
-                </p>
+
+              <div className="bg-gray-100 p-3 shadow-lg rounded-b-lg text-center text-xs" >
+                <div
+                  className="h-2 rounded-full"
+                  style={{
+                    width: `${((post.TotalQuantity - post.Boxes) / post.TotalQuantity) * 100}%`,
+                    backgroundColor: post.Status === "Soldout" ? "#F97316" : post.Status === "Inventory" ? "#3B82F6" : "#D1D5DB",
+                    transition: "width 0.5s ease-in-out", // Animation for smooth transition
+                  }}
+                ></div>
+                <p className="font-bold mt-1">{post.Status}</p>
               </div>
-  
+
+
               {/* Dropdown Menu */}
               {menuVisible[post._id] && (
                 <div className="absolute right-4 top-12 bg-white shadow-lg rounded-lg border w-32 z-10 text-xs">
@@ -152,10 +165,10 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
           );
         })
       ) : (
-        <p className="text-center col-span-full">No records found</p>
+        <p className="text-center text-xs col-span-full">No records found</p>
       )}
     </div>
-  );  
+  );
 };
 
 export default ContainerCards;
