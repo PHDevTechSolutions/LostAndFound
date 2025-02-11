@@ -26,6 +26,8 @@ interface Post {
   Size: string;
   Status: string;
   Remaining: number;
+  Country: number;
+  Freezing: number;
 }
 
 const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, handleDelete, handleCreateData, Role }) => {
@@ -92,17 +94,21 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
               {/* Card Body */}
               <div className="p-3 text-xs capitalize">
                 <p>
-                  <strong>Arrived:</strong> {post.DateArrived} /{" "}
+                  <strong>Arrived:</strong> {post.DateArrived} |{" "}
                   <strong>Soldout:</strong> {post.DateSoldout}
                 </p>
-                <p>
-                  <strong>Supplier:</strong> {post.SupplierName}
+                <p className="mb-2">
+                  <strong>Supplier:</strong> {post.SupplierName} |{" "}
+                  <strong>{post.Country}</strong> 
                 </p>
                 <p>
-                  <strong>Container No.:</strong> {post.ContainerNo}
+                  <strong>Container No:</strong> {post.ContainerNo}
                 </p>
                 <p>
-                  <strong>Commodity</strong> {post.Commodity}
+                  <strong>Commodity:</strong> {post.Commodity}
+                </p>
+                <p className="mb-2">
+                  <strong>Size:</strong> {post.Size} | {""} <strong>{post.Freezing}</strong> | {""} <strong>{post.BoxType}</strong> 
                 </p>
                 <p>
                   <strong>Beginning:</strong> {post.TotalQuantity}
@@ -112,12 +118,6 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
                 </p>
                 <p>
                   <strong>Remaining:</strong> {post.Boxes}
-                </p>
-                <p>
-                  <strong>Box Type:</strong> {post.BoxType}
-                </p>
-                <p>
-                  <strong>Size:</strong> {post.Size}
                 </p>
               </div>
 
