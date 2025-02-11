@@ -64,43 +64,43 @@ const ActivityLog: React.FC = () => {
           {() => (
             <div className="container mx-auto p-4">
               {/* Title and Controls in a single row */}
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold">Activity Logs</h2>
+              <div className="flex flex-wrap justify-between items-center mb-4 space-y-4 md:space-y-0 md:space-x-4">
+                <h2 className="text-lg font-bold w-full md:w-auto">Activity Logs</h2>
 
                 {/* Date Range Filter and Pagination Controls */}
-                <div className="flex space-x-4">
+                <div className="flex flex-wrap space-x-4 w-full md:w-auto">
                   {/* Date Range Filter */}
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-2 w-full md:w-auto">
                     <input
                       type="date"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="p-2 border border-gray-300 rounded text-xs"
+                      className="p-2 border border-gray-300 rounded text-xs w-full md:w-auto"
                     />
                     <input
                       type="date"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="p-2 border border-gray-300 rounded text-xs"
+                      className="p-2 border border-gray-300 rounded text-xs w-full md:w-auto"
                     />
                   </div>
 
                   {/* Pagination Controls */}
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-2 w-full md:w-auto mt-2">
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 text-xs"
+                      className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 text-xs w-full md:w-auto"
                     >
                       Previous
                     </button>
-                    <span className="px-4 py-2 text-xs text-gray-500">
+                    <span className="px-4 py-2 text-xs text-gray-500 w-full md:w-auto">
                       Page {currentPage} of {totalPages}
                     </span>
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 text-xs"
+                      className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 text-xs w-full md:w-auto"
                     >
                       Next
                     </button>
@@ -119,7 +119,6 @@ const ActivityLog: React.FC = () => {
             </div>
           )}
         </UserFetcher>
-
       </ParentLayout>
     </SessionChecker>
   );

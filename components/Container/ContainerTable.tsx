@@ -55,7 +55,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
       {updatedPosts.length > 0 ? (
         updatedPosts.map((post) => {
           // Determine card color and animation class based on status
@@ -69,7 +69,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
           return (
             <div
               key={post._id}
-              className={`relative ${cardClasses} border rounded-lg shadow-md p-4 transition-all duration-500 ease-in-out`}
+              className={`relative ${cardClasses} border rounded-xl shadow-md p-4 transition-all duration-500 ease-in-out`}
             >
               {/* Card Header */}
               <div className="bg-gray-100 p-3 rounded-t-lg flex justify-between items-center">
@@ -85,7 +85,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
               </div>
   
               {/* Card Body */}
-              <div className="p-3 text-sm">
+              <div className="p-3 text-xs">
                 <p>
                   <strong>Arrived:</strong> {post.DateArrived} /{" "}
                   <strong>Soldout:</strong> {post.DateSoldout}

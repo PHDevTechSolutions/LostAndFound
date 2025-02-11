@@ -270,23 +270,23 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
         <>
             <Form beginningBalance={beginningBalance} totalAmount={totalAmount} totalPayment={totalPayment} totalBalance={totalBalance} />
 
-            <div className="mt-4 p-4 border shadow-md rounded-md">
+            <div className="mt-4 p-4 border shadow-md rounded-md overflow-x-auto">
                 <table className="min-w-full bg-white border text-xs">
                     <thead>
                         <tr>
-                            <th className="w-1/7 text-left  px-4 py-2">Date</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Buy and Sell</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Breakdown</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Container Van</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Commodity</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Size</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Qty</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Sales Price</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Total Debt</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Payment</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Balance</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Status</th>
-                            <th className="w-1/7 text-left  px-4 py-2">Actions</th>
+                            <th className="text-left px-4 py-2">Date</th>
+                            <th className="text-left px-4 py-2">Buy and Sell</th>
+                            <th className="text-left px-4 py-2">Breakdown</th>
+                            <th className="text-left px-4 py-2">Container Van</th>
+                            <th className="text-left px-4 py-2">Commodity</th>
+                            <th className="text-left px-4 py-2">Size</th>
+                            <th className="text-left px-4 py-2">Qty</th>
+                            <th className="text-left px-4 py-2">Sales Price</th>
+                            <th className="text-left px-4 py-2">Total Debt</th>
+                            <th className="text-left px-4 py-2">Payment</th>
+                            <th className="text-left px-4 py-2">Balance</th>
+                            <th className="text-left px-4 py-2">Status</th>
+                            <th className="text-left px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
