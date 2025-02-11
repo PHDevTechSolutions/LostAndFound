@@ -4,14 +4,19 @@ import React, { useState, useEffect } from "react";
 import { motion, animate } from "framer-motion";
 import { FaHandHoldingUsd  } from "react-icons/fa";
 
-const AddReceivable: React.FC = () => {
+interface AddReceivableProps {
+  selectedMonth: string;
+  selectedYear: string;
+}
+
+const AddReceivable: React.FC<AddReceivableProps> = ({ selectedMonth, selectedYear }) => {
   const [totalGrossSalesToday, setTotalGrossSalesToday] = useState<number>(0);
   const [displayReceivable, setDisplayReceivable] = useState<number>(0);
 
   useEffect(() => {
     const fetchReceivable = async () => {
       try {
-        const response = await fetch("/api/Dashboard/FetchReceivable");
+        const response = await fetch("/api/Dashboard/FetchReceivable?month=${selectedMonth}&year=${selectedYear}");
         if (!response.ok) throw new Error("Failed to fetch receivable");
 
         const result = await response.json();
@@ -37,7 +42,7 @@ const AddReceivable: React.FC = () => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+      className="relative bg-white shadow-md rounded-xl p-12 text-center overflow-hidden"
     >
       {/* Background Icon */}
       <div className="absolute inset-0 flex items-center justify-center opacity-10">

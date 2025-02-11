@@ -10,7 +10,7 @@ interface ChartFilterProps {
 
 const ChartFilter: React.FC<ChartFilterProps> = ({ selectedMonth, setSelectedMonth, selectedYear, setSelectedYear }) => {
     return (
-        <div className="mt-8 flex gap-4">
+        <div className="mb-4 flex gap-4">
             {/* Month Filter */}
             <select
                 className="px-3 py-2 border rounded text-xs"

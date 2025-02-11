@@ -37,7 +37,7 @@ const CardInventory: React.FC = () => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+      className="relative bg-white shadow-md rounded-xl p-12 text-center overflow-hidden"
     >
       {/* Background Icon */}
       <div className="absolute inset-0 flex items-center justify-center opacity-10">

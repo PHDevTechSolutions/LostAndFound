@@ -4,14 +4,21 @@ import React, { useState, useEffect } from "react";
 import { motion, animate } from "framer-motion";
 import { FaMoneyBillWave } from "react-icons/fa"
 
-const CardSales: React.FC = () => {
+interface CardSalesProps {
+  selectedMonth: string;
+  selectedYear: string;
+}
+
+const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear }) => {
   const [totalSales, setTotalSales] = useState<number>(0);
   const [displaySalesToday, setDisplaySalesToday] = useState<number>(0);
 
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await fetch("/api/Dashboard/FetchSalesToday");
+        // Construct the API request with selected filters
+        const url = `/api/Dashboard/FetchSalesToday?month=${selectedMonth}&year=${selectedYear}`;
+        const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to fetch sales data");
 
         const result = await response.json();
@@ -30,14 +37,14 @@ const CardSales: React.FC = () => {
     };
 
     fetchSalesData();
-  }, []);
+  }, [selectedMonth, selectedYear]);
 
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="relative bg-white shadow-lg rounded-xl p-12 text-center overflow-hidden"
+      className="relative bg-white shadow-md rounded-xl p-12 text-center overflow-hidden"
     >
       {/* Background Icon */}
       <div className="absolute inset-0 flex items-center justify-center opacity-10">

@@ -55,21 +55,10 @@ const DashboardPage: React.FC = () => {
   };
 
   
-
   return (
     <SessionChecker>
       <ParentLayout>
         <div className="container mx-auto p-4">
-          {/* Containers Cards Section */}
-          <div className="mb-4">
-            <h3 className="text-xl font-semibold mb-2">Containers</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <CardInventory />
-              <CardSoldout />
-              <CardSales />
-            </div>
-          </div>
-
           {/* Filters Section */}
           <ChartFilter
             selectedMonth={selectedMonth}
@@ -77,6 +66,17 @@ const DashboardPage: React.FC = () => {
             selectedYear={selectedYear}
             setSelectedYear={setSelectedYear}
           />
+          
+          {/* Containers Cards Section */}
+          <div className="mb-4">
+            <h3 className="text-xl font-semibold mb-2">Containers</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <CardInventory />
+              <CardSoldout />
+              <CardSales selectedMonth={selectedMonth} selectedYear={selectedYear} />
+            </div>
+          </div>
+
           <div className="mb-4">
             {/* Dashboard Chart */}
           <DashboardChart filteredData={getFilteredData()} />
@@ -87,7 +87,7 @@ const DashboardPage: React.FC = () => {
             <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <BeginningBalanceCard />
-              <AddReceivable />
+              <AddReceivable selectedMonth={selectedMonth} selectedYear={selectedYear} />
               <LessCollection />
               <EndingBalance />
             </div>
