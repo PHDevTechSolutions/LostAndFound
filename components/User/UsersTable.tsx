@@ -10,9 +10,10 @@ interface UsersTableProps {
   handleEdit: (post: any) => void;
   handleDelete: (postId: string) => void;
   Role: string;
+  Location: string;
 }
 
-const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, handleDelete, Role }) => {
+const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, handleDelete, Role, Location }) => {
   const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
 
   useEffect(() => {
@@ -33,10 +34,28 @@ const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, h
     };
   }, [posts]);
 
+  // Filter posts based on location and role
+  const filteredPosts = updatedPosts.filter((post) => {
+    // If Role is Staff, they can only see posts with the same location
+    if (Role === "Staff") {
+      return post.Location === Location;
+    }
+    // If Role is Admin, they can see all posts regardless of location
+    if (Role === "Admin") {
+      return post.Location === Location;
+    }
+    return true;
+  });
+
+  // Sort posts by DateArrived in descending order
+  const sortedPosts = filteredPosts.sort((a, b) => {
+    return new Date(b.DateArrived).getTime() - new Date(a.DateArrived).getTime();
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-      {updatedPosts.length > 0 ? (
-        updatedPosts
+      {sortedPosts.length > 0 ? (
+        sortedPosts
           .filter(post => !(Role === "Admin" && post.Role === "Super Admin"))
           .map((post) => (
             <div
@@ -86,7 +105,7 @@ const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, h
 
               {/* Status Indicator */}
               <div className="bg-gray-100 p-3 rounded-b-lg text-xs text-left font-semibold">
-                <p><strong>Role:</strong> {post.Role}</p>
+                <p><strong>{post.Role}</strong></p>
               </div>
             </div>
           ))

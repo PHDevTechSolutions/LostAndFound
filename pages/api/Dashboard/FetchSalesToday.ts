@@ -6,6 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
+  const { location } = req.query; // Extract the location from the query string
+
   try {
     const db = await connectToDatabase();
     const containerCollection = db.collection("container_order");
@@ -68,6 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         $match: {
           PaymentMode: "Cash", // Filter by PaymentMode: "Cash"
           ...dateFilter, // Apply the date filter based on the selected month and year or today's date
+          Location: location,
         },
       },
       {

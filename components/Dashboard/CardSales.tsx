@@ -7,9 +7,10 @@ import { FaMoneyBillWave } from "react-icons/fa"
 interface CardSalesProps {
   selectedMonth: string;
   selectedYear: string;
+  Location: string;
 }
 
-const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear }) => {
+const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear, Location }) => {
   const [totalSales, setTotalSales] = useState<number>(0);
   const [displaySalesToday, setDisplaySalesToday] = useState<number>(0);
 
@@ -17,7 +18,7 @@ const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear }) =>
     const fetchSalesData = async () => {
       try {
         // Construct the API request with selected filters
-        const url = `/api/Dashboard/FetchSalesToday?month=${selectedMonth}&year=${selectedYear}`;
+        const url = `/api/Dashboard/FetchSalesToday?month=${selectedMonth}&year=${selectedYear}&location=${Location}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to fetch sales data");
 
@@ -37,7 +38,7 @@ const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear }) =>
     };
 
     fetchSalesData();
-  }, [selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear, Location]);
 
   return (
     <motion.div

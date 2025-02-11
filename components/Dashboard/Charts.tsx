@@ -1,22 +1,78 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line, Bar } from "react-chartjs-2";
-import {Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement,} from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+} from "chart.js";
 
 // Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface SalesData {
   _id: string;
   totalGrossSales: number;
+  Location: string;
 }
 
-interface ChartProps {
-  filteredData: SalesData[]; // Expecting filtered data in SalesData[] type
+interface DashboardChartProps {
+  Location: string;
 }
 
-const DashboardChart: React.FC<ChartProps> = ({ filteredData }) => {
+const DashboardChart: React.FC<DashboardChartProps> = ({ Location }) => {
+  const [salesData, setSalesData] = useState<SalesData[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<string>("All");
+  const [selectedYear, setSelectedYear] = useState<string>("All");
+
+  // Fetch sales data when the component mounts or Location changes
+  useEffect(() => {
+    const fetchSalesData = async () => {
+      try {
+        const url = `/api/Dashboard/FetchSales?location=${Location}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to fetch sales data");
+
+        const data = await response.json();
+        setSalesData(data);
+      } catch (error) {
+        console.error("Error fetching sales data:", error);
+      }
+    };
+
+    fetchSalesData();
+  }, [Location]);
+
+  // Filter sales data based on selected month and year
+  const getFilteredData = () => {
+    return salesData.filter((item) => {
+      const month = new Date(item._id).getMonth() + 1;
+      const year = new Date(item._id).getFullYear();
+      return (
+        (selectedMonth === "All" || month === parseInt(selectedMonth, 10)) &&
+        (selectedYear === "All" || year === parseInt(selectedYear, 10))
+      );
+    });
+  };
+
+  const filteredData = getFilteredData();
+
   // Ensure filteredData is not empty before attempting to generate chart data
   if (filteredData.length === 0) {
     return (
@@ -60,14 +116,36 @@ const DashboardChart: React.FC<ChartProps> = ({ filteredData }) => {
       {/* Line Chart Card */}
       <div className="bg-white shadow-md rounded-lg p-4">
         <div style={{ position: "relative", height: "300px" }}>
-          <Line data={lineChartData} options={{ responsive: true, plugins: { title: { display: true, text: "Gross Sales Over Time", }, },}}/>
+          <Line
+            data={lineChartData}
+            options={{
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Gross Sales Over Time",
+                },
+              },
+            }}
+          />
         </div>
       </div>
 
       {/* Bar Chart Card */}
       <div className="bg-white shadow-md rounded-lg p-4">
         <div style={{ position: "relative", height: "300px" }}>
-          <Bar data={barChartData} options={{ responsive: true, plugins: { title: { display: true, text: "Gross Sales by Date", }, },}}/>
+          <Bar
+            data={barChartData}
+            options={{
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: "Gross Sales by Date",
+                },
+              },
+            }}
+          />
         </div>
       </div>
     </div>

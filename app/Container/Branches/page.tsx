@@ -8,20 +8,20 @@ import UserFetcher from "../../../components/UserFetcher";
 // Pages
 import AddAccountForm from "../../../components/Container/AddContainerForm";
 import CreateDataForm from "../../../components/Container/CreateDataForm";
-import SearchFilters from "../../../components/Container/SearchFilters";
-import ContainerTable from "../../../components/Container/ContainerTable";
+import SearchFilters from "../../../components/Branches/SearchFilters";
+import ContainerTable from "../../../components/Branches/ContainerTable";
 import Pagination from "../../../components/Container/Pagination";
 
 // Toasts
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const ContainerList: React.FC = () => {
+const Branches: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-
+    const [selectedLocation, setselectedLocation] = useState("");
     const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
         start: "",
         end: "",
@@ -58,7 +58,8 @@ const ContainerList: React.FC = () => {
             post.SpsicNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase());
-
+            
+        const matchesLocation = selectedLocation ? post.Location.includes(selectedLocation) : true;
         const dateArrive = new Date(post.DateArrived).getTime();
         const dateSoldout = new Date(post.DateSoldout).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
@@ -68,7 +69,7 @@ const ContainerList: React.FC = () => {
             (!rangeStart || dateArrive >= rangeStart) &&
             (!rangeEnd || dateSoldout <= rangeEnd);
 
-        return inSearchTerm && inDateRange;
+        return inSearchTerm && inDateRange && matchesLocation;
     });
 
     // Pagination logic
@@ -148,16 +149,13 @@ const ContainerList: React.FC = () => {
                                     />
                                 ) : (
                                     <>
-                                        <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add Fishing Container
-                                            </button>
-                                        </div>
-                                        <h2 className="text-lg font-bold mb-2">Summary of Sales</h2>
+                                        <h2 className="text-lg font-bold mb-2">Branches</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                         <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
+                                                selectedLocation={selectedLocation}
+                                                setselectedLocation={setselectedLocation}
                                                 postsPerPage={postsPerPage}
                                                 setPostsPerPage={setPostsPerPage}
                                                 dateRange={dateRange}
@@ -207,4 +205,4 @@ const ContainerList: React.FC = () => {
     );
 };
 
-export default ContainerList;
+export default Branches;

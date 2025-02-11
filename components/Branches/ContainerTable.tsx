@@ -32,14 +32,7 @@ interface Post {
   Location: string; // Add location field to Post
 }
 
-const ContainerCards: React.FC<ContainerCardsProps> = ({
-  posts,
-  handleEdit,
-  handleDelete,
-  handleCreateData,
-  Role,
-  Location,
-}) => {
+const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, handleDelete, handleCreateData, Role, Location }) => {
   const [updatedPosts, setUpdatedPosts] = useState<Post[]>(posts);
   const [menuVisible, setMenuVisible] = useState<{ [key: string]: boolean }>({});
 
@@ -50,7 +43,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
   useEffect(() => {
     const newPostListener = (newPost: Post) => {
       setUpdatedPosts((prevPosts) => {
-        if (prevPosts.find((post) => post._id === newPost._id)) return prevPosts;
+        if (prevPosts.find(post => post._id === newPost._id)) return prevPosts;
         return [newPost, ...prevPosts];
       });
     };
@@ -92,8 +85,8 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
             post.Status === "Inventory"
               ? "bg-blue-300 border-blue-500"
               : post.Status === "Soldout"
-              ? "bg-orange-300 border-orange-500"
-              : "bg-white border-gray-200";
+                ? "bg-orange-300 border-orange-500"
+                : "bg-white border-gray-200";
 
           return (
             <div
@@ -121,16 +114,16 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                 </p>
                 <p className="mb-2">
                   <strong>Supplier:</strong> {post.SupplierName} |{" "}
-                  <strong>{post.Country}</strong>
+                  <strong>{post.Country}</strong> 
                 </p>
                 <p>
-                  <strong>Container No:</strong> {post.ContainerNo}
+                  <strong>Container No:</strong> {post.ContainerNo} | <strong>{post.Location}</strong>
                 </p>
                 <p>
                   <strong>Commodity:</strong> {post.Commodity}
                 </p>
                 <p className="mb-2">
-                  <strong>Size:</strong> {post.Size} | {""} <strong>{post.Freezing}</strong> | {""} <strong>{post.BoxType}</strong>
+                  <strong>Size:</strong> {post.Size} | {""} <strong>{post.Freezing}</strong> | {""} <strong>{post.BoxType}</strong> 
                 </p>
                 <p>
                   <strong>Beginning:</strong> {post.TotalQuantity}
@@ -144,22 +137,19 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
               </div>
 
               {/* Card Footer */}
-              <div className="bg-gray-100 p-3 shadow-lg rounded-b-lg text-center text-xs">
+
+              <div className="bg-gray-100 p-3 shadow-lg rounded-b-lg text-center text-xs" >
                 <div
                   className="h-2 rounded-full"
                   style={{
                     width: `${((post.TotalQuantity - post.Boxes) / post.TotalQuantity) * 100}%`,
-                    backgroundColor:
-                      post.Status === "Soldout"
-                        ? "#F97316"
-                        : post.Status === "Inventory"
-                        ? "#3B82F6"
-                        : "#D1D5DB",
+                    backgroundColor: post.Status === "Soldout" ? "#F97316" : post.Status === "Inventory" ? "#3B82F6" : "#D1D5DB",
                     transition: "width 0.5s ease-in-out", // Animation for smooth transition
                   }}
                 ></div>
                 <p className="font-bold mt-1">{post.Status}</p>
               </div>
+
 
               {/* Dropdown Menu */}
               {menuVisible[post._id] && (
@@ -168,13 +158,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                     onClick={() => handleCreateData(post._id)}
                     className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >
-                    Create Data
-                  </button>
-                  <button
-                    onClick={() => handleEdit(post)}
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Edit
+                    View Data
                   </button>
                   {Role !== "Staff" && (
                     <button

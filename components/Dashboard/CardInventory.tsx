@@ -4,33 +4,38 @@ import React, { useState, useEffect } from "react";
 import { motion, animate } from "framer-motion";
 import { FaBox } from "react-icons/fa";
 
-const CardInventory: React.FC = () => {
+interface CardInventoryProps { 
+  Location: string;
+}
+
+const CardInventory: React.FC<CardInventoryProps> = ({ Location }) => {
   const [inventoryCount, setInventoryCount] = useState<number>(0);
   const [displayInventoryCount, setDisplayInventoryCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchInventoryCount = async () => {
       try {
-        const response = await fetch("/api/Dashboard/FetchInventory");
+        // Use Location in the API call or for any other logic
+        const response = await fetch(`/api/Dashboard/FetchInventory?location=${Location}`);
         if (!response.ok) throw new Error("Failed to fetch inventory count");
-
+  
         const result = await response.json();
         const inventoryTotal = result.inventoryTotal || 0;
-
+  
         // Animate the number transition
         animate(displayInventoryCount, inventoryTotal, {
           duration: 1.5,
           onUpdate: (val) => setDisplayInventoryCount(Math.floor(val)),
         });
-
+  
         setInventoryCount(inventoryTotal);
       } catch (error) {
         console.error("Error fetching inventory count:", error);
       }
     };
-
+  
     fetchInventoryCount();
-  }, []);
+  }, [Location]); // Dependency on Location so it re-runs if it changes
 
   return (
     <motion.div

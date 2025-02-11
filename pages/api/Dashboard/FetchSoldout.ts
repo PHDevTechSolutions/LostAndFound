@@ -6,6 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
+  const { location } = req.query; // Extract the location from the query string
+
   try {
     const db = await connectToDatabase();
     const containerCollection = db.collection("container");
@@ -16,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {
           $match: {
             Status: "Soldout", // Only match documents where status is "Inventory"
+            Location: location, // Match documents based on the location
           },
         },
         {

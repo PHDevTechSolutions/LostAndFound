@@ -109,8 +109,10 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
     <>
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+        <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" />
           <label className="block text-xs font-bold mb-2" htmlFor="SPSIC No">SPSIC No.</label>
           <input type="text" id="SpsicNo" value={SpsicNo || ""} onChange={(e) => setSpsicNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
+          <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
         </div>
 
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">

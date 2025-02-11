@@ -17,7 +17,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         const activityLogsCollection = db.collection('ActivityLogs');
 
         const updatedAccount = {
-            SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, updatedAt: new Date(),
+            SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, Location, updatedAt: new Date(),
         };
 
         // Update container data
