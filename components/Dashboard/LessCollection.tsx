@@ -52,7 +52,7 @@ const LessCollection: React.FC<LessCollectionProps> = ({ Location, Role }) => {
       {/* Content */}
       <h3 className="text-xs font-semibold text-gray-600">Less Collection</h3>
       <motion.p 
-        className="text-3xl font-bold text-red-600"
+        className="text-md md:text-md lg:text-3xl font-bold text-red-600"
         key={displayCollection} // Re-render when value updates
       >
         ₱{displayCollection.toLocaleString()}

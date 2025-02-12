@@ -52,7 +52,7 @@ const EndingBalance: React.FC<EndingBalanceProps> = ({ Location, Role }) => {
       {/* Content */}
       <h3 className="text-xs font-semibold text-gray-600">Ending Balance</h3>
       <motion.p 
-        className="text-3xl font-bold text-blue-600"
+        className="text-md md:text-md lg:text-3xl font-bold text-blue-600"
         key={displayBalance} // Re-render when value updates
       >
         ₱{displayBalance.toLocaleString()}

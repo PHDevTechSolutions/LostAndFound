@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, animate } from "framer-motion";
 import { FaWallet } from "react-icons/fa";
 
-interface BeginningBalanceProps { 
+interface BeginningBalanceProps {
   selectedMonth: string;
   selectedYear: string;
   Location: string;
@@ -51,11 +51,12 @@ const BeginningBalanceCard: React.FC<BeginningBalanceProps> = ({ selectedMonth, 
       </div>
 
       {/* Content */}
-      <h3 className="text-xs font-semibold text-gray-600">Beginning Balance (Previous)</h3>
-      <motion.p 
-        className="text-3xl font-bold text-gray-800"
+      <h3 className="text-xs font-semibold text-gray-600">Beginning Balance</h3>
+      <motion.p
+        className="text-md md:text-md lg:text-3xl font-bold text-gray-800"
         key={displayBalance} // Re-render when value updates
       >
+
         ₱{displayBalance.toLocaleString()}
       </motion.p>
     </motion.div>

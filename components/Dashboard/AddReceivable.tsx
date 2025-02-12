@@ -54,7 +54,7 @@ const AddReceivable: React.FC<AddReceivableProps> = ({ selectedMonth, selectedYe
       {/* Content */}
       <h3 className="text-xs font-semibold text-gray-600">Add Receivable</h3>
       <motion.p 
-        className="text-3xl font-bold text-green-600"
+        className="text-md md:text-md lg:text-3xl font-bold text-green-600"
         key={displayReceivable} // Re-render when value updates
       >
         ₱{displayReceivable.toLocaleString()}
