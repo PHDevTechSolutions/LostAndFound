@@ -179,6 +179,7 @@ const PedientePage: React.FC = () => {
                                         }}
                                         refreshUser={fetchDatabase}
                                         userName={user ? user.userName : ""}
+                                        Location={user ? user.Location : ""}
                                         editPost={editPost}
                                     />
                                 ) : (

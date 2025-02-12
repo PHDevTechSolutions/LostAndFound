@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+  const { location } = req.query; // Extract the location from the query string
+
   if (req.method === "GET") {
     try {
       const db = await connectToDatabase();
@@ -14,6 +17,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             Commodity: { $ifNull: ["$Commodity", ""] }, // Handle empty or null Commodity values
             BoxSales: { $toDouble: "$BoxSales" }, // Convert BoxSales to number (even if it is a string)
             Price: { $toDouble: "$Price" }, // Convert Price to number (even if it is a string)
+          },
+        },
+        {
+          $match: {
+            Location: location,
           },
         },
         {

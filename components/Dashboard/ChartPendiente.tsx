@@ -16,16 +16,20 @@ interface SalesCommodity {
 
 interface ChartProps {
     filteredCommodity: SalesCommodity[]; // Expecting filtered data in SalesData[] type
-  }
+}
 
-const ChartPendiente: React.FC = () => {
+interface PendienteProps {
+  Location: string;
+}
+
+const ChartPendiente: React.FC<PendienteProps> = ({ Location }) => {
   const [filteredCommodity, setFilteredCommodity] = useState<SalesCommodity[]>([]);
 
   // Fetch the aggregated sales data from the API
   useEffect(() => {
     const fetchCommodityData = async () => {
       try {
-        const response = await fetch("/api/Dashboard/FetchSalesCommodity");
+        const response = await fetch(`/api/Dashboard/FetchSalesCommodity?location=${Location}`);
         if (!response.ok) throw new Error("Failed to fetch sales data");
 
         const data: SalesCommodity[] = await response.json();
@@ -36,7 +40,7 @@ const ChartPendiente: React.FC = () => {
     };
 
     fetchCommodityData();
-  }, []);
+  }, [Location]);
 
   // Chart data configuration
   const chartData = {

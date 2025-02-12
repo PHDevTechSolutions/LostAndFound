@@ -11,11 +11,12 @@ interface PedienteFormProps {
     onCancel: () => void;
     refreshUser: () => void;
     userName: any;
+    Location: string;
     editPost?: any;
 }
 // End
 
-const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, editPost }) => {
+const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, editPost, Location: propLocation }) => {
     const [userName, setuserName] = useState(editPost ? editPost.userName : "");
     const [DatePediente, setDatePediente] = useState(editPost ? editPost.DatePediente:  "");
     const [DateOrder, setDateOrder] = useState(editPost ? editPost.DateOrder : "");
@@ -32,6 +33,8 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
     const [BalanceAmount, setBalanceAmount] = useState(editPost ? editPost.BalanceAmount : "");
     const [Status, setStatus] = useState<string>(editPost ? editPost.Status : "");
 
+    const [Location, setLocation] = useState(editPost?.Location || propLocation || "");
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -45,6 +48,7 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
 
             },
             body: JSON.stringify({
+                Location,
                 userName,
                 DatePediente,
                 DateOrder,
@@ -84,6 +88,7 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
                 <h2 className="text-xs font-bold mb-4">{editPost ? "Edit Buyer's Information" : "Add User"}</h2>
                 <UserFields
+                    Location={Location} setLocation={setLocation} 
                     userName={userName} setuserName={setuserName}
                     DatePediente={DatePediente} setDatePediente={setDatePediente}
                     DateOrder={DateOrder} setDateOrder={setDateOrder}

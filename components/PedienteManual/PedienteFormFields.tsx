@@ -11,6 +11,7 @@ interface Payment {
 }
 
 interface PedienteFormFieldsProps {
+    Location: string; setLocation: (value: string) => void;
     userName: string; setuserName: (value: string) => void;
     DatePediente: string; setDatePediente: (value: string) => void;
     DateOrder: string; setDateOrder: (value: string) => void;
@@ -30,6 +31,7 @@ interface PedienteFormFieldsProps {
 }
 
 const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
+    Location, setLocation,
     userName, setuserName,
     DatePediente, setDatePediente,
     DateOrder, setDateOrder,
@@ -132,6 +134,7 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
             <div className="flex flex-wrap -mx-4">
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="DatePediente">Date</label>
+                    <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
                     <input type="date" id="DatePediente" value={DatePediente} onChange={(e) => setDatePediente(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">

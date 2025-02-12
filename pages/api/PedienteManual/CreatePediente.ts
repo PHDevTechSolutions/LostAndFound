@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to add an account directly in this file
-async function CreatePediente({ DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status }: {
+async function CreatePediente({ DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status, Location }: {
     DatePediente: string;
     BuyersName: string;
     DateOrder: string;
@@ -17,12 +17,14 @@ async function CreatePediente({ DatePediente, BuyersName, DateOrder, PlaceSales,
     PayAmount: string;
     BalanceAmount: string;
     Status: string;
+
+    Location: string;
 }) {
     const db = await connectToDatabase();
     const containerCollection = db.collection("pediente");
 
     // Create container data
-    const newData = { DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status, createdAt: new Date() };
+    const newData = { DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status, Location, createdAt: new Date() };
 
     // Insert new container data into the container collection
     await containerCollection.insertOne(newData);
@@ -37,7 +39,7 @@ async function CreatePediente({ DatePediente, BuyersName, DateOrder, PlaceSales,
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
-        const { DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status } = req.body;
+        const { DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status, Location } = req.body;
 
         // Validate required fields
         if (!BuyersName || !DatePediente) {
@@ -45,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         try {
-            const result = await CreatePediente({ DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status });
+            const result = await CreatePediente({ DatePediente, BuyersName, DateOrder, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PaymentMode, PayAmount, BalanceAmount, Status, Location });
             res.status(200).json(result);
         } catch (error) {
             console.error("Error adding container:", error);

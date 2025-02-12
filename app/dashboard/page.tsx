@@ -58,13 +58,13 @@ const DashboardPage: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   <BeginningBalanceCard Location={user ? user.Location : ""} />
                   <AddReceivable selectedMonth={selectedMonth} selectedYear={selectedYear} Location={user ? user.Location : ""} />
-                  <LessCollection />
-                  <EndingBalance />
+                  <LessCollection Location={user ? user.Location : ""} />
+                  <EndingBalance Location={user ? user.Location : ""} />
                 </div>
               </div>
 
               <div className="mb-4">
-                <ChartPendiente />
+                <ChartPendiente Location={user ? user.Location : ""} />
               </div>
             </div>
           )}

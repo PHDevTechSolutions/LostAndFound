@@ -4,14 +4,18 @@ import React, { useState, useEffect } from "react";
 import { motion, animate } from "framer-motion";
 import { FaBalanceScale } from "react-icons/fa";
 
-const EndingBalance: React.FC = () => {
+interface EndingBalanceProps {
+  Location: string;
+}
+
+const EndingBalance: React.FC<EndingBalanceProps> = ({ Location }) => {
   const [totalBalanceToday, setTotalBalanceToday] = useState<number>(0);
   const [displayBalance, setDisplayBalance] = useState<number>(0);
 
   useEffect(() => {
     const fetchEndingBalance = async () => {
       try {
-        const response = await fetch("/api/Dashboard/FetchBalance");
+        const response = await fetch(`/api/Dashboard/FetchBalance?location=${Location}`);
         if (!response.ok) throw new Error("Failed to fetch balance");
 
         const result = await response.json();
@@ -30,7 +34,7 @@ const EndingBalance: React.FC = () => {
     };
 
     fetchEndingBalance();
-  }, []);
+  }, [Location]);
 
   return (
     <motion.div
