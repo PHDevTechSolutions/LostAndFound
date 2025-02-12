@@ -55,7 +55,7 @@ const Login: React.FC = () => {
       className="flex min-h-screen items-center justify-center bg-cover bg-center relative p-4"
       style={{ backgroundImage: "url('/shipping.jpg')" }}
     >
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-50 shadow-lg"></div>
       <ToastContainer className="text-xs" />
       <div className="relative z-10 w-full max-w-md p-8 bg-white bg-opacity-20 backdrop-blur-lg rounded-lg shadow-xl text-center">
       <Image src="/jjventure.png" alt="JJ Venture Logo" width={100} height={100} className="mx-auto mb-4 bg-gray-100 rounded-full shadow-xl"/>
@@ -92,12 +92,6 @@ const Login: React.FC = () => {
             </button>
           </div>
         </form>
-        <div className="text-center text-xs text-white">
-          Don’t have an account?{" "}
-          <Link href="/register" className="text-blue-300 hover:underline">
-            Sign Up
-          </Link>
-        </div>
         <footer className="mt-4 text-center text-xs text-white">
           <p>JJ Venture Sources, Inc 2025 - PHDev-Tech Solutions</p>
         </footer>
