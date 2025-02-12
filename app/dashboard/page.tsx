@@ -48,18 +48,32 @@ const DashboardPage: React.FC = () => {
                   <h3 className="text-xl font-semibold mb-2">Containers</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <CardInventory
-                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Location={
+                        userRole === "Super Admin" || userRole === "Directors"
+                          ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                          : userLocation
+                      }
                       Role={userRole}
                     />
+
                     <CardSoldout
-                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Location={
+                        userRole === "Super Admin" || userRole === "Directors"
+                          ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                          : userLocation
+                      }
                       Role={userRole}
                     />
+
                     <CardSales
+                      Location={
+                        userRole === "Super Admin" || userRole === "Directors"
+                          ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                          : userLocation
+                      }
+                      Role={userRole}
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
-                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
-                      Role={userRole}
                     />
                   </div>
                 </div>
@@ -67,7 +81,11 @@ const DashboardPage: React.FC = () => {
                 <div className="mb-4">
                   {/* Dashboard Chart */}
                   <DashboardChart
-                    Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                    Location={
+                      userRole === "Super Admin" || userRole === "Directors"
+                        ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                        : userLocation
+                    }
                     Role={userRole}
                     selectedMonth={selectedMonth}
                     selectedYear={selectedYear}
@@ -79,23 +97,39 @@ const DashboardPage: React.FC = () => {
                   <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <BeginningBalanceCard
+                      Location={
+                        userRole === "Super Admin" || userRole === "Directors"
+                          ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                          : userLocation
+                      }
+                      Role={userRole}
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
-                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
-                      Role={userRole}
                     />
                     <AddReceivable
+                      Location={
+                        userRole === "Super Admin" || userRole === "Directors"
+                          ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                          : userLocation
+                      }
+                      Role={userRole}
                       selectedMonth={selectedMonth}
                       selectedYear={selectedYear}
-                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
-                      Role={userRole}
                     />
                     <LessCollection
-                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Location={
+                        userRole === "Super Admin" || userRole === "Directors"
+                          ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                          : userLocation
+                      }
                       Role={userRole}
                     />
                     <EndingBalance
-                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Location={
+                        userRole === "Super Admin" || userRole === "Directors"
+                          ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                          : userLocation
+                      }
                       Role={userRole}
                     />
                   </div>
@@ -103,7 +137,11 @@ const DashboardPage: React.FC = () => {
 
                 <div className="mb-4">
                   <ChartPendiente
-                    Location={selectedLocation !== "All" ? selectedLocation : userLocation}
+                    Location={
+                      userRole === "Super Admin" || userRole === "Directors"
+                        ? (selectedLocation === "Philippines" || selectedLocation === "All" ? "All" : selectedLocation)
+                        : userLocation
+                    }
                     Role={userRole}
                     selectedMonth={selectedMonth}
                     selectedYear={selectedYear}
