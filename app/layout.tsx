@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "JJ Venture Sources, Inc",
   description: "Created in NextJs Developed By PH Dev-Tech Solutions",
   icons: {
-    icon: "/jjv.png", // Favicon for the tab bar
+    icon: "/jjventure.png", // Favicon for the tab bar
   },
 };
 

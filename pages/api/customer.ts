@@ -7,10 +7,13 @@ export default async function fetchCompanies(req: NextApiRequest, res: NextApiRe
             const db = await connectToDatabase();
             const customerCollection = db.collection('container_order');
 
+            const Location = req.query.Location; // Get location from query parameters
+
             if (req.query.BuyersName) {
                 const BuyersName = decodeURIComponent(req.query.BuyersName as string);
                 const customerDetails = await customerCollection.findOne({ 
-                    BuyersName,
+                    Location,           // Include Location filter
+                    BuyersName,         // Existing BuyersName filter
                     PaymentMode: 'PDC'  // Only fetch data where paymentMode is 'PDC'
                 });
                 if (customerDetails) {
@@ -19,10 +22,13 @@ export default async function fetchCompanies(req: NextApiRequest, res: NextApiRe
                     res.status(404).json({ error: 'Customer not found or no PDC payment mode found' });
                 }
             } else {
-                // Fetch all records where paymentMode is 'PDC'
-                const customer = await customerCollection.find({ 
-                    PaymentMode: 'PDC'  // Only fetch records with paymentMode 'PDC'
-                }, { 
+                // Fetch all records where paymentMode is 'PDC' and filter by Location if provided
+                const query: any = { PaymentMode: 'PDC' };
+                if (Location) {
+                    query.Location = Location;  // Add location filter to query if provided
+                }
+
+                const customers = await customerCollection.find(query, { 
                     projection: { 
                         BuyersName: 1, 
                         ContainerNo: 1, 
@@ -31,7 +37,8 @@ export default async function fetchCompanies(req: NextApiRequest, res: NextApiRe
                         GrossSales: 1 
                     }
                 }).toArray();
-                res.status(200).json(customer);
+
+                res.status(200).json(customers);
             }
         } catch (error) {
             console.error('Error fetching customers:', error);

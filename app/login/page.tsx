@@ -58,10 +58,10 @@ const Login: React.FC = () => {
       <ToastContainer className="text-xs" />
       <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-md">
         <div className="hidden md:block md:w-1/2 p-8">
-          <Image src="/images/illustration/illustration.svg" alt="Illustration" width={350} height={350} className="object-cover h-full w-full rounded-l-lg" />
+          <Image src="/jjventure.png" alt="Illustration" width={350} height={350} className="object-cover h-full w-full rounded-l-lg" />
         </div>
         <div className="w-full md:w-1/2 p-8">
-          <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
+          <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
@@ -89,11 +89,6 @@ const Login: React.FC = () => {
               </button>
             </div>
           </form>
-          <div className="flex justify-center mb-4">
-            <button className="w-full py-3 bg-gray-200 text-xs text-dark font-medium rounded-md hover:bg-gray-100 shadow-lg flex items-center justify-center" disabled={loading}>
-              <FcGoogle className="mr-2" /> Sign in with Google
-            </button>
-          </div>
           <div className="text-center text-xs">
             Don’t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">Sign Up</Link>

@@ -52,23 +52,21 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
     const [customerList, setCustomerList] = useState<any[]>([]);
 
     useEffect(() => {
-        // Set default date to today's date in yyyy-mm-dd format
-        const today = new Date().toISOString().split('T')[0];
-        setDatePediente(today);
-    }, []);
-
-    useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const response = await fetch('/api/customer');
+                const response = await fetch(`/api/customer?Location=${encodeURIComponent(Location)}`);
                 const data = await response.json();
+
+                // Assuming the server already filters by Location, you may not need to filter it again.
                 setCustomerList(data);
             } catch (error) {
                 console.error('Error fetching customers:', error);
             }
         };
         fetchCustomers();
-    }, []);
+    }, [Location]); // Refetch when Location changes
+
+
 
     const customerOptions = customerList.map((customer) => ({
         value: customer.BuyersName,  // Use the BuyersName or any other unique identifier
@@ -81,7 +79,7 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
 
         if (selectedCustomer) {
             try {
-                const response = await fetch(`/api/customer?BuyersName=${encodeURIComponent(selectedCustomer)}`);
+                const response = await fetch(`/api/customer?BuyersName=${encodeURIComponent(selectedCustomer)}&Location=${encodeURIComponent(Location)}`);
                 if (response.ok) {
                     const customerDetails = await response.json();
                     setBuyersName(customerDetails.BuyersName || '');
@@ -125,9 +123,9 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
         const payAmountNum = parseFloat(PayAmount) || 0;
         const grossSalesNum = parseFloat(GrossSales) || 0;
         const balance = grossSalesNum - payAmountNum;
-    
+
         setBalanceAmount(balance.toFixed(2)); // Keep 2 decimal places
-      }, [PayAmount, GrossSales, setBalanceAmount]);
+    }, [PayAmount, GrossSales, setBalanceAmount]);
 
     return (
         <>
@@ -147,47 +145,58 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date Order</label>
-                    <input type="text" id="DateOrder" value={DateOrder} onChange={(e) => setDateOrder(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-100" readOnly />
+                    <input type="date" id="DateOrder" value={DateOrder} onChange={(e) => setDateOrder(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
-                    <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="ContainerNo">Container No</label>
-                    <input type="text" id="ContainerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="ContainerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Commodity">Commodity</label>
-                    <input type="text" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" />
+
+                    <select id="Commodity" value={Commodity || ""} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+                        <option value="">Select Commodity</option>
+                        <option value="Chabeta">Chabeta</option>
+                        <option value="Galunggong (Female)">Galunggong (Female)</option>
+                        <option value="Galunggon (Male)">Galunggon (Male)</option>
+                        <option value="Matambaka">Matambaka</option>
+                        <option value="Pampano">Pampano</option>
+                        <option value="Salmon">Salmon</option>
+                        <option value="Tulingan">Tulingan</option>
+                        <option value="Yellow Tail">Yellow Tail</option>
+                    </select>
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Size">Size</label>
-                    <input type="text" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-100" readOnly />
+                    <input type="text" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="BoxSales">BoxSales</label>
-                    <input type="text" id="BoxSales" value={BoxSales} onChange={(e) => setBoxSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="BoxSales" value={BoxSales} onChange={(e) => setBoxSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Price">Sales Price</label>
-                    <input type="text" id="Price" value={Price} onChange={(e) => setPrice(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="Price" value={Price} onChange={(e) => setPrice(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Total Debt</label>
-                    <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="GrossSales" value={GrossSales} onChange={(e) => setGrossSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>
-                    <input type="text" id="PaymentMode" value={PaymentMode} onChange={(e) => setPaymentMode(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-100" readOnly />
+                    <input type="text" id="PaymentMode" value={PaymentMode} onChange={(e) => setPaymentMode(e.target.value)} className="w-full px-3 py-2 border rounded text-xs bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="PayAmount">Payment Amount</label>
-                    <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => {const value = e.target.value;if (/^\d*\.?\d*$/.test(value)) {setPayAmount(value);}}}  className="w-full px-3 py-2 border rounded text-xs"  />
+                    <input type="text" id="PayAmount" value={PayAmount ?? ""} onChange={(e) => { const value = e.target.value; if (/^\d*\.?\d*$/.test(value)) { setPayAmount(value); } }} className="w-full px-3 py-2 border rounded text-xs" />
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="BalanceAmount">Total Balance</label>
-                    <input type="text" id="BalanceAmount" value={BalanceAmount ?? ""} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
+                    <input type="text" id="BalanceAmount" value={BalanceAmount ?? ""} onChange={(e) => setBalanceAmount(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" readOnly />
                 </div>
                 <div className="w-full sm:w-1/4 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="Status">Status</label>

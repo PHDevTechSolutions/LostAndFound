@@ -130,7 +130,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
         {/* Logo Section */}
         <div className="flex items-center justify-between p-4 border">
           <div className="flex items-center">
-            <img src="/jjv.png" alt="Logo" className="h-8 mr-2" />
+            <img src="/jjventure.png" alt="Logo" className="h-8 mr-2" />
             <Link
               href={`/dashboard${userId ? `?id=${encodeURIComponent(userId)}` : ""}`}
             >
