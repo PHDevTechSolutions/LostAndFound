@@ -6,21 +6,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { location } = req.query; // Extract the location from the query string
+  const { location, role } = req.query; // Extract role and location from the query
 
   try {
     const db = await connectToDatabase();
     const containerCollection = db.collection("container");
 
+    const matchCondition: any = { Status: "Soldout" };
+    if (role !== "Super Admin" && role !== "Directors") {
+      matchCondition.Location = location; // Restrict by location if not Super Admin or Director
+    }
+
     // Fetch count of Inventory where status is "Inventory"
     const result = await containerCollection
       .aggregate([
-        {
-          $match: {
-            Status: "Soldout", // Only match documents where status is "Inventory"
-            Location: location, // Match documents based on the location
-          },
-        },
+        { $match: matchCondition },
         {
           $group: {
             _id: "$Status", // Group by status

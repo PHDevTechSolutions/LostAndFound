@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { location } = req.query; // Extract the location from the query string
+  const { location, role } = req.query; // Extract role and location from the query
 
   try {
     const db = await connectToDatabase();
@@ -64,15 +64,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       };
     }
 
+    const matchCondition: any = { PaymentMode: "Cash", ...dateFilter, };
+    if (role !== "Super Admin" && role !== "Directors") {
+      matchCondition.Location = location; // Restrict by location if not Super Admin or Director
+    }
+
     // Aggregate GrossSales per DateOrder, filtering by PaymentMode and the selected date filter
     const result = await containerCollection.aggregate([
-      {
-        $match: {
-          PaymentMode: "Cash", // Filter by PaymentMode: "Cash"
-          ...dateFilter, // Apply the date filter based on the selected month and year or today's date
-          Location: location,
-        },
-      },
+      { $match: matchCondition },
       {
         $addFields: {
           GrossSales: { $toDouble: "$GrossSales" }, // Convert GrossSales to a double (number)

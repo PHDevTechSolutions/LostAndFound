@@ -41,9 +41,9 @@ const DashboardPage: React.FC = () => {
               <div className="mb-4">
                 <h3 className="text-xl font-semibold mb-2">Containers</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  <CardInventory Location={user ? user.Location : ""} />
-                  <CardSoldout Location={user ? user.Location : ""} />
-                  <CardSales selectedMonth={selectedMonth} selectedYear={selectedYear} Location={user ? user.Location : ""} />
+                  <CardInventory Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                  <CardSoldout Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                  <CardSales selectedMonth={selectedMonth} selectedYear={selectedYear} Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
                 </div>
               </div>
 

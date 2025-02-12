@@ -8,9 +8,10 @@ interface CardSalesProps {
   selectedMonth: string;
   selectedYear: string;
   Location: string;
+  Role: string;
 }
 
-const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear, Location }) => {
+const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear, Location, Role }) => {
   const [totalSales, setTotalSales] = useState<number>(0);
   const [displaySalesToday, setDisplaySalesToday] = useState<number>(0);
 
@@ -18,7 +19,7 @@ const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear, Loca
     const fetchSalesData = async () => {
       try {
         // Construct the API request with selected filters
-        const url = `/api/Dashboard/FetchSalesToday?month=${selectedMonth}&year=${selectedYear}&location=${Location}`;
+        const url = `/api/Dashboard/FetchSalesToday?month=${selectedMonth}&year=${selectedYear}&location=${Location}&role=${Role}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to fetch sales data");
 
@@ -38,7 +39,7 @@ const CardSales: React.FC<CardSalesProps> = ({ selectedMonth, selectedYear, Loca
     };
 
     fetchSalesData();
-  }, [selectedMonth, selectedYear, Location]);
+  }, [selectedMonth, selectedYear, Location, Role]);
 
   return (
     <motion.div

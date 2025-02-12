@@ -6,16 +6,17 @@ import { FaRegTimesCircle } from "react-icons/fa";
 
 interface CardSoldoutProps { 
   Location: string;
+  Role: string;
 }
 
-const CardSoldout: React.FC<CardSoldoutProps> = ({ Location }) => {
+const CardSoldout: React.FC<CardSoldoutProps> = ({ Location, Role }) => {
   const [soldoutCount, setSoldoutCount] = useState<number>(0);
   const [displaySoldoutCount, setDisplaySoldoutCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchSoldoutCount = async () => {
       try {
-        const response = await fetch(`/api/Dashboard/FetchSoldout?location=${Location}`);
+        const response = await fetch(`/api/Dashboard/FetchSoldout?location=${Location}&role=${Role}`);
         if (!response.ok) throw new Error("Failed to fetch soldout count");
 
         const result = await response.json();
@@ -34,7 +35,7 @@ const CardSoldout: React.FC<CardSoldoutProps> = ({ Location }) => {
     };
 
     fetchSoldoutCount();
-  }, [Location]);
+  }, [Location, Role]);
 
   return (
     <motion.div

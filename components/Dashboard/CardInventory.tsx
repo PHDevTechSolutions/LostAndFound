@@ -6,9 +6,10 @@ import { FaBox } from "react-icons/fa";
 
 interface CardInventoryProps { 
   Location: string;
+  Role: string;
 }
 
-const CardInventory: React.FC<CardInventoryProps> = ({ Location }) => {
+const CardInventory: React.FC<CardInventoryProps> = ({ Location, Role }) => {
   const [inventoryCount, setInventoryCount] = useState<number>(0);
   const [displayInventoryCount, setDisplayInventoryCount] = useState<number>(0);
 
@@ -16,7 +17,7 @@ const CardInventory: React.FC<CardInventoryProps> = ({ Location }) => {
     const fetchInventoryCount = async () => {
       try {
         // Use Location in the API call or for any other logic
-        const response = await fetch(`/api/Dashboard/FetchInventory?location=${Location}`);
+        const response = await fetch(`/api/Dashboard/FetchInventory?location=${Location}&role=${Role}`);
         if (!response.ok) throw new Error("Failed to fetch inventory count");
   
         const result = await response.json();
@@ -35,7 +36,7 @@ const CardInventory: React.FC<CardInventoryProps> = ({ Location }) => {
     };
   
     fetchInventoryCount();
-  }, [Location]); // Dependency on Location so it re-runs if it changes
+  }, [Location, Role]); // Dependency on Location so it re-runs if it changes
 
   return (
     <motion.div
