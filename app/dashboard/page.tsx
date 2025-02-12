@@ -41,30 +41,62 @@ const DashboardPage: React.FC = () => {
               <div className="mb-4">
                 <h3 className="text-xl font-semibold mb-2">Containers</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  <CardInventory Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
-                  <CardSoldout Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
-                  <CardSales selectedMonth={selectedMonth} selectedYear={selectedYear} Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                  <CardInventory
+                    Location={user ? user.Location : ""}
+                    Role={user ? user.Role : ""}
+                  />
+                  <CardSoldout
+                    Location={user ? user.Location : ""}
+                    Role={user ? user.Role : ""}
+                  />
+                  <CardSales
+                    selectedMonth={selectedMonth} selectedYear={selectedYear}
+                    Location={user ? user.Location : ""}
+                    Role={user ? user.Role : ""}
+                  />
                 </div>
               </div>
 
               <div className="mb-4">
                 {/* Dashboard Chart */}
-                <DashboardChart Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                <DashboardChart
+                  Location={user ? user.Location : ""}
+                  Role={user ? user.Role : ""}
+                  selectedMonth={selectedMonth} selectedYear={selectedYear}
+                />
               </div>
 
               {/* Frozen Pendiente Cards Section */}
               <div className="mb-4">
                 <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  <BeginningBalanceCard Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
-                  <AddReceivable selectedMonth={selectedMonth} selectedYear={selectedYear} Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
-                  <LessCollection Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
-                  <EndingBalance Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                  <BeginningBalanceCard
+                    selectedMonth={selectedMonth} selectedYear={selectedYear}
+                    Location={user ? user.Location : ""}
+                    Role={user ? user.Role : ""}
+                  />
+                  <AddReceivable
+                    selectedMonth={selectedMonth} selectedYear={selectedYear}
+                    Location={user ? user.Location : ""}
+                    Role={user ? user.Role : ""}
+                  />
+                  <LessCollection
+                    Location={user ? user.Location : ""}
+                    Role={user ? user.Role : ""}
+                  />
+                  <EndingBalance
+                    Location={user ? user.Location : ""}
+                    Role={user ? user.Role : ""}
+                  />
                 </div>
               </div>
 
               <div className="mb-4">
-                <ChartPendiente Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                <ChartPendiente
+                  Location={user ? user.Location : ""}
+                  Role={user ? user.Role : ""}
+                  selectedMonth={selectedMonth} selectedYear={selectedYear}
+                />
               </div>
             </div>
           )}

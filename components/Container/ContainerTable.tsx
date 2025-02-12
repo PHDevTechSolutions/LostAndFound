@@ -141,6 +141,9 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                 <p>
                   <strong>Remaining:</strong> {post.Boxes}
                 </p>
+                <p className="mt-4">
+                  <strong>Warehouse:</strong> {post.Location}
+                </p>
               </div>
 
               {/* Card Footer */}

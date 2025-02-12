@@ -13,20 +13,20 @@ interface SalesData {
 }
 
 interface DashboardChartProps {
+  selectedMonth: string;
+  selectedYear: string;
   Location: string;
   Role: string;
 }
 
-const DashboardChart: React.FC<DashboardChartProps> = ({ Location, Role }) => {
+const DashboardChart: React.FC<DashboardChartProps> = ({ selectedMonth, selectedYear, Location, Role }) => {
   const [salesData, setSalesData] = useState<SalesData[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<string>("All");
-  const [selectedYear, setSelectedYear] = useState<string>("All");
 
   // Fetch sales data when the component mounts or Location changes
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const url = `/api/Dashboard/FetchSales?location=${Location}&role=${Role}`;
+        const url = `/api/Dashboard/FetchSales?location=${Location}&role=${Role}&month=${selectedMonth}&year=${selectedYear}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to fetch sales data");
 
@@ -38,7 +38,7 @@ const DashboardChart: React.FC<DashboardChartProps> = ({ Location, Role }) => {
     };
 
     fetchSalesData();
-  }, [Location, Role]);
+  }, [selectedMonth, selectedYear, Location, Role]);
 
   // Filter sales data based on selected month and year
   const getFilteredData = () => {

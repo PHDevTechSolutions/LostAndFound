@@ -6,47 +6,68 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { location, role } = req.query; // Extract role and location from the query
-
   try {
     const db = await connectToDatabase();
     const pedienteCollection = db.collection("pediente");
 
+    const { location, role, month, year } = req.query;
+
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to start of the day
+    today.setHours(0, 0, 0, 0); // Start of today
 
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1); // Get yesterday's date
 
-    const matchCondition: any = { DatePediente: { $gte: yesterday, $lt: today } };
-    if (role !== "Super Admin" && role !== "Directors") {
-      matchCondition.Location = location; // Restrict by location if not Super Admin or Director
+    let dateFilter: any = {};
+
+    if (month !== "All" && year !== "All") {
+      const startDate = new Date(`${year}-${month}-01`);
+      const endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + 1);
+
+      dateFilter.DatePediente = { $gte: startDate, $lt: endDate };
+    } else if (year !== "All") {
+      const startDate = new Date(`${year}-01-01`);
+      const endDate = new Date(`${parseInt(year as string) + 1}-01-01`);
+
+      dateFilter.DatePediente = { $gte: startDate, $lt: endDate };
+    } else if (month !== "All") {
+      const startDate = new Date(`2000-${month}-01`);
+      const endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + 1);
+
+      dateFilter.DatePediente = { $gte: startDate, $lt: endDate };
+    } else {
+      dateFilter.DatePediente = { $gte: yesterday, $lt: today }; // Default filter (kahapon)
     }
 
-    // Step 1: Try to get yesterday's balance
+    const matchCondition: any = { ...dateFilter };
+    if (role !== "Super Admin" && role !== "Directors") {
+      matchCondition.Location = location;
+    }
+
     let result = await pedienteCollection
       .aggregate([
         {
           $addFields: {
-            DatePediente: { $toDate: "$DatePediente" }, // Ensure DatePediente field is treated as Date
-            BalanceAmount: { $toDouble: "$BalanceAmount" }, // Convert BalanceAmount to number
+            DatePediente: { $toDate: "$DatePediente" },
+            BalanceAmount: { $toDouble: "$BalanceAmount" },
           },
         },
         { $match: matchCondition },
         {
           $group: {
             _id: null,
-            totalBalance: { $sum: "$BalanceAmount" }, // Sum of yesterday’s BalanceAmount
+            totalBalance: { $sum: "$BalanceAmount" },
           },
         },
       ])
       .toArray();
 
-    // If no data for yesterday, find the latest available previous balance
     if (result.length === 0) {
       const lastAvailableData = await pedienteCollection
-        .find({ DatePediente: { $lt: today } }) // Get records before today
-        .sort({ DatePediente: -1 }) // Sort descending to get the most recent one
+        .find({ DatePediente: { $lt: today } })
+        .sort({ DatePediente: -1 })
         .limit(1)
         .toArray();
 

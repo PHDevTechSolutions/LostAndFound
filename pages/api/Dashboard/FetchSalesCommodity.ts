@@ -10,7 +10,56 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const db = await connectToDatabase();
       const containerCollection = db.collection("container_order");
 
-      const matchCondition: any = {};
+      const { month, year } = req.query;
+
+      const today = new Date().toISOString().split('T')[0];
+
+      let dateFilter = {};
+
+      if (month !== "All" && year !== "All") {
+        // Construct a date range for the selected month and year
+        const startDate = new Date(`${year}-${month}-01`);
+        const endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + 1); // Set the end date to the next month
+
+        dateFilter = {
+          DateOrder: {
+            $gte: startDate.toISOString(),
+            $lt: endDate.toISOString(),
+          },
+        };
+      } else if (year !== "All") {
+        // If only year is selected, filter by year
+        const yearInt = parseInt(year as string); // Ensure year is a number
+        const startDate = new Date(`${yearInt}-01-01`);
+        const endDate = new Date(`${yearInt + 1}-01-01`);
+
+        dateFilter = {
+          DateOrder: {
+            $gte: startDate.toISOString(),
+            $lt: endDate.toISOString(),
+          },
+        };
+      } else if (month !== "All") {
+        // If only month is selected, filter by month across all years
+        const startDate = new Date(`2000-${month}-01`);
+        const endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + 1); // Set the end date to the next month
+
+        dateFilter = {
+          DateOrder: {
+            $gte: startDate.toISOString(),
+            $lt: endDate.toISOString(),
+          },
+        };
+      } else {
+        // Default to today if no filters are applied
+        dateFilter = {
+          DateOrder: today, // Filter by today's date
+        };
+      }
+
+      const matchCondition: any = { ...dateFilter };
       if (role !== "Super Admin" && role !== "Directors") {
         matchCondition.Location = location; // Restrict by location if not Super Admin or Director
       }
