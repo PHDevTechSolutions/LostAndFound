@@ -208,6 +208,7 @@ const PedientePage: React.FC = () => {
                                                 handleDelete={confirmDelete}
                                                 handleCreateData={handleCreateData}
                                                 Role={user ? user.Role : ""}
+                                                Location={user ? user.Location : ""}
                                             />
 
                                             <Pagination

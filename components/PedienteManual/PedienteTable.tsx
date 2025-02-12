@@ -19,6 +19,7 @@ interface Post {
     Price: number;
     PayAmount: number;
     Status: string;
+    Location: string; 
 }
 
 interface PedienteTableProps {
@@ -27,6 +28,7 @@ interface PedienteTableProps {
     handleDelete: (postId: string) => void;
     handleCreateData: (postId: string) => void;
     Role: string; // Pass the role here
+    Location: string;
 }
 
 const groupByBuyer = (posts: Post[]) => {
@@ -74,7 +76,7 @@ const calculateBeginningBalance = (posts: Post[]) => {
     return beginningBalance;
 };
 
-const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData, Role }) => {
+const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData, Role, Location }) => {
     const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
     const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
@@ -119,8 +121,23 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
     };
 
     const filteredPosts = useMemo(() => {
-        return filterPostsByDateRange(updatedPosts, dateRange);
-    }, [updatedPosts, dateRange]);
+        // Filter posts based on Role and Location
+        let roleFilteredPosts = updatedPosts.filter(post => {
+            if (Role === "Staff") {
+                return post.Location === Location; // Staff can only see their location
+            }
+            if (Role === "Admin") {
+                return post.Location === Location; // Admin sees posts based on location
+            }
+            if (Role === "Director" || Role === "Super Admin") {
+                return true; // Directors and Super Admin can see all posts
+            }
+            return true; // Fallback to showing all posts if role doesn't match
+        });
+
+        // Now, filter by date range after Role and Location filtering
+        return filterPostsByDateRange(roleFilteredPosts, dateRange);
+    }, [updatedPosts, dateRange, Role, Location]);
 
     useEffect(() => {
         const newPostListener = (newPost: any) => {
@@ -135,11 +152,6 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
             socket.off("newPost", newPostListener);
         };
     }, []);
-
-    useEffect(() => {
-        const filteredPosts = posts.filter(post => post.PaymentMode === "PDC");
-        setUpdatedPosts(filteredPosts);
-    }, [posts]);
 
     const toggleRow = useCallback((postId: string) => {
         setExpandedRows(prev => {
@@ -158,8 +170,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
     };
 
     const memoizedRows = useMemo(() => {
-        const filteredPosts = filterPostsByDateRange(updatedPosts, dateRange);
-        const groupedPosts = groupByBuyer(filteredPosts);
+        const groupedPosts = groupByBuyer(filteredPosts); // Use the filtered posts
 
         let totalQty = 0;
         let totalAmount = 0;
@@ -188,19 +199,19 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 
                 return (
                     <tr key={post._id}>
-                        <td className="px-4 py-2  capitalize">{post.DateOrder}</td>
-                        <td className="px-4 py-2  capitalize">{post.BuyersName}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.PlaceSales}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.ContainerNo}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.Commodity}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.Size}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.BoxSales}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.Price)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(total)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.PayAmount || 0)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(balance)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.Status}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">
+                        <td className="px-4 py-2 capitalize">{post.DateOrder}</td>
+                        <td className="px-4 py-2 capitalize">{post.BuyersName}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{post.PlaceSales}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{post.ContainerNo}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{post.Commodity}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{post.Size}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{post.BoxSales}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{formatCurrency(post.Price)}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{formatCurrency(total)}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{formatCurrency(post.PayAmount || 0)}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{formatCurrency(balance)}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">{post.Status}</td>
+                        <td className="px-4 py-2 hidden md:table-cell">
                             <Menu as="div" className="relative inline-block text-left">
                                 <div>
                                     <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
@@ -243,12 +254,10 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 
             return (
                 <React.Fragment key={buyer}>
-                    {/* Grouped Buyer Row */}
                     <tr className="bg-gray-100 font-semibold">
                         <td colSpan={13} className="px-4 py-2 uppercase">{buyer}</td>
                     </tr>
                     {buyerRows}
-                    {/* Group Total Row */}
                     <tr className="bg-gray-300">
                         <td className="px-4 py-2 text-right" colSpan={6}>Group Total:</td>
                         <td className="px-4 py-2" colSpan={2}>{groupTotalQty}</td>
@@ -263,7 +272,8 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
         });
 
         return { rows, totalQty, totalAmount, totalPayment, totalBalance };
-    }, [updatedPosts, dateRange, expandedRows, toggleRow, handleCreateData, handleEdit, handleDelete, Role]);
+    }, [filteredPosts, expandedRows, toggleRow, handleCreateData, handleEdit, handleDelete, Role]);
+
     const { rows, totalQty, totalAmount, totalPayment, totalBalance } = memoizedRows;
 
     return (
@@ -314,3 +324,4 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleE
 });
 
 export default PedienteTable;
+
