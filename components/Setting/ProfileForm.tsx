@@ -83,6 +83,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <option value="Navotas">Navotas</option>
           <option value="Sambat">Sambat</option>
           <option value="Minalin">Minalin</option>
+          <option value="Philippines">Philippines</option>
         </select>
       </div>
       {/* Show role dropdown only if the role is not Admin or Staff */}

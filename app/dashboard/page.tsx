@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ParentLayout from "../../components/Layouts/ParentLayout";
 import SessionChecker from "../../components/SessionChecker";
 import UserFetcher from "../../components/UserFetcher";
@@ -17,89 +17,101 @@ import CardSoldout from "../../components/Dashboard/CardSoldout";
 import ChartPendiente from "../../components/Dashboard/ChartPendiente";
 import CardSales from "../../components/Dashboard/CardSales";
 
-
 const DashboardPage: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>("All");
   const [selectedYear, setSelectedYear] = useState<string>("All");
-
+  const [selectedLocation, setSelectedLocation] = useState<string>("All");
 
   return (
     <SessionChecker>
       <ParentLayout>
         <UserFetcher>
-          {(user) => (
-            <div className="container mx-auto p-4">
-              {/* Filters Section */}
-              <ChartFilter
-                selectedMonth={selectedMonth}
-                setSelectedMonth={setSelectedMonth}
-                selectedYear={selectedYear}
-                setSelectedYear={setSelectedYear}
-              />
+          {(user) => {
+            const userLocation = user ? user.Location : "";
+            const userRole = user ? user.Role : "";
 
-              {/* Containers Cards Section */}
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold mb-2">Containers</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  <CardInventory
-                    Location={user ? user.Location : ""}
-                    Role={user ? user.Role : ""}
+            return (
+              <div className="container mx-auto p-4">
+                {/* Filters Section */}
+                <ChartFilter
+                  selectedMonth={selectedMonth}
+                  setSelectedMonth={setSelectedMonth}
+                  selectedYear={selectedYear}
+                  setSelectedYear={setSelectedYear}
+                  selectedLocation={selectedLocation}
+                  setSelectedLocation={setSelectedLocation}
+                  userRole={userRole} // Pass userRole here
+                />
+
+                {/* Containers Cards Section */}
+                <div className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Containers</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <CardInventory
+                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Role={userRole}
+                    />
+                    <CardSoldout
+                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Role={userRole}
+                    />
+                    <CardSales
+                      selectedMonth={selectedMonth}
+                      selectedYear={selectedYear}
+                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Role={userRole}
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  {/* Dashboard Chart */}
+                  <DashboardChart
+                    Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                    Role={userRole}
+                    selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
                   />
-                  <CardSoldout
-                    Location={user ? user.Location : ""}
-                    Role={user ? user.Role : ""}
-                  />
-                  <CardSales
-                    selectedMonth={selectedMonth} selectedYear={selectedYear}
-                    Location={user ? user.Location : ""}
-                    Role={user ? user.Role : ""}
+                </div>
+
+                {/* Frozen Pendiente Cards Section */}
+                <div className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <BeginningBalanceCard
+                      selectedMonth={selectedMonth}
+                      selectedYear={selectedYear}
+                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Role={userRole}
+                    />
+                    <AddReceivable
+                      selectedMonth={selectedMonth}
+                      selectedYear={selectedYear}
+                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Role={userRole}
+                    />
+                    <LessCollection
+                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Role={userRole}
+                    />
+                    <EndingBalance
+                      Location={selectedLocation !== "Philippines" ? selectedLocation : userLocation}
+                      Role={userRole}
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <ChartPendiente
+                    Location={selectedLocation !== "All" ? selectedLocation : userLocation}
+                    Role={userRole}
+                    selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
                   />
                 </div>
               </div>
-
-              <div className="mb-4">
-                {/* Dashboard Chart */}
-                <DashboardChart
-                  Location={user ? user.Location : ""}
-                  Role={user ? user.Role : ""}
-                  selectedMonth={selectedMonth} selectedYear={selectedYear}
-                />
-              </div>
-
-              {/* Frozen Pendiente Cards Section */}
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  <BeginningBalanceCard
-                    selectedMonth={selectedMonth} selectedYear={selectedYear}
-                    Location={user ? user.Location : ""}
-                    Role={user ? user.Role : ""}
-                  />
-                  <AddReceivable
-                    selectedMonth={selectedMonth} selectedYear={selectedYear}
-                    Location={user ? user.Location : ""}
-                    Role={user ? user.Role : ""}
-                  />
-                  <LessCollection
-                    Location={user ? user.Location : ""}
-                    Role={user ? user.Role : ""}
-                  />
-                  <EndingBalance
-                    Location={user ? user.Location : ""}
-                    Role={user ? user.Role : ""}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <ChartPendiente
-                  Location={user ? user.Location : ""}
-                  Role={user ? user.Role : ""}
-                  selectedMonth={selectedMonth} selectedYear={selectedYear}
-                />
-              </div>
-            </div>
-          )}
+            );
+          }}
         </UserFetcher>
       </ParentLayout>
     </SessionChecker>
