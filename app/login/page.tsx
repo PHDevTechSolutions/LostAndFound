@@ -1,5 +1,3 @@
-//app/login/page.tsx
-
 "use client";
 
 import React, { useState } from "react";
@@ -20,11 +18,11 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     if (!Email || !Password) {
-      toast.error("All fields are required!"); // Show error toast if fields are empty
+      toast.error("All fields are required!");
       return;
     }
 
-    setLoading(true); // Set loading state
+    setLoading(true);
 
     try {
       const response = await fetch("/api/login", {
@@ -38,69 +36,74 @@ const Login: React.FC = () => {
       const result = await response.json();
 
       if (response.ok) {
-        toast.success("Login successful!"); // Show success toast
-        // Delay the redirect to allow the toast to be displayed
+        toast.success("Login successful!");
         setTimeout(() => {
           router.push(`/dashboard?id=${encodeURIComponent(result.userId)}`);
-        }, 1500); // 1.5 seconds delay
+        }, 1500);
       } else {
-        toast.error(result.message || "Login failed!"); // Show error toast
+        toast.error(result.message || "Login failed!");
       }
     } catch (error) {
-      toast.error("An error occurred while logging in!"); // Show general error toast
+      toast.error("An error occurred while logging in!");
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+    <div
+      className="flex min-h-screen items-center justify-center bg-cover bg-center relative p-4"
+      style={{ backgroundImage: "url('/shipping.jpg')" }}
+    >
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <ToastContainer className="text-xs" />
-      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-md">
-        <div className="hidden md:block md:w-1/2 p-8">
-          <Image src="/jjventure.png" alt="Illustration" width={350} height={350} className="object-cover h-full w-full rounded-l-lg" />
-        </div>
-        <div className="w-full md:w-1/2 p-8">
-          <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={Email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                placeholder="6+ Characters, 1 Capital letter"
-                value={Password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <button type="submit" className="w-full text-xs py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 shadow-lg" disabled={loading}>
-                {loading ? "Signing In..." : "Sign In"}
-              </button>
-            </div>
-          </form>
-          <div className="text-center text-xs">
-            Don’t have an account?{" "}
-            <Link href="/register" className="text-blue-600 hover:underline">Sign Up</Link>
+      <div className="relative z-10 w-full max-w-md p-8 bg-white bg-opacity-20 backdrop-blur-lg rounded-lg shadow-xl text-center">
+      <Image src="/jjventure.png" alt="JJ Venture Logo" width={100} height={100} className="mx-auto mb-4 bg-gray-100 rounded-full shadow-xl"/>
+
+        <h2 className="text-2xl font-bold text-white mb-6">Login</h2>
+        <form onSubmit={handleSubmit} className="text-left">
+          <div className="mb-4">
+            <label className="block text-xs font-medium text-white mb-1">Email</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={Email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
-          <footer className="absolute bottom-4 right-4 text-xs text-gray-600">
-          <p>JJ Venture Sources, Inc 2025 - PHDev-Tech Solutions</p>
-          </footer>
+          <div className="mb-4">
+            <label className="block text-xs font-medium text-white mb-1">Password</label>
+            <input
+              type="password"
+              placeholder="6+ Characters, 1 Capital letter"
+              value={Password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-4">
+            <button
+              type="submit"
+              className="w-full text-xs py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 shadow-lg"
+              disabled={loading}
+            >
+              {loading ? "Signing In..." : "Sign In"}
+            </button>
+          </div>
+        </form>
+        <div className="text-center text-xs text-white">
+          Don’t have an account?{" "}
+          <Link href="/register" className="text-blue-300 hover:underline">
+            Sign Up
+          </Link>
         </div>
+        <footer className="mt-4 text-center text-xs text-white">
+          <p>JJ Venture Sources, Inc 2025 - PHDev-Tech Solutions</p>
+        </footer>
       </div>
     </div>
   );
 };
 
 export default Login;
-
