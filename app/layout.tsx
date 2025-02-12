@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,8 @@ export default function RootLayout({
       >
         <ToastContainer /> {/* This makes sure toasts show up */}
         {children}
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
