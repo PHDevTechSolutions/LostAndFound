@@ -49,22 +49,22 @@ const DashboardPage: React.FC = () => {
 
               <div className="mb-4">
                 {/* Dashboard Chart */}
-                <DashboardChart Location={user ? user.Location : ""} />
+                <DashboardChart Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
               </div>
 
               {/* Frozen Pendiente Cards Section */}
               <div className="mb-4">
                 <h3 className="text-xl font-semibold mb-2">Frozen Pendiente</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  <BeginningBalanceCard Location={user ? user.Location : ""} />
-                  <AddReceivable selectedMonth={selectedMonth} selectedYear={selectedYear} Location={user ? user.Location : ""} />
-                  <LessCollection Location={user ? user.Location : ""} />
-                  <EndingBalance Location={user ? user.Location : ""} />
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                  <BeginningBalanceCard Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                  <AddReceivable selectedMonth={selectedMonth} selectedYear={selectedYear} Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                  <LessCollection Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
+                  <EndingBalance Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
                 </div>
               </div>
 
               <div className="mb-4">
-                <ChartPendiente Location={user ? user.Location : ""} />
+                <ChartPendiente Location={user ? user.Location : ""} Role={user ? user.Role : ""} />
               </div>
             </div>
           )}

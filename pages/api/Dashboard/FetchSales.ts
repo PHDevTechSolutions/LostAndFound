@@ -3,23 +3,21 @@ import { connectToDatabase } from "../../../lib/mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
-    const { location } = req.query; // Extract the location from the query string
 
-    if (!location) {
-      return res.status(400).json({ success: false, message: "Location is required" });
-    }
+    const { location, role } = req.query; // Extract role and location from the query
 
     try {
       const db = await connectToDatabase();
       const containerCollection = db.collection("container_order");
 
+      const matchCondition: any = {};
+      if (role !== "Super Admin" && role !== "Directors") {
+        matchCondition.Location = location; // Restrict by location if not Super Admin or Director
+      }
+
       // Aggregate GrossSales per DateOrder, filtering by location and converting GrossSales to number if necessary
       const result = await containerCollection.aggregate([
-        {
-          $match: {
-            Location: location, // Match documents where the Location field equals the provided location
-          },
-        },
+        { $match: matchCondition },
         {
           $addFields: {
             GrossSales: { $toDouble: "$GrossSales" }, // Convert to number if it's stored as a string

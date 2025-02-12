@@ -6,16 +6,17 @@ import { FaBalanceScale } from "react-icons/fa";
 
 interface EndingBalanceProps {
   Location: string;
+  Role: string;
 }
 
-const EndingBalance: React.FC<EndingBalanceProps> = ({ Location }) => {
+const EndingBalance: React.FC<EndingBalanceProps> = ({ Location, Role }) => {
   const [totalBalanceToday, setTotalBalanceToday] = useState<number>(0);
   const [displayBalance, setDisplayBalance] = useState<number>(0);
 
   useEffect(() => {
     const fetchEndingBalance = async () => {
       try {
-        const response = await fetch(`/api/Dashboard/FetchBalance?location=${Location}`);
+        const response = await fetch(`/api/Dashboard/FetchBalance?location=${Location}&role=${Role}`);
         if (!response.ok) throw new Error("Failed to fetch balance");
 
         const result = await response.json();
@@ -34,7 +35,7 @@ const EndingBalance: React.FC<EndingBalanceProps> = ({ Location }) => {
     };
 
     fetchEndingBalance();
-  }, [Location]);
+  }, [Location, Role]);
 
   return (
     <motion.div

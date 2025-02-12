@@ -2,41 +2,22 @@
 
 import React, { useState, useEffect } from "react";
 import { Line, Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-} from "chart.js";
+import {Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement,} from "chart.js";
 
 // Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 interface SalesData {
   _id: string;
   totalGrossSales: number;
-  Location: string;
 }
 
 interface DashboardChartProps {
   Location: string;
+  Role: string;
 }
 
-const DashboardChart: React.FC<DashboardChartProps> = ({ Location }) => {
+const DashboardChart: React.FC<DashboardChartProps> = ({ Location, Role }) => {
   const [salesData, setSalesData] = useState<SalesData[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>("All");
   const [selectedYear, setSelectedYear] = useState<string>("All");
@@ -45,7 +26,7 @@ const DashboardChart: React.FC<DashboardChartProps> = ({ Location }) => {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const url = `/api/Dashboard/FetchSales?location=${Location}`;
+        const url = `/api/Dashboard/FetchSales?location=${Location}&role=${Role}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to fetch sales data");
 
@@ -57,7 +38,7 @@ const DashboardChart: React.FC<DashboardChartProps> = ({ Location }) => {
     };
 
     fetchSalesData();
-  }, [Location]);
+  }, [Location, Role]);
 
   // Filter sales data based on selected month and year
   const getFilteredData = () => {

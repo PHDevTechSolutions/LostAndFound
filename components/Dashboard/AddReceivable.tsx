@@ -8,16 +8,17 @@ interface AddReceivableProps {
   selectedMonth: string;
   selectedYear: string;
   Location: string;
+  Role: string;
 }
 
-const AddReceivable: React.FC<AddReceivableProps> = ({ Location }) => {
+const AddReceivable: React.FC<AddReceivableProps> = ({ Location, Role }) => {
   const [totalGrossSalesToday, setTotalGrossSalesToday] = useState<number>(0);
   const [displayReceivable, setDisplayReceivable] = useState<number>(0);
 
   useEffect(() => {
     const fetchReceivable = async () => {
       try {
-        const response = await fetch(`/api/Dashboard/FetchReceivable?location=${Location}`);
+        const response = await fetch(`/api/Dashboard/FetchReceivable?location=${Location}&role=${Role}`);
         if (!response.ok) throw new Error("Failed to fetch receivable");
 
         const result = await response.json();
@@ -36,7 +37,7 @@ const AddReceivable: React.FC<AddReceivableProps> = ({ Location }) => {
     };
 
     fetchReceivable();
-  }, [Location]);
+  }, [Location, Role]);
 
   return (
     <motion.div

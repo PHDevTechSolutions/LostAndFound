@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { location } = req.query; // Extract the location from the query string
+  const { location, role } = req.query; // Extract role and location from the query
 
   try {
     const db = await connectToDatabase();
@@ -14,6 +14,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to start of the day
+
+    const matchCondition: any = { DatePediente: { $gte: today } };
+    if (role !== "Super Admin" && role !== "Directors") {
+      matchCondition.Location = location; // Restrict by location if not Super Admin or Director
+    }
 
     // Fetch total GrossSales for today based on DatePediente
     const result = await pedienteCollection
@@ -24,12 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             GrossSales: { $toDouble: "$GrossSales" }, // Convert GrossSales to number
           },
         },
-        {
-          $match: {
-            DatePediente: { $gte: today }, // Match records for today or later
-            Location: location,
-          },
-        },
+        { $match: matchCondition },
         {
           $group: {
             _id: null, // Sum the GrossSales

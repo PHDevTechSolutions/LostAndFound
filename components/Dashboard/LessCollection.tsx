@@ -6,16 +6,17 @@ import { FaMoneyBillWave } from "react-icons/fa";
 
 interface LessCollectionProps {
   Location: string;
+  Role: string;
 }
 
-const LessCollection: React.FC<LessCollectionProps> = ({ Location }) => {
+const LessCollection: React.FC<LessCollectionProps> = ({ Location, Role }) => {
   const [totalCollectionToday, setTotalCollectionToday] = useState<number>(0);
   const [displayCollection, setDisplayCollection] = useState<number>(0);
 
   useEffect(() => {
     const fetchCollection = async () => {
       try {
-        const response = await fetch(`/api/Dashboard/FetchCollection?location=${Location}`);
+        const response = await fetch(`/api/Dashboard/FetchCollection?location=${Location}&role=${Role}`);
         if (!response.ok) throw new Error("Failed to fetch collection");
 
         const result = await response.json();
@@ -34,7 +35,7 @@ const LessCollection: React.FC<LessCollectionProps> = ({ Location }) => {
     };
 
     fetchCollection();
-  }, [Location]);
+  }, [Location, Role]);
 
   return (
     <motion.div

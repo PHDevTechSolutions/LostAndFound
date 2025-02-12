@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { location } = req.query; // Extract the location from the query string
+  const { location, role } = req.query; // Extract role and location from the query
 
   try {
     const db = await connectToDatabase();
@@ -18,6 +18,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1); // Get yesterday's date
 
+    const matchCondition: any = { DatePediente: { $gte: yesterday, $lt: today } };
+    if (role !== "Super Admin" && role !== "Directors") {
+      matchCondition.Location = location; // Restrict by location if not Super Admin or Director
+    }
+
     // Step 1: Try to get yesterday's balance
     let result = await pedienteCollection
       .aggregate([
@@ -27,12 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             BalanceAmount: { $toDouble: "$BalanceAmount" }, // Convert BalanceAmount to number
           },
         },
-        {
-          $match: {
-            DatePediente: { $gte: yesterday, $lt: today }, // Get only records from yesterday
-            Location: location,
-          },
-        },
+        { $match: matchCondition },
         {
           $group: {
             _id: null,

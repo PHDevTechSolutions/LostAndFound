@@ -3,12 +3,17 @@ import { connectToDatabase } from "../../../lib/mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-  const { location } = req.query; // Extract the location from the query string
+  const { location, role } = req.query; // Extract role and location from the query
 
   if (req.method === "GET") {
     try {
       const db = await connectToDatabase();
       const containerCollection = db.collection("container_order");
+
+      const matchCondition: any = {};
+      if (role !== "Super Admin" && role !== "Directors") {
+        matchCondition.Location = location; // Restrict by location if not Super Admin or Director
+      }
 
       // Aggregate total number of BoxSales and total price per Commodity
       const result = await containerCollection.aggregate([
@@ -19,11 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             Price: { $toDouble: "$Price" }, // Convert Price to number (even if it is a string)
           },
         },
-        {
-          $match: {
-            Location: location,
-          },
-        },
+        { $match: matchCondition },
         {
           $group: {
             _id: "$Commodity", // Group by Commodity
