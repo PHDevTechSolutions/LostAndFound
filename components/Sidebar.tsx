@@ -157,13 +157,13 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
         {/* Menu Section */}
         <div className="flex flex-col items-center rounded-md flex-grow overflow-y-auto text-xs p-2">
         <div className="w-full">
-          <Link href={`/dashboard${userId ? `?id=${encodeURIComponent(userId)}` : ''}`} className="flex items-center w-full p-4 hover:bg-gray-700 rounded hover: rounded-md hover:text-white transition-all"><MdOutlineSpaceDashboard size={22} className="mr-1"/>Dashboard</Link>
+          <Link href={`/dashboard${userId ? `?id=${encodeURIComponent(userId)}` : ''}`} className="flex items-center w-full p-4 text-white mb-1 bg-[#143c66] rounded hover: rounded-md hover:text-white transition-all"><MdOutlineSpaceDashboard size={22} className="mr-1"/>Dashboard</Link>
         </div>
           {filteredMenuItems.map((item, index) => (
             <div key={index} className="w-full">
               <button
                 onClick={() => handleToggle(item.title)}
-                className={`flex items-center w-full p-4 hover:rounded-md hover:bg-gray-700 hover:text-white transition-all ${collapsed ? "justify-center" : ""}`}
+                className={`flex items-center w-full p-4 rounded-md transition-all hover:bg-[#143c66] hover:text-white ${collapsed ? "justify-center" : ""}`}
               >
                 <item.icon size={18} />
                 {!collapsed && <span className="ml-2">{item.title}</span>}
@@ -185,7 +185,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
                         key={subIndex}
                         href={subItem.href}
                         prefetch={true}
-                        className="flex items-center w-full p-4 hover:rounded-md hover:bg-gray-700 hover:text-white transition-all"
+                        className="flex items-center w-full p-4 hover:rounded-md hover:bg-[#143c66] hover:text-white transition-all"
                       >
                         {/* Adding small circle icon for each submenu item */}
                         <FaRegCircle size={10} className="mr-2 ml-2" />
