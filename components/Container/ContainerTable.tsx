@@ -20,6 +20,7 @@ interface Post {
   DateSoldout: string;
   SupplierName: string;
   ContainerNo: string;
+  ContainerType: string;
   Commodity: string;
   TotalQuantity: number;
   Boxes: number;
@@ -125,6 +126,9 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                 </p>
                 <p>
                   <strong>Container No:</strong> {post.ContainerNo}
+                </p>
+                <p>
+                  <strong>Container Type:</strong> {post.ContainerType}
                 </p>
                 <p>
                   <strong>Commodity:</strong> {post.Commodity}

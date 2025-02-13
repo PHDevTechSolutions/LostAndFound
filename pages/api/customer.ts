@@ -7,12 +7,9 @@ export default async function fetchCompanies(req: NextApiRequest, res: NextApiRe
             const db = await connectToDatabase();
             const customerCollection = db.collection('container_order');
 
-            const Location = req.query.Location; // Get location from query parameters
-
             if (req.query.BuyersName) {
                 const BuyersName = decodeURIComponent(req.query.BuyersName as string);
                 const customerDetails = await customerCollection.findOne({ 
-                    Location,           // Include Location filter
                     BuyersName,         // Existing BuyersName filter
                     PaymentMode: 'PDC'  // Only fetch data where paymentMode is 'PDC'
                 });

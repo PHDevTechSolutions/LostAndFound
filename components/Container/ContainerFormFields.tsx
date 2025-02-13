@@ -12,8 +12,13 @@ interface FormFieldsProps {
   setDateSoldout: (value: string) => void;
   SupplierName: string;
   setSupplierName: (value: string) => void;
+
   ContainerNo: string;
   setContainerNo: (value: string) => void;
+  ContainerType: string;
+  setContainerType: (value: string) => void;
+  
+
   Country: string;
   setCountry: (value: string) => void;
   Boxes: number;
@@ -36,6 +41,10 @@ interface FormFieldsProps {
   setBoxType: (value: string) => void;
   Remarks: string;
   setRemarks: (value: string) => void;
+
+  PlaceSales: string;
+  setPlaceSales: (value: string) => void;
+
   editData?: any;
 }
 
@@ -51,8 +60,12 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
   setDateSoldout,
   SupplierName,
   setSupplierName,
+
   ContainerNo,
   setContainerNo,
+  ContainerType,
+  setContainerType,
+  
   Country,
   setCountry,
   Boxes,
@@ -75,6 +88,9 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
   setStatus,
   Remarks,
   setRemarks,
+
+  PlaceSales,
+  setPlaceSales,
   editData,
 }) => {
 
@@ -109,7 +125,6 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
     <>
       <div className="flex flex-wrap -mx-4">
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-        <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" />
           <label className="block text-xs font-bold mb-2" htmlFor="SPSIC No">SPSIC No.</label>
           <input type="text" id="SpsicNo" value={SpsicNo || ""} onChange={(e) => setSpsicNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
           <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
@@ -130,9 +145,20 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
           <input type="text" id="SupplierName" value={SupplierName || ""} onChange={(e) => setSupplierName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
         </div>
 
-        <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+        <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Container No">Container No.</label>
           <input type="text" id="ContainerNo" value={ContainerNo || ""} onChange={(e) => setContainerNo(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" />
+        </div>
+
+        <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="Container Type">Container Type</label>
+          <select id="ContainerType" value={ContainerType || ""} onChange={(e) => setContainerType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
+            <option value="">Select Type</option>
+            <option value="Concord">Concord</option>
+            <option value="JS">JS</option>
+            <option value="Manor">Manor</option>
+            <option value="Jumbo">Jumbo</option>
+          </select>
         </div>
 
         <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
@@ -144,7 +170,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
           </select>
         </div>
 
-        <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+        <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Type of Freezing">Boxes</label>
           <select id="BoxType" value={BoxType || ""} onChange={(e) => setBoxType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Boxes</option>
@@ -159,6 +185,21 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
             <option value="White Box">White Box</option>
             <option value="White Box 2L">White Box 2L</option>
             <option value="White Box Lapad">White Box Lapad</option>
+          </select>
+        </div>
+
+        <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="Storage Type">Storage Type</label>
+          <select id="PlaceSales" value={PlaceSales || ""} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" >
+            <option value="">Select Type</option>
+            <option value="BELEN">BELEN STORAGE</option>
+            <option value="BELEN-KH">BELEN-KH STORAGE</option>
+            <option value="BELEN-CS">BELEN-CS STORAGE</option>
+            <option value="JJV-JS">JJV-JS STORAGE</option>
+            <option value="JJV-LH">JJV-LH STORAGE</option>
+            <option value="JJV-JS">JJV-JS STORAGE</option>
+            <option value="JJV-TD">JJV-TD STORAGE</option>
+            <option value="JJV-NP">JJV-NP STORAGE</option>
           </select>
         </div>
 

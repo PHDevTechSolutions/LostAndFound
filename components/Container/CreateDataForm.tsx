@@ -15,6 +15,7 @@ interface CreateDataFormProps {
 // Post
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
+    const [ContainerType, setContainerType] = useState(post?.ContainerType || "");
     const [Size, setSize] = useState(post?.Size || "");
     const [Commodity, setCommodity] = useState(post?.Commodity || "");
     const [userName, setuserName] = useState("");
@@ -24,9 +25,10 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [BoxSales, setBoxSales] = useState("");
     const [Price, setPrice] = useState("");
     const [Boxes, setBoxes] = useState(post?.Boxes || "");
+    const [Freezing, setFreezing] = useState(post?.Freezing || "");
     const [OriginalBoxes, setOriginalBoxes] = useState(post?.Boxes || "");
     const [GrossSales, setGrossSales] = useState("");
-    const [PlaceSales, setPlaceSales] = useState("BELEN STORAGE");
+    const [PlaceSales, setPlaceSales] = useState(post?.PlaceSales || "");
     const [PaymentMode, setPaymentMode] = useState("");
     const [editData, setEditData] = useState<any>(null);
     const [tableData, setTableData] = useState<any[]>([]);
@@ -70,6 +72,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 ContainerNo,
+                ContainerType,
                 Size,
                 Commodity,
                 userName,
@@ -82,6 +85,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 GrossSales,
                 PlaceSales,
                 PaymentMode,
+                Freezing,
                 id: editData ? editData._id : undefined,
             }),
         });
@@ -163,6 +167,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         let updatedBoxes = parseInt(OriginalBoxes) || 0;
 
         setContainerNo(data.ContainerNo);
+        setContainerType(data.ContainerType);
         setCommodity(data.Commodity)
         setSize(data.Size);
         setuserName(data.userName);
@@ -176,6 +181,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
         setGrossSales(data.GrossSales);
         setPlaceSales(data.PlaceSales);
         setPaymentMode(data.PaymentMode);
+        setFreezing(data.Freezing);
         setEditData(data);
     };
 
@@ -268,6 +274,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[20%]">
                     <OrderFormFields
                         ContainerNo={ContainerNo} setContainerNo={setContainerNo}
+                        ContainerType={ContainerType} setContainerType={ContainerType}
                         Size={Size} setSize={setSize}
                         Commodity={Commodity} setCommodity={setCommodity}
                         userName={userName} setuserName={setuserName}
@@ -277,6 +284,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         Price={Price} setPrice={setPrice} handlePriceChange={handlePriceChange}
                         Boxes={Boxes} setBoxes={setBoxes} GrossSales={GrossSales}
                         setGrossSales={setGrossSales} PlaceSales={PlaceSales} setPlaceSales={setPlaceSales}
+                        Freezing={Freezing} setFreezing={setFreezing}
                         PaymentMode={PaymentMode} setPaymentMode={setPaymentMode} editData={editData}
                         onCancel={onCancel} handleSubmit={handleSubmit}
                     />

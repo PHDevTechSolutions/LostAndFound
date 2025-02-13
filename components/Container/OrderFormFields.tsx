@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 interface OrderFormFieldsProps {
     ContainerNo: string;
     setContainerNo: React.Dispatch<React.SetStateAction<string>>;
+    ContainerType: string;
+    setContainerType: React.Dispatch<React.SetStateAction<string>>;
     Size: string;
     setSize: React.Dispatch<React.SetStateAction<string>>;
     Commodity: string;
@@ -31,18 +33,22 @@ interface OrderFormFieldsProps {
     setPlaceSales: React.Dispatch<React.SetStateAction<string>>;
     PaymentMode: string;
     setPaymentMode: React.Dispatch<React.SetStateAction<string>>;
+
+    Freezing: string;
+    setFreezing: React.Dispatch<React.SetStateAction<string>>;
+
     editData: any;
     onCancel: () => void;
     handleSubmit: (e: React.FormEvent) => void;
 }
 
 const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
-    ContainerNo, setContainerNo, Commodity, setCommodity, Size, setSize,
+    ContainerNo, setContainerNo, ContainerType, setContainerType, Commodity, setCommodity, Size, setSize,
     userName, setuserName, Location, setLocation,
     DateOrder, setDateOrder, BuyersName, setBuyersName,
     BoxSales, setBoxSales, handleBoxSalesChange, Price, setPrice,
     handlePriceChange, Boxes, setBoxes, GrossSales, setGrossSales, 
-    PlaceSales, setPlaceSales, PaymentMode, setPaymentMode,
+    PlaceSales, setPlaceSales, PaymentMode, setPaymentMode, Freezing, setFreezing,
     editData, onCancel, handleSubmit,
 }) => {
 
@@ -52,23 +58,19 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
         setBoxSales("");
         setPrice("");
         setGrossSales("");
-        setPlaceSales("");
         setPaymentMode("");
     };
 
-    useEffect(() => {
-        if (!PlaceSales) {
-            setPlaceSales("Belen Storage");
-        }
-    }, []);
-
     return (
         <form onSubmit={handleSubmit}>
+
             <input type="hidden" id="containerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
+            <input type="hidden" id="ContainerType" value={ContainerType} onChange={(e) => setContainerType(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
             <input type="hidden" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
             <input type="hidden" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             <input type="hidden" id="Username" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" disabled />
             <input type="hidden" id="Location" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
+            <input type="hidden" id="Freezing" value={Freezing} onChange={(e) => setFreezing(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
         
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date</label>

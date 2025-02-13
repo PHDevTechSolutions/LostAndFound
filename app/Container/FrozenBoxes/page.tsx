@@ -9,7 +9,7 @@ import UserFetcher from "../../../components/UserFetcher";
 import AddAccountForm from "../../../components/Container/AddContainerForm";
 import CreateDataForm from "../../../components/Container/CreateDataForm";
 import SearchFilters from "../../../components/Container/SearchFilters";
-import ContainerTable from "../../../components/Container/ContainerTable";
+import ContainerTable from "../../../components/Frozen/FrozenTable";
 import Pagination from "../../../components/Container/Pagination";
 
 // Toasts
@@ -148,12 +148,7 @@ const ContainerList: React.FC = () => {
                                     />
                                 ) : (
                                     <>
-                                        <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add Fishing Container
-                                            </button>
-                                        </div>
-                                        <h2 className="text-lg font-bold mb-2">List of Containers</h2>
+                                        <h2 className="text-lg font-bold mb-2">List of Remaining Frozen Boxes</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                         <SearchFilters
                                                 searchTerm={searchTerm}

@@ -19,7 +19,10 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [DateArrived, setDateArrived] = useState(editData?.DateArrived || "");
   const [DateSoldout, setDateSoldout] = useState(editData?.DateSoldout || "");
   const [SupplierName, setSupplierName] = useState(editData?.SupplierName || "");
+
   const [ContainerNo, setContainerNo] = useState(editData?.ContainerNo || "");
+  const [ContainerType, setContainerType] = useState(editData?.ContainerType || "");
+
   const [Country, setCountry] = useState(editData?.Country || "");
   const [Boxes, setBoxes] = useState(editData?.Boxes || "");
   const [TotalQuantity, setTotalQuantity] = useState(editData?.TotalQuantity || "");
@@ -30,6 +33,8 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [Status, setStatus] = useState(editData?.Status || "");
   const [BoxType, setBoxType] = useState(editData?.BoxType || "");
   const [Remarks, setRemarks] = useState(editData?.Remarks || "");
+
+  const [PlaceSales, setPlaceSales] = useState(editData?.PlaceSales || "")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,8 +48,8 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Location, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, Country, Boxes,
-        TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks,
+        Location, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes,
+        TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, PlaceSales,
         userName, 
         id: editData?._id, 
       }),
@@ -75,7 +80,10 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           DateArrived={DateArrived} setDateArrived={setDateArrived}
           DateSoldout={DateSoldout} setDateSoldout={setDateSoldout}
           SupplierName={SupplierName} setSupplierName={setSupplierName}
+
           ContainerNo={ContainerNo} setContainerNo={setContainerNo}
+          ContainerType={ContainerType} setContainerType={setContainerType}
+          
           setCountry={setCountry} Country={Country}
           setTotalQuantity={setTotalQuantity} TotalQuantity={TotalQuantity}
           setTotalGrossSales={setTotalGrossSales} TotalGrossSales={TotalGrossSales}
@@ -86,6 +94,9 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           setStatus={setStatus} Status={Status}
           setBoxType={setBoxType} BoxType={BoxType}
           setRemarks={setRemarks} Remarks={Remarks}
+
+          PlaceSales={PlaceSales} setPlaceSales={setPlaceSales}
+
           editData={editData}
         />
         <div className="flex justify-between">

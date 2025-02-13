@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { PiShippingContainer, PiWarehouse } from "react-icons/pi";
 import { FaUsersGear, FaPlus, FaMinus } from "react-icons/fa6";
 import { IoCogSharp } from "react-icons/io5";
-import { FaRegCircle } from "react-icons/fa";
+import { FaRegCircle, FaSnowflake  } from "react-icons/fa";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 
 
@@ -71,12 +71,22 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
           href: `/Container/ActivityLog${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
         {
+          title: "Branches",
+          href: `/Container/Branches${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
+        },
+      ],
+    },
+    {
+      title: "Frozen",
+      icon: FaSnowflake,
+      subItems: [
+        {
           title: "Pendiente",
           href: `/Container/PedienteManual${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
         {
-          title: "Branches",
-          href: `/Container/Branches${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
+          title: "Frozen Remaining Boxes",
+          href: `/Container/FrozenBoxes${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
       ],
     },

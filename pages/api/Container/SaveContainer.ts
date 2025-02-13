@@ -3,10 +3,11 @@ import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to save container data
 async function saveContainer({
-  ContainerNo, Size, Commodity, userName, Location, DateOrder, BuyersName,
-  BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode
+  ContainerNo, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName,
+  BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, Freezing
 }: {
   ContainerNo: string;
+  ContainerType: string;
   Size: string;
   Commodity: string;
   userName: string;
@@ -19,6 +20,8 @@ async function saveContainer({
   GrossSales: string;
   PlaceSales: string;
   PaymentMode: string;
+  Freezing: string;
+
 }) {
   const db = await connectToDatabase();
   const containerCollection = db.collection("container_order");
@@ -49,6 +52,7 @@ async function saveContainer({
   // Proceed with inserting new data if it's not a duplicate
   const newData = {
     ContainerNo,
+    ContainerType,
     Size,
     Commodity,
     userName,
@@ -61,6 +65,7 @@ async function saveContainer({
     GrossSales,
     PlaceSales,
     PaymentMode,
+    Freezing,
     createdAt: new Date(),
   };
 
@@ -85,7 +90,7 @@ async function saveContainer({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { ContainerNo, Size, Commodity, userName, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode } = req.body;
+    const { ContainerNo, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, Freezing } = req.body;
 
     // Validate required fields
     if (!Size || !BuyersName) {
@@ -94,8 +99,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const result = await saveContainer({
-        ContainerNo, Size, Commodity, userName, Location, DateOrder, BuyersName, 
-        BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode
+        ContainerNo, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName, 
+        BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, Freezing
       });
 
       if (!result.success) {

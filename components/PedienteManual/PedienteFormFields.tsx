@@ -66,7 +66,11 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
         fetchCustomers();
     }, [Location]); // Refetch when Location changes
 
-
+    useEffect(() => {
+        // Automatically set today's date
+        const today = new Date().toISOString().split("T")[0];
+        setDatePediente(today);
+      }, []);
 
     const customerOptions = customerList.map((customer) => ({
         value: customer.BuyersName,  // Use the BuyersName or any other unique identifier
