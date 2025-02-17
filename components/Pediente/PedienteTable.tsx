@@ -1,13 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import io from "socket.io-client";
-import { Menu } from "@headlessui/react";
-import { BsPlusCircle, BsThreeDotsVertical } from "react-icons/bs";
+import React, { useMemo, useState } from "react";
 import Form from "./Form";
-
-const socket = io("http://localhost:3001");
+import { BsThreeDotsVertical } from "react-icons/bs"; // For the 3 dots icon
 
 interface Post {
     _id: string;
+    createdAt: string;
     DateOrder: string;
     BuyersName: string;
     PlaceSales: string;
@@ -16,243 +13,157 @@ interface Post {
     Size: string;
     BoxSales: number;
     Price: number;
-    PayAmount: number;
+    GrossSales: string;
+    PayAmount: string;
+    BalanceAmount: string;
     Status: string;
+    Location: string;
+    PaymentMode: string;
 }
 
 interface PedienteTableProps {
-    posts: any[];
-    handleEdit: (post: any) => void;
-    handleDelete: (postId: string) => void;
-    handleCreateData: (postId: string) => void;
-    Role: string; // Pass the role here
+    posts: Post[];
+    handleEdit: (post: Post) => void;
+    Role: string;
+    Location: string;
 }
 
 const groupByBuyer = (posts: Post[]) => {
     return posts.reduce((acc, post) => {
         const { BuyersName } = post;
-        if (!acc[BuyersName]) acc[BuyersName] = [];
-        acc[BuyersName].push(post);
+        const normalizedBuyerName = BuyersName.toLowerCase();  // Normalize to lowercase
+        if (!acc[normalizedBuyerName]) acc[normalizedBuyerName] = [];
+        acc[normalizedBuyerName].push(post);
         return acc;
     }, {} as Record<string, Post[]>);
 };
 
-const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, handleEdit, handleDelete, handleCreateData, Role }) => {
-    const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
-    const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+const formatCurrency = (amount: number): string => {
+    return `₱${parseFloat(amount.toString()).toLocaleString()}`;
+};
 
-    useEffect(() => {
-        setUpdatedPosts(posts);
-    }, [posts]);
+const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Location, handleEdit }) => {
+    const [menuVisible, setMenuVisible] = useState<{ [key: string]: boolean }>({});
 
-    useEffect(() => {
-        // Filter posts to include only those with paymentmode === 'PDC'
-        const filteredPosts = posts.filter(post => post.PaymentMode === "PDC");
-        setUpdatedPosts(filteredPosts);
-    }, [posts]);
-
-
-    useEffect(() => {
-        const newPostListener = (newPost: any) => {
-            setUpdatedPosts((prevPosts) => {
-                if (prevPosts.find(post => post._id === newPost._id)) return prevPosts;  // Prevent adding duplicate posts
-                return [newPost, ...prevPosts];
-            });
-        };
-
-        socket.on("newPost", newPostListener);
-        return () => {
-            socket.off("newPost", newPostListener);
-        };
-    }, []);
-
-    const toggleRow = useCallback((postId: string) => {
-        setExpandedRows(prev => {
-            const newExpandedRows = new Set(prev);
-            if (newExpandedRows.has(postId)) {
-                newExpandedRows.delete(postId);
-            } else {
-                newExpandedRows.add(postId);
-            }
-            return newExpandedRows;
-        });
-    }, []);
-
-    const formatCurrency = (amount: number): string => {
-        return new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(amount);
+    const toggleMenu = (id: string) => {
+        setMenuVisible(prevState => ({
+            ...prevState,
+            [id]: !prevState[id],
+        }));
     };
 
-    // Memoizing the table rows and summing grouped data
-    const memoizedRows = useMemo(() => {
-        const groupedPosts = groupByBuyer(updatedPosts);
-        let totalQty = 0;
-        let totalAmount = 0;
-        let totalPayment = 0;
-        let totalBalance = 0;
+    const updatedPosts = useMemo(() => {
+        return posts.filter(post => post.PaymentMode === "PDC" && post.Location === Location);
+    }, [posts, Location]);
 
-        const rows = Object.entries(groupedPosts).map(([buyer, posts]) => {
-            let groupTotalQty = 0;
-            let groupTotalAmount = 0;
-            let groupTotalPayment = 0;
-            let groupTotalBalance = 0;
+    const groupedPosts = groupByBuyer(updatedPosts);
 
-            const buyerRows = posts.map((post) => {
-                const total = post.BoxSales * post.Price;
-                const balance = total - (post.PayAmount || 0);
+    // Calculate Grand Totals
+    let grandTotalQty = 0;
+    let grandTotalDebt = 0;
+    let grandTotalPayment = 0;
+    let grandTotalBalance = 0;
 
-                // Group level totals
-                groupTotalQty += Number(post.BoxSales) || 0;
-                groupTotalAmount += total;
-                groupTotalPayment += post.PayAmount || 0;
-                groupTotalBalance += balance;
-
-                totalQty += Number(post.BoxSales) || 0;
-                totalAmount += total;
-                totalPayment += Number(post.PayAmount) || 0;
-                totalBalance += balance;
-
-                return (
-                    <tr key={post._id}>
-                        <td className="px-4 py-2  capitalize">{post.DateOrder}</td>
-                        <td className="px-4 py-2  capitalize">{post.BuyersName}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.PlaceSales}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.ContainerNo}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.Commodity}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.Size}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.BoxSales}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.Price)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(total)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(post.PayAmount || 0)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{formatCurrency(balance)}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">{post.Status}</td>
-                        <td className="px-4 py-2  hidden md:table-cell">
-                            <Menu as="div" className="relative inline-block text-left">
-                                <div>
-                                    <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                                        <BsThreeDotsVertical />
-                                    </Menu.Button>
-                                </div>
-                                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                                    <div className="py-1">
-                                        <Menu.Item>
-                                            {({ active }) => (
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleEdit(post); }}
-                                                    className={`${active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                                                        } block w-full text-left px-4 py-2 text-xs`}
-                                                >
-                                                    Edit
-                                                </button>
-                                            )}
-                                        </Menu.Item>
-                                        {Role !== "Staff" && (
-                                            <Menu.Item>
-                                                {({ active }) => (
-                                                    <button
-                                                        onClick={(e) => { e.stopPropagation(); handleDelete(post._id); }}
-                                                        className={`${active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                                                            } block w-full text-left px-4 py-2 text-xs`}
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                )}
-                                            </Menu.Item>
-                                        )}
-                                    </div>
-                                </Menu.Items>
-                            </Menu>
-                        </td>
-                    </tr>
-                );
-            });
-
-            return (
-                <React.Fragment key={buyer}>
-                    {/* Grouped Buyer Row */}
-                    <tr className="bg-gray-100 font-semibold">
-                        <td colSpan={13} className="px-4 py-2 uppercase">{buyer}</td>
-                    </tr>
-                    {buyerRows}
-                    {/* Group Total Row */}
-                    <tr className="bg-gray-300">
-                        <td className="px-4 py-2 text-right" colSpan={6}>Group Total:</td>
-                        <td className="px-4 py-2" colSpan={2}>{groupTotalQty}</td>
-                        <td className="px-4 py-2">{formatCurrency(groupTotalAmount)}</td>
-                        <td className="px-4 py-2">{formatCurrency(groupTotalPayment)}</td>
-                        <td className="px-4 py-2">{formatCurrency(groupTotalBalance)}</td>
-                        <td className="px-4 py-2"></td>
-                        <td className="px-4 py-2"></td>
-                    </tr>
-                </React.Fragment>
-            );
-        });
-
-        return { rows, totalQty, totalAmount, totalPayment, totalBalance };
-    }, [updatedPosts, expandedRows, toggleRow, handleCreateData, handleEdit, handleDelete, Role]);
-
-    const { rows, totalQty, totalAmount, totalPayment, totalBalance } = memoizedRows;
-
-    const [isExpanded, setIsExpanded] = useState(false);
+    Object.entries(groupedPosts).forEach(([buyer, buyerPosts]) => {
+        buyerPosts.forEach(post => {
+            const boxSales = Number(post.BoxSales) || 0;
+            const grossSales = parseFloat(post.GrossSales) || 0;
+            const payAmount = parseFloat(post.PayAmount) || 0;
     
+            grandTotalQty += boxSales;
+            grandTotalDebt += grossSales;
+            grandTotalPayment += payAmount;
+            grandTotalBalance += grossSales - payAmount;
+        });
+    });
 
+    // Ensure that NaN values are replaced with 0
+    grandTotalQty = isNaN(grandTotalQty) ? 0 : grandTotalQty;
+    grandTotalDebt = isNaN(grandTotalDebt) ? 0 : grandTotalDebt;
+    grandTotalPayment = isNaN(grandTotalPayment) ? 0 : grandTotalPayment;
+    grandTotalBalance = isNaN(grandTotalBalance) ? 0 : grandTotalBalance;
 
     return (
         <div>
-            <Form totalPayment={totalPayment} totalBalance={totalBalance} />
-            <>  
-                {/* Collapsible Toggle Button */}
-                <div className="text-center">
-                    <button
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        className="text-xs text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">
-                        {isExpanded ? "Hide Details ▲" : "Show Details ▼"}
-                    </button>
-                </div>
+            {/* Pass the grand totals as props to the Form component */}
+            <Form beginningBalance={0} totalAmount={grandTotalDebt} totalPayment={grandTotalPayment} totalBalance={grandTotalBalance}/>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
+                {Object.entries(groupedPosts).map(([buyer, buyerPosts]) => {
+                    const totalQty = buyerPosts.reduce((acc, post) => acc + (Number(post.BoxSales) || 0), 0);
+                    const totalDebt = buyerPosts.reduce((acc, post) => acc + parseFloat(post.GrossSales), 0);
+                    const totalPayment = buyerPosts.reduce((acc, post) => acc + parseFloat(post.PayAmount), 0);
+                    const totalBalance = buyerPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) - parseFloat(post.PayAmount)), 0);
 
-                {/* Collapsible Section */}
-                <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? "opacity-100" : "max-h-0 opacity-0"}`}>
-                    <div className="mt-4 p-4 border shadow-md rounded-md">
-                        <table className="min-w-full bg-white border text-xs">
-                            <thead>
-                                <tr>
-                                    <th className="w-1/7 text-left  px-4 py-2">Date</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Buy and Sell</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Breakdown</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Container Van</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Commodity</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Size</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Qty</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Sales Price</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Total Debt</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Payment</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Balance</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Status</th>
-                                    <th className="w-1/7 text-left  px-4 py-2">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rows.length > 0 ? rows : (
-                                    <tr>
-                                        <td colSpan={13} className="py-2 px-4 border text-center">No records found</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                            <tfoot className="bg-gray-200 font-bold">
-                                <tr>
-                                    <td className="px-4 py-2 border text-right" colSpan={6}>Grand Total:</td>
-                                    <td className="px-4 py-2" colSpan={2}>{totalQty}</td>
-                                    <td className="px-4 py-2">{formatCurrency(totalAmount)}</td>
-                                    <td className="px-4 py-2">{formatCurrency(totalPayment)}</td>
-                                    <td className="px-4 py-2">{formatCurrency(totalBalance)}</td>
-                                    <td className="px-4 py-2"></td>
-                                    <td className="px-4 py-2"></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </>
+                    return (
+                        <div key={buyer} className="relative border-b-2 rounded-md shadow-md p-4 flex flex-col mb-2">
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-xs font-semibold text-gray-800 text-center uppercase">{buyer}</h3>
+                            </div>
 
+                            <div className="mt-4 text-xs capitalize flex-grow grid grid-cols-4 gap-2">
+                                {buyerPosts.map((post) => {
+                                    const balance = parseFloat(post.GrossSales) - parseFloat(post.PayAmount); // Calculate balance for each post
+                                    return (
+                                        <div key={post._id} className="mb-4 border p-4 rounded-md bg-white shadow-sm relative"> {/* Added relative positioning here */}
+                                            <div className="flex justify-between items-center mb-2">
+                                                <h4 className="text-xs font-semibold text-gray-800 text-left">Container No. {post.ContainerNo}</h4>
+                                                <button className="text-gray-500 hover:text-gray-800" onClick={() => toggleMenu(post._id)}>
+                                                    <BsThreeDotsVertical size={12} />
+                                                </button>
+                                            </div>
+
+                                            <div className="flex justify-between">
+                                                <div className="w-full text-left">
+                                                    <p><strong>Date:</strong> {post.DateOrder}</p>
+                                                    <p><strong>Breakdown:</strong> {post.PlaceSales}</p>
+                                                    <p><strong>Commodity:</strong> {post.Commodity}</p>
+                                                    <p><strong>Size:</strong> {post.Size}</p>
+                                                    <p><strong>Qty:</strong> {post.BoxSales}</p>
+                                                    <p className="mt-2"><strong>Sales Price:</strong> {formatCurrency(post.Price)}</p>
+                                                    <p><strong>Total Debt:</strong> {formatCurrency(parseFloat(post.GrossSales) || 0)}</p>
+                                                    <p><strong>Payment:</strong> {formatCurrency(parseFloat(post.PayAmount) || 0)}</p>
+                                                    <p><strong>Balance:</strong> {formatCurrency(balance || 0)}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-4 border-t pt-2 text-xs text-gray-600 flex justify-between items-center">
+                                                <span><strong>Status:</strong> {post.Status}</span>
+                                            </div>
+
+                                            {/* Dropdown Menu */}
+                                            {menuVisible[post._id] && (
+                                                <div className="absolute right-4 top-12 bg-white shadow-lg rounded-lg border w-32 z-10 text-xs">
+                                                    <button onClick={() => handleEdit(post)} className="w-full px-4 py-2 hover:bg-gray-100 text-left">Edit</button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div className="border-t border-gray-900 mt-3 pt-2 text-xs">
+                                <div className="flex flex-wrap gap-4">
+                                    <span className="flex items-center gap-1 font-bold">QTY: {totalQty || 0}</span> |
+                                    <span className="flex items-center gap-1 font-bold">Total Debt: {formatCurrency(totalDebt || 0)}</span> |
+                                    <span className="flex items-center gap-1 font-bold">Total Payment: {formatCurrency(totalPayment || 0)}</span> |
+                                    <span className="flex items-center gap-1 font-bold">Total Balance: {formatCurrency(totalBalance || 0)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+                {updatedPosts.length === 0 && <p className="text-center text-xs col-span-full">No records found</p>}
+            </div>
+            {/* Grand Total Section */}
+            <div className="border-t border-gray-900 mt-3 pt-2 text-xs">
+                <div className="flex flex-wrap gap-4">
+                    <span className="flex items-center font-bold">Grand Total:</span>
+                    <span className="flex items-center gap-1 font-bold">Grand QTY: {grandTotalQty}</span> |
+                    <span className="flex items-center gap-1 font-bold">Grand Total Debt: {formatCurrency(grandTotalDebt)}</span> |
+                    <span className="flex items-center gap-1 font-bold">Grand Total Payment: {formatCurrency(grandTotalPayment)}</span> |
+                    <span className="flex items-center gap-1 font-bold">Grand Total Balance: {formatCurrency(grandTotalBalance)}</span>
+                </div>
+            </div>
         </div>
     );
 });

@@ -13,7 +13,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
 
     try {
         const db = await connectToDatabase();
-        const containerCollection = db.collection('pediente');
+        const containerCollection = db.collection('container_order');
         const updatedAccount = {
             DateOrder, BuyersName, PlaceSales, ContainerNo, Commodity, Size, BoxSales, Price, GrossSales, PayAmount, Status, Location, updatedAt: new Date(),
         };

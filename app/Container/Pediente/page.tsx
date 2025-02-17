@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Ensures client-side rendering
 
 import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
@@ -7,9 +7,7 @@ import UserFetcher from "../../../components/UserFetcher";
 
 // Pages
 import PedienteForm from "../../../components/Pediente/PedienteForm";
-import SearchFilters from "../../../components/Pediente/SearchFilters";
 import PedienteTable from "../../../components/Pediente/PedienteTable";
-import Pagination from "../../../components/Pediente/Pagination";
 
 // Toasts
 import { ToastContainer, toast } from "react-toastify";
@@ -19,24 +17,15 @@ const PedientePage: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editPost, setEditPost] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
-        start: "",
-        end: "",
-    });
-
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(1000);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [postToDelete, setPostToDelete] = useState<string | null>(null);
-    const [showCreateForm, setShowCreateForm] = useState(false);
-    const [postForCreate, setPostForCreate] = useState<any>(null);
 
     // Fetch Data from the API
     const fetchDatabase = async () => {
         try {
             const response = await fetch("/api/Pediente/FetchPediente");
             const data = await response.json();
+            console.log("Fetched Data: ", data); // Log the fetched data for debugging
             setPosts(data);
         } catch (error) {
             toast.error("Error fetching accounts.");
@@ -48,77 +37,15 @@ const PedientePage: React.FC = () => {
         fetchDatabase();
     }, []);
 
-
-    // Filter Data based on search term and city address
-    const filteredAccounts = posts.filter((post) => {
-        const inSearchTerm =
-            post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
-            post.BuyersName.toUpperCase().includes(searchTerm.toUpperCase()) ||
-            post.PlaceSales.toLowerCase().includes(searchTerm.toLowerCase());
-
-        const dateArrive = new Date(post.DateOrder).getTime();
-        const dateSoldout = new Date(post.DateOrder).getTime();
-        const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
-        const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-
-        const inDateRange =
-            (!rangeStart || dateArrive >= rangeStart) &&
-            (!rangeEnd || dateSoldout <= rangeEnd);
-
-        return inSearchTerm && inDateRange;
-    });
-
-    // Pagination logic
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = filteredAccounts.slice(indexOfFirstPost, indexOfLastPost);
-    const totalPages = Math.ceil(filteredAccounts.length / postsPerPage);
-
-    // Edit post function
     const handleEdit = (post: any) => {
         setEditPost(post);
         setShowForm(true);
     };
 
-    // Show delete modal
-    const confirmDelete = (postId: string) => {
-        setPostToDelete(postId);
-        setShowDeleteModal(true);
-    };
-
-    // Delete post function
-    const handleDelete = async () => {
-        if (!postToDelete) return;
-        try {
-            const response = await fetch(`/api/Container/DeleteContainer`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id: postToDelete }),
-            });
-
-            if (response.ok) {
-                setPosts(posts.filter((post) => post._id !== postToDelete));
-                toast.success("Data deleted successfully.");
-            } else {
-                toast.error("Failed to delete data.");
-            }
-        } catch (error) {
-            toast.error("Failed to delete data.");
-            console.error("Error deleting data:", error);
-        } finally {
-            setShowDeleteModal(false);
-            setPostToDelete(null);
-        }
-    };
-
-    const handleCreateData = (postId: string) => {
-        const selectedPost = posts.find((post) => post._id === postId);
-        setPostForCreate(selectedPost); // Pass the selected post details
-        setShowCreateForm(true);
-        setShowForm(false); // Ensure other forms are closed
-    };
+    // Pagination logic
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
     return (
         <SessionChecker>
@@ -135,39 +62,23 @@ const PedientePage: React.FC = () => {
                                         }}
                                         refreshUser={fetchDatabase}
                                         userName={user ? user.userName : ""}
+                                        Location={user ? user.Location : ""}
                                         editPost={editPost}
                                     />
                                 ) : (
                                     <>
-                                        <h2 className="text-lg font-bold mb-2">Storage Pendiente</h2>
+                                        <h2 className="text-lg font-bold mb-2">Pendiente Frozen</h2>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                            <SearchFilters
-                                                searchTerm={searchTerm}
-                                                setSearchTerm={setSearchTerm}
-                                                postsPerPage={postsPerPage}
-                                                setPostsPerPage={setPostsPerPage}
-                                                dateRange={dateRange}
-                                                setDateRange={setDateRange}
-                                            />
                                             <PedienteTable
-                                                posts={currentPosts}
-                                                handleEdit={handleEdit}
-                                                handleDelete={confirmDelete}
-                                                handleCreateData={handleCreateData}
+                                                posts={currentPosts} // Pass paginated posts here
                                                 Role={user ? user.Role : ""}
+                                                Location={user ? user.Location : ""}
+                                                handleEdit={handleEdit}
                                             />
-
-                                            <Pagination
-                                                currentPage={currentPage}
-                                                totalPages={totalPages}
-                                                setCurrentPage={setCurrentPage}
-                                            />
-                                            <div className="text-xs mt-2">
-                                                Showing {indexOfFirstPost + 1} to {Math.min(indexOfLastPost, filteredAccounts.length)} of {filteredAccounts.length} entries
-                                            </div>
                                         </div>
                                     </>
                                 )}
+                                <ToastContainer className="text-xs" autoClose={1000} />
                             </div>
                         </div>
                     )}

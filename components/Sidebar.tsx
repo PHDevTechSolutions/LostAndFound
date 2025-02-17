@@ -85,6 +85,10 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
           href: `/Container/PedienteManual${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
         {
+          title: "Pendiente Automatic",
+          href: `/Container/Pediente${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
+        },
+        {
           title: "Frozen Remaining Boxes",
           href: `/Container/FrozenBoxes${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
