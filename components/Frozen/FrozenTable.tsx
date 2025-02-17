@@ -153,6 +153,8 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                                                 <p><strong>Orca:</strong> {post.TotalQuantity - post.Boxes}</p>
                                                 <p><strong>Total:</strong> {post.TotalQuantity}</p>
                                                 <p className="mt-2"><strong>Total Sales:</strong> {post.GrossSales}</p>
+                                                <p className="mt-2"><strong>Total PDC:</strong> </p>
+                                                <p className="mt-2"><strong>Total Cash:</strong> </p>
                                             </div>
 
                                             {/* Card Footer */}
