@@ -3,10 +3,11 @@ import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to save container data
 async function saveContainer({
-  ContainerNo, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName,
+  ContainerNo, ReferenceNumber, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName,
   BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, Freezing
 }: {
   ContainerNo: string;
+  ReferenceNumber: string;
   ContainerType: string;
   Size: string;
   Commodity: string;
@@ -52,6 +53,7 @@ async function saveContainer({
   // Proceed with inserting new data if it's not a duplicate
   const newData = {
     ContainerNo,
+    ReferenceNumber,
     ContainerType,
     Size,
     Commodity,
@@ -90,7 +92,7 @@ async function saveContainer({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { ContainerNo, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, Freezing } = req.body;
+    const { ContainerNo, ReferenceNumber, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName, BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, Freezing } = req.body;
 
     // Validate required fields
     if (!Size || !BuyersName) {
@@ -99,7 +101,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const result = await saveContainer({
-        ContainerNo, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName, 
+        ContainerNo, ReferenceNumber, ContainerType, Size, Commodity, userName, Location, DateOrder, BuyersName, 
         BoxSales, Price, Remaining, GrossSales, PlaceSales, PaymentMode, Freezing
       });
 

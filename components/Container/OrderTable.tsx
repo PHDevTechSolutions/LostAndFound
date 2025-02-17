@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { IoPrint } from "react-icons/io5";
 import { FaRegFileExcel } from "react-icons/fa";
@@ -13,7 +13,8 @@ interface TableProps {
   totalBoxSales: number;
   totalPrice: number;
   totalGrossSales: number;
-  post: { Vendor: string; ContainerNo: string };
+  ReferenceNumber: string;
+  post: { Vendor: string; ContainerNo: string; ReferenceNumber: string;};
 }
 
 const Table: React.FC<TableProps> = React.memo(
@@ -21,6 +22,44 @@ const Table: React.FC<TableProps> = React.memo(
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
     const tableRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+      if (totalGrossSales !== 0 && totalGrossSales !== undefined && totalGrossSales !== null) {
+        const updateGrossSalesInDatabase = async () => {
+          try {
+            const response = await fetch("/api/Container/UpdateGrossSales", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                referenceNumber: post?.ReferenceNumber,  // Correct field name for ReferenceNumber
+                grossSales: totalGrossSales,
+              }),
+            });
+    
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+    
+            if (data.success) {
+              console.log("Gross Sales updated successfully!");
+            } else {
+              console.error("Failed to update Gross Sales:", data.message || "Unknown error");
+            }
+          } catch (error) {
+            // Check if error is an instance of Error to handle it correctly
+            const errorMessage = error instanceof Error ? error.message : error;
+            console.error("Error updating Gross Sales:", errorMessage);
+          }
+        };
+    
+        updateGrossSalesInDatabase();
+      }
+    }, [totalGrossSales, post?.ReferenceNumber]);
+    
+    
     const handlePrint = useCallback(() => {
       if (tableRef.current) {
         const printContent = `

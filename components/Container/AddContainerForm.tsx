@@ -15,6 +15,8 @@ interface AddContainerProps {
 
 const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, userName, editData, Location: propLocation }) => {
   const [Location, setLocation] = useState(editData?.Location || propLocation || "");
+
+  const [ReferenceNumber, setReferenceNumber] = useState(editData?.ReferenceNumber || "");
   const [SpsicNo, setSpsicNo] = useState(editData?.SpsicNo || "");
   const [DateArrived, setDateArrived] = useState(editData?.DateArrived || "");
   const [DateSoldout, setDateSoldout] = useState(editData?.DateSoldout || "");
@@ -48,7 +50,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Location, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes,
+        ReferenceNumber, Location, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes,
         TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, PlaceSales,
         userName, 
         id: editData?._id, 
@@ -76,6 +78,8 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         <h2 className="text-xs font-bold mb-4">{editData ? "Edit Container" : "Add Container"}</h2>
         <FormFields
           Location={Location} setLocation={setLocation} 
+
+          ReferenceNumber={ReferenceNumber} setReferenceNumber={setReferenceNumber}
           SpsicNo={SpsicNo} setSpsicNo={setSpsicNo}
           DateArrived={DateArrived} setDateArrived={setDateArrived}
           DateSoldout={DateSoldout} setDateSoldout={setDateSoldout}

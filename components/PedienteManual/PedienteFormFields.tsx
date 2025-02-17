@@ -49,33 +49,12 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
     Status, setStatus,
     editPost,
 }) => {
-    const [customerList, setCustomerList] = useState<any[]>([]);
-
-    useEffect(() => {
-        const fetchCustomers = async () => {
-            try {
-                const response = await fetch(`/api/customer?Location=${encodeURIComponent(Location)}`);
-                const data = await response.json();
-
-                // Assuming the server already filters by Location, you may not need to filter it again.
-                setCustomerList(data);
-            } catch (error) {
-                console.error('Error fetching customers:', error);
-            }
-        };
-        fetchCustomers();
-    }, [Location]); // Refetch when Location changes
-
+    
     useEffect(() => {
         // Automatically set today's date
         const today = new Date().toISOString().split("T")[0];
         setDatePediente(today);
       }, []);
-
-    const customerOptions = customerList.map((customer) => ({
-        value: customer.BuyersName,  // Use the BuyersName or any other unique identifier
-        label: `${customer.BuyersName} | ${customer.ContainerNo} | ${customer.DateOrder} | ${customer.Size} | ${customer.GrossSales}`,
-    }));
 
     const handleCustomerChange = async (selectedOption: any) => {
         const selectedCustomer = selectedOption ? selectedOption.value : '';
@@ -141,11 +120,7 @@ const PedienteFormFields: React.FC<PedienteFormFieldsProps> = ({
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="BuyersName">Buyers Name</label>
-                    {editPost ? (
-                        <input type="text" id="BuyersName" value={BuyersName} readOnly className="w-full px-3 py-2 border bg-gray-50 rounded text-xs" />
-                    ) : (
-                        <Select id="BuyersName" options={customerOptions} onChange={handleCustomerChange} className="w-full text-xs capitalize" placeholder="Select Company" isClearable />
-                    )}
+                    <input type="text" id="BuyersName" value={BuyersName} onChange={(e) => setBuyersName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize bg-gray-50" />
                 </div>
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date Order</label>

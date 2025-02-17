@@ -19,7 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<any>({ containerData: [], containerOrderData: [] });
     const [searchTerm, setSearchTerm] = useState("");
 
     const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
@@ -34,11 +34,12 @@ const ContainerList: React.FC = () => {
 
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [postForCreate, setPostForCreate] = useState<any>(null);
+    
 
     // Fetch Data from the API
     const fetchDatabase = async () => {
         try {
-            const response = await fetch("/api/Container/FetchContainer");
+            const response = await fetch("/api/Container/FetchGrossSales");
             const data = await response.json();
             setPosts(data);
         } catch (error) {
@@ -53,7 +54,7 @@ const ContainerList: React.FC = () => {
     
 
     // Filter Data based on search term and city address
-    const filteredAccounts = posts.filter((post) => {
+    const filteredAccounts = posts.containerData.filter((post: any) => {
         const inSearchTerm =
             post.SpsicNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
@@ -102,7 +103,7 @@ const ContainerList: React.FC = () => {
             });
 
             if (response.ok) {
-                setPosts(posts.filter((post) => post._id !== postToDelete));
+                setPosts(posts.filter((post: any) => post._id !== postToDelete));
                 toast.success("Data deleted successfully.");
             } else {
                 toast.error("Failed to delete data.");
@@ -117,7 +118,7 @@ const ContainerList: React.FC = () => {
     };
 
     const handleCreateData = (postId: string) => {
-        const selectedPost = posts.find((post) => post._id === postId);
+        const selectedPost = posts.find((post: any) => post._id === postId);
         setPostForCreate(selectedPost); // Pass the selected post details
         setShowCreateForm(true);
         setShowForm(false); // Ensure other forms are closed

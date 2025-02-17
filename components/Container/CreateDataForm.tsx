@@ -15,6 +15,7 @@ interface CreateDataFormProps {
 // Post
 const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
     const [ContainerNo, setContainerNo] = useState(post?.ContainerNo || "");
+    const [ReferenceNumber, setReferenceNumber] = useState(post?.ReferenceNumber || "");
     const [ContainerType, setContainerType] = useState(post?.ContainerType || "");
     const [Size, setSize] = useState(post?.Size || "");
     const [Commodity, setCommodity] = useState(post?.Commodity || "");
@@ -71,6 +72,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
             method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+                ReferenceNumber,
                 ContainerNo,
                 ContainerType,
                 Size,
@@ -273,6 +275,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                 {/* Form Section */}
                 <div className="bg-white shadow-md rounded-lg p-4 flex-grow basis-[20%]">
                     <OrderFormFields
+                        ReferenceNumber={ReferenceNumber} setReferenceNumber={setReferenceNumber}
                         ContainerNo={ContainerNo} setContainerNo={setContainerNo}
                         ContainerType={ContainerType} setContainerType={ContainerType}
                         Size={Size} setSize={setSize}
@@ -309,6 +312,7 @@ const CreateDataForm: React.FC<CreateDataFormProps> = ({ post, onCancel }) => {
                         totalBoxSales={totalBoxSales}
                         totalPrice={totalPrice}
                         totalGrossSales={totalGrossSales}
+                        ReferenceNumber={ReferenceNumber}
                         post={post} // Pass the post prop here
                     />
 

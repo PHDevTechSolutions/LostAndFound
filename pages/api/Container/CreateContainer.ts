@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 // Function to add an account directly in this file
-async function addContainer({ SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, Location, PlaceSales }: {
+async function addContainer({ ReferenceNumber, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, Location, PlaceSales }: {
+  ReferenceNumber: string;
   SpsicNo: string;
   DateArrived: string;
   DateSoldout: string;
@@ -28,7 +29,7 @@ async function addContainer({ SpsicNo, DateArrived, DateSoldout, SupplierName, C
   const containerCollection = db.collection("container");
 
   // Create container data
-  const newData = { SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Location, Freezing, Status, BoxType, Remarks, PlaceSales, createdAt: new Date() };
+  const newData = { ReferenceNumber, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Location, Freezing, Status, BoxType, Remarks, PlaceSales, createdAt: new Date() };
 
   // Insert new container data into the container collection
   await containerCollection.insertOne(newData);
@@ -57,7 +58,7 @@ async function addContainer({ SpsicNo, DateArrived, DateSoldout, SupplierName, C
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, Location, PlaceSales } = req.body;
+    const { ReferenceNumber, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, Location, PlaceSales } = req.body;
 
     // Validate required fields
     if (!ContainerNo || !SpsicNo) {
@@ -65,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const result = await addContainer({ SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, Location, PlaceSales });
+      const result = await addContainer({ ReferenceNumber, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes, TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, userName, Location, PlaceSales });
       res.status(200).json(result);
     } catch (error) {
       console.error("Error adding container:", error);

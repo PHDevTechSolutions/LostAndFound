@@ -32,6 +32,8 @@ interface Post {
     Freezing: number;
     Location: string;
     PlaceSales: string;
+    GrossSales: number;
+    ReferenceNumber: string;  // Assuming the reference number field
 }
 
 const ContainerCards: React.FC<ContainerCardsProps> = ({
@@ -46,8 +48,10 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
     const [menuVisible, setMenuVisible] = useState<{ [key: string]: boolean }>({});
 
     useEffect(() => {
+        console.log("Posts data:", posts);
         setUpdatedPosts(posts);
     }, [posts]);
+
 
     useEffect(() => {
         const newPostListener = (newPost: Post) => {
@@ -80,27 +84,31 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
 
     // Group by ContainerType and calculate total values per group
     const groupedPosts = filteredPosts.reduce((acc, post) => {
+        const GrossSales = post.GrossSales ? parseFloat(post.GrossSales.toString()) : 0;
+        console.log(`GrossSales for ${post.ContainerNo}:`, GrossSales);
+
         if (!acc[post.ContainerType]) {
-            acc[post.ContainerType] = { posts: [], totalQuantity: 0, totalBelen: 0, totalOrca: 0 };
+            acc[post.ContainerType] = { posts: [], totalQuantity: 0, totalBelen: 0, totalOrca: 0, totalGrossSales: 0 };
         }
         acc[post.ContainerType].posts.push(post);
         acc[post.ContainerType].totalQuantity += post.TotalQuantity;
         acc[post.ContainerType].totalBelen += post.Boxes;
         acc[post.ContainerType].totalOrca += post.TotalQuantity - post.Boxes;
+        acc[post.ContainerType].totalGrossSales += GrossSales; // Add GrossSales to the total for the container type
         return acc;
-    }, {} as Record<string, { posts: Post[]; totalQuantity: number; totalBelen: number; totalOrca: number }>);
+    }, {} as Record<string, { posts: Post[]; totalQuantity: number; totalBelen: number; totalOrca: number; totalGrossSales: number }>);
 
     // Calculate overall totals across all groups
     const overallTotalQuantity = Object.values(groupedPosts).reduce((sum, group) => sum + group.totalQuantity, 0);
     const overallTotalBelen = Object.values(groupedPosts).reduce((sum, group) => sum + group.totalBelen, 0);
     const overallTotalOrca = Object.values(groupedPosts).reduce((sum, group) => sum + group.totalOrca, 0);
+    const overallTotalGrossSales = Object.values(groupedPosts).reduce((sum, group) => sum + group.totalGrossSales, 0); // Overall total GrossSales
 
     return (
         <div className="p-4">
             {/* Main Header with Total Counts */}
             <div className="bg-gray-300 p-4 rounded-lg text-center font-bold text-sm mb-4">
-                Total: {overallTotalQuantity} | Belen Storage: {overallTotalBelen} | Orca: {overallTotalOrca}
-            </div>
+                Total: {overallTotalQuantity} | Belen Storage: {overallTotalBelen} | Orca: {overallTotalOrca} | Total Sales: {overallTotalGrossSales.toFixed(2)}</div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
                 {Object.entries(groupedPosts).length > 0 ? (
@@ -109,7 +117,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                             {/* Main Card Header */}
                             <div className="bg-gray-200 p-3 shadow-lg rounded-lg flex justify-between items-center">
                                 <h3 className="text-xs font-semibold text-gray-800">
-                                    {containerType} (Total: {group.totalQuantity} | Belen: {group.totalBelen} | Orca: {group.totalOrca})
+                                    {containerType} (Total: {group.totalQuantity} | Belen: {group.totalBelen} | Orca: {group.totalOrca} | Sales: {group.totalGrossSales.toFixed(2)})
                                 </h3>
                             </div>
 
@@ -136,6 +144,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                                                 </button>
                                             </div>
                                             <div className="text-xs capitalize mt-2">
+                                                <p><strong>Reference No:</strong> {post.ReferenceNumber}</p>
                                                 <p><strong>Container No:</strong> {post.ContainerNo}</p>
                                                 <p><strong>Country:</strong> {post.Country}</p>
                                                 <p><strong>Commodity:</strong> {post.Commodity} | <strong>{post.BoxType}</strong></p>
@@ -143,26 +152,13 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                                                 <p className="mt-2"><strong>Belen Storage:</strong> {post.Boxes}</p>
                                                 <p><strong>Orca:</strong> {post.TotalQuantity - post.Boxes}</p>
                                                 <p><strong>Total:</strong> {post.TotalQuantity}</p>
-                                                <p className="mt-2"><strong>Total Sales:</strong> {post.TotalQuantity}</p>
-                                                <p className="mt-2"><strong>Warehouse:</strong> {post.Location}</p>
+                                                <p className="mt-2"><strong>Total Sales:</strong> {post.GrossSales}</p>
                                             </div>
 
-                                            {/* Status Indicator */}
-                                            <div className="bg-gray-100 p-2 shadow rounded-b-lg text-center text-xs mt-2">
-                                                <div
-                                                    className="h-2 rounded-full"
-                                                    style={{
-                                                        width: `${((post.TotalQuantity - post.Boxes) / post.TotalQuantity) * 100}%`,
-                                                        backgroundColor:
-                                                            post.Status === "Soldout"
-                                                                ? "#F97316"
-                                                                : post.Status === "Inventory"
-                                                                    ? "#3B82F6"
-                                                                    : "#D1D5DB",
-                                                        transition: "width 0.5s ease-in-out",
-                                                    }}
-                                                ></div>
-                                                <p className="font-bold mt-1">{post.Status}</p>
+                                            {/* Card Footer */}
+
+                                            <div className="border-t border-gray-900 mt-3 pt-2 text-xs flex justify-between items-center">
+                                                <span className="flex items-center gap-1 font-bold">{post.Status} / {post.Location}</span>
                                             </div>
 
                                             {/* Dropdown Menu */}

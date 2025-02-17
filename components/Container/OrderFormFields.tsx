@@ -5,6 +5,10 @@ import React, { useEffect } from "react";
 interface OrderFormFieldsProps {
     ContainerNo: string;
     setContainerNo: React.Dispatch<React.SetStateAction<string>>;
+
+    ReferenceNumber: string;
+    setReferenceNumber: React.Dispatch<React.SetStateAction<string>>;
+
     ContainerType: string;
     setContainerType: React.Dispatch<React.SetStateAction<string>>;
     Size: string;
@@ -27,8 +31,10 @@ interface OrderFormFieldsProps {
     handlePriceChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     Boxes: string;
     setBoxes: React.Dispatch<React.SetStateAction<string>>;
+
     GrossSales: string;
     setGrossSales: React.Dispatch<React.SetStateAction<string>>;
+    
     PlaceSales: string;
     setPlaceSales: React.Dispatch<React.SetStateAction<string>>;
     PaymentMode: string;
@@ -43,7 +49,7 @@ interface OrderFormFieldsProps {
 }
 
 const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
-    ContainerNo, setContainerNo, ContainerType, setContainerType, Commodity, setCommodity, Size, setSize,
+    ReferenceNumber, setReferenceNumber, ContainerNo, setContainerNo, ContainerType, setContainerType, Commodity, setCommodity, Size, setSize,
     userName, setuserName, Location, setLocation,
     DateOrder, setDateOrder, BuyersName, setBuyersName,
     BoxSales, setBoxSales, handleBoxSalesChange, Price, setPrice,
@@ -63,7 +69,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
 
     return (
         <form onSubmit={handleSubmit}>
-
+            <input type="hidden" id="ReferenceNumber" value={ReferenceNumber} onChange={(e) => setReferenceNumber(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
             <input type="hidden" id="containerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
             <input type="hidden" id="ContainerType" value={ContainerType} onChange={(e) => setContainerType(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
             <input type="hidden" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
