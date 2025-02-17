@@ -154,16 +154,6 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
                 })}
                 {updatedPosts.length === 0 && <p className="text-center text-xs col-span-full">No records found</p>}
             </div>
-            {/* Grand Total Section */}
-            <div className="border-t border-gray-900 mt-3 pt-2 text-xs">
-                <div className="flex flex-wrap gap-4">
-                    <span className="flex items-center font-bold">Grand Total:</span>
-                    <span className="flex items-center gap-1 font-bold">Grand QTY: {grandTotalQty}</span> |
-                    <span className="flex items-center gap-1 font-bold">Grand Total Debt: {formatCurrency(grandTotalDebt)}</span> |
-                    <span className="flex items-center gap-1 font-bold">Grand Total Payment: {formatCurrency(grandTotalPayment)}</span> |
-                    <span className="flex items-center gap-1 font-bold">Grand Total Balance: {formatCurrency(grandTotalBalance)}</span>
-                </div>
-            </div>
         </div>
     );
 });

@@ -82,10 +82,6 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
       subItems: [
         {
           title: "Pendiente",
-          href: `/Container/PedienteManual${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
-        },
-        {
-          title: "Pendiente Automatic",
           href: `/Container/Pediente${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
         {

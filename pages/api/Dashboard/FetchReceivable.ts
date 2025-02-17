@@ -10,12 +10,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const db = await connectToDatabase();
-    const pedienteCollection = db.collection("pediente");
+    const pedienteCollection = db.collection("container_order");
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to start of the day
 
-    const matchCondition: any = { DatePediente: { $gte: today } };
+    const matchCondition: any = { createdAt: { $gte: today } };
 
     if (location === "Philippines") {
       // No location filter applied, showing data from all locations
@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .aggregate([
         {
           $addFields: {
-            DatePediente: { $toDate: "$DatePediente" }, // Ensure DatePediente field is treated as Date
+            createdAt: { $toDate: "$createdAt" }, // Ensure DatePediente field is treated as Date
             GrossSales: { $toDouble: "$GrossSales" }, // Convert GrossSales to number
           },
         },

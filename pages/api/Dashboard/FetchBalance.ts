@@ -10,57 +10,65 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const db = await connectToDatabase();
-    const pedienteCollection = db.collection("pediente");
+    const pedienteCollection = db.collection("container_order");
 
+    // Get current date and set to start of day (midnight)
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to start of the day
+    today.setHours(0, 0, 0, 0); // Start of today (midnight)
 
-    const matchCondition: any = { DatePediente: { $gte: today } };
-    
+    // Get end of day (11:59:59 PM)
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999); // End of today (end of day)
+
+    console.log("Date Range: ", today, endOfDay); // Log date range for debugging
+
+    // Define the match condition for the date range
+    const matchCondition: any = {
+      createdAt: { $gte: today, $lte: endOfDay }, // Match records within today's date range
+    };
+
+    // Location filter logic
     if (location === "Philippines") {
       // No location filter applied, showing data from all locations
-      // Do nothing in terms of filtering Location here
     } else if (location && location !== "All") {
-      // Apply location filter if specified and not "All"
-      matchCondition.Location = location;
+      matchCondition.Location = location; // Apply location filter if specified
     }
 
     // Check if user is Super Admin or Director
     if (role === "Super Admin" || role === "Directors") {
-      // Super Admin and Directors can see all locations if "All" is selected
       if (location && location !== "All" && location !== "Philippines") {
-        // Apply location filter if a location other than 'Philippines' is specified
-        matchCondition.Location = location;
+        matchCondition.Location = location; // Apply location filter
       }
     } else {
-      // For other roles (Admin, Staff, etc.), restrict by location if not "All"
       if (location && location === "All") {
-        // Show all locations if "All" is selected for other roles
-        // No additional filter is added, so all locations will be included
+        // No additional filter added for "All"
       } else if (location && location !== "Philippines") {
-        // Apply location filter for other roles if a specific location is selected
-        matchCondition.Location = location;
+        matchCondition.Location = location; // Apply location filter
       }
     }
 
-    // Fetch total GrossSales for today based on DatePediente
+    console.log("Match Condition: ", matchCondition); // Log match condition for debugging
+
+    // Fetch total BalanceAmount for today based on createdAt
     const result = await pedienteCollection
       .aggregate([
         {
           $addFields: {
-            DatePediente: { $toDate: "$DatePediente" }, // Ensure DatePediente field is treated as Date
-            BalanceAmount: { $toDouble: "$BalanceAmount" }, // Convert GrossSales to number
+            createdAt: { $toDate: "$createdAt" }, // Ensure createdAt field is treated as Date
+            BalanceAmount: { $toDouble: "$BalanceAmount" }, // Convert BalanceAmount to number
           },
         },
-        { $match: matchCondition },
+        { $match: matchCondition }, // Match documents based on the condition
         {
           $group: {
-            _id: null, // Sum the GrossSales
-            totalBalanceToday: { $sum: "$BalanceAmount" },
+            _id: null, // Group all records to calculate the sum
+            totalBalanceToday: { $sum: "$BalanceAmount" }, // Sum of BalanceAmount
           },
         },
       ])
       .toArray();
+
+    console.log("Query Result: ", result); // Log query result for debugging
 
     const BalanceToday = result.length > 0 ? result[0].totalBalanceToday : 0;
 

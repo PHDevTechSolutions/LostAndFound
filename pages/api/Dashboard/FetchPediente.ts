@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const db = await connectToDatabase();
-    const pedienteCollection = db.collection("pediente");
+    const pedienteCollection = db.collection("container_order");
 
     const { location, role, month, year } = req.query;
 
@@ -25,20 +25,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const endDate = new Date(startDate);
       endDate.setMonth(endDate.getMonth() + 1);
 
-      dateFilter.DatePediente = { $gte: startDate, $lt: endDate };
+      dateFilter.createdAt = { $gte: startDate, $lt: endDate };
     } else if (year !== "All") {
       const startDate = new Date(`${year}-01-01`);
       const endDate = new Date(`${parseInt(year as string) + 1}-01-01`);
 
-      dateFilter.DatePediente = { $gte: startDate, $lt: endDate };
+      dateFilter.createdAt = { $gte: startDate, $lt: endDate };
     } else if (month !== "All") {
       const startDate = new Date(`2000-${month}-01`);
       const endDate = new Date(startDate);
       endDate.setMonth(endDate.getMonth() + 1);
 
-      dateFilter.DatePediente = { $gte: startDate, $lt: endDate };
+      dateFilter.createdAt = { $gte: startDate, $lt: endDate };
     } else {
-      dateFilter.DatePediente = { $gte: yesterday, $lt: today }; // Default filter (kahapon)
+      dateFilter.createdAt = { $gte: yesterday, $lt: today }; // Default filter (kahapon)
     }
 
     const matchCondition: any = { ...dateFilter };
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .aggregate([
         {
           $addFields: {
-            DatePediente: { $toDate: "$DatePediente" },
+            createdAt: { $toDate: "$createdAt" },
             BalanceAmount: { $toDouble: "$BalanceAmount" },
           },
         },
@@ -89,15 +89,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (result.length === 0) {
       const lastAvailableData = await pedienteCollection
-        .find({ DatePediente: { $lt: today } })
-        .sort({ DatePediente: -1 })
+        .find({ createdAt: { $lt: today } })
+        .sort({ createdAt: -1 })
         .limit(1)
         .toArray();
 
       if (lastAvailableData.length > 0) {
         return res.status(200).json({
           previousBalance: parseFloat(lastAvailableData[0].BalanceAmount) || 0,
-          message: `No data for yesterday. Using last available data from ${lastAvailableData[0].DatePediente}.`,
+          message: `No data for yesterday. Using last available data from ${lastAvailableData[0].createdAt}.`,
         });
       }
 
