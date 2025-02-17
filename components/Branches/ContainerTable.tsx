@@ -94,7 +94,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
               className={`relative ${cardClasses} border rounded-xl shadow-md p-4 transition-all duration-500 ease-in-out`}
             >
               {/* Card Header */}
-              <div className="bg-gray-100 p-3 shadow-lg rounded-lg flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <h3 className="text-xs font-semibold text-gray-800 text-center">
                   {post.SpsicNo}
                 </h3>
@@ -107,7 +107,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
               </div>
 
               {/* Card Body */}
-              <div className="p-3 text-xs capitalize">
+              <div className="pt-4 text-xs capitalize">
                 <p>
                   <strong>Arrived:</strong> {post.DateArrived} |{" "}
                   <strong>Soldout:</strong> {post.DateSoldout}
@@ -138,15 +138,8 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
 
               {/* Card Footer */}
 
-              <div className="bg-gray-100 p-3 shadow-lg rounded-b-lg text-center text-xs" >
-                <div
-                  className="h-2 rounded-full"
-                  style={{
-                    width: `${((post.TotalQuantity - post.Boxes) / post.TotalQuantity) * 100}%`,
-                    backgroundColor: post.Status === "Soldout" ? "#F97316" : post.Status === "Inventory" ? "#3B82F6" : "#D1D5DB",
-                    transition: "width 0.5s ease-in-out", // Animation for smooth transition
-                  }}
-                ></div>
+              <div className="pt-4 text-left text-xs" >
+                <div className="border-t border-gray-800 mb-2"></div>
                 <p className="font-bold mt-1">{post.Status}</p>
               </div>
 

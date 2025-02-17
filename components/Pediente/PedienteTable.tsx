@@ -21,9 +21,16 @@ interface Post {
     PaymentMode: string;
 }
 
+const STATUS_COLORS: { [key: string]: string } = {
+    "New Debt": "border-gray-300",
+    "Paid Balance": "border-yellow-300",
+    "Fully Paid": "border-green-300",
+};
+
 interface PedienteTableProps {
     posts: Post[];
     handleEdit: (post: Post) => void;
+    handleStatusUpdate: (postId: string, newStatus: string) => void;
     Role: string;
     Location: string;
 }
@@ -42,14 +49,24 @@ const formatCurrency = (amount: number): string => {
     return `₱${parseFloat(amount.toString()).toLocaleString()}`;
 };
 
-const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Location, handleEdit }) => {
+const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Location, handleEdit, handleStatusUpdate }) => {
     const [menuVisible, setMenuVisible] = useState<{ [key: string]: boolean }>({});
+    const [statusMenuVisible, setStatusMenuVisible] = useState<{ [key: string]: boolean }>({});
 
     const toggleMenu = (id: string) => {
         setMenuVisible(prevState => ({
             ...prevState,
             [id]: !prevState[id],
         }));
+    };
+
+    const toggleStatusMenu = (postId: string) => {
+        setStatusMenuVisible((prev) => ({ ...prev, [postId]: !prev[postId] }));
+    };
+
+    const updateStatus = (postId: string, newStatus: string) => {
+        handleStatusUpdate(postId, newStatus);
+        setStatusMenuVisible({});
     };
 
     const updatedPosts = useMemo(() => {
@@ -69,7 +86,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
             const boxSales = Number(post.BoxSales) || 0;
             const grossSales = parseFloat(post.GrossSales) || 0;
             const payAmount = parseFloat(post.PayAmount) || 0;
-    
+
             grandTotalQty += boxSales;
             grandTotalDebt += grossSales;
             grandTotalPayment += payAmount;
@@ -86,14 +103,14 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
     return (
         <div>
             {/* Pass the grand totals as props to the Form component */}
-            <Form beginningBalance={0} totalAmount={grandTotalDebt} totalPayment={grandTotalPayment} totalBalance={grandTotalBalance}/>
+            <Form beginningBalance={0} totalAmount={grandTotalDebt} totalPayment={grandTotalPayment} totalBalance={grandTotalBalance} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
                 {Object.entries(groupedPosts).map(([buyer, buyerPosts]) => {
                     const totalQty = buyerPosts.reduce((acc, post) => acc + (Number(post.BoxSales) || 0), 0);
                     const totalDebt = buyerPosts.reduce((acc, post) => acc + parseFloat(post.GrossSales), 0);
                     const totalPayment = buyerPosts.reduce((acc, post) => acc + parseFloat(post.PayAmount), 0);
                     const totalBalance = buyerPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) - parseFloat(post.PayAmount)), 0);
-
+                    
                     return (
                         <div key={buyer} className="relative border-b-2 rounded-md shadow-md p-4 flex flex-col mb-2">
                             <div className="flex justify-between items-center">
@@ -103,8 +120,9 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
                             <div className="mt-4 text-xs capitalize flex-grow grid grid-cols-4 gap-2">
                                 {buyerPosts.map((post) => {
                                     const balance = parseFloat(post.GrossSales) - parseFloat(post.PayAmount); // Calculate balance for each post
+                                    const cardClasses = STATUS_COLORS[post.Status] || "bg-white border-gray-200";
                                     return (
-                                        <div key={post._id} className="mb-4 border p-4 rounded-md bg-white shadow-sm relative"> {/* Added relative positioning here */}
+                                        <div key={post._id} className={`relative border rounded-md shadow-md p-4 flex flex-col mb-2 ${cardClasses}`}>
                                             <div className="flex justify-between items-center mb-2">
                                                 <h4 className="text-xs font-semibold text-gray-800 text-left">Container No. {post.ContainerNo}</h4>
                                                 <button className="text-gray-500 hover:text-gray-800" onClick={() => toggleMenu(post._id)}>
@@ -126,7 +144,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
                                                 </div>
                                             </div>
 
-                                            <div className="mt-4 border-t pt-2 text-xs text-gray-600 flex justify-between items-center">
+                                            <div className="mt-4 border-t border-gray-900 pt-2 text-xs text-gray-900 flex justify-between items-center">
                                                 <span><strong>Status:</strong> {post.Status}</span>
                                             </div>
 
@@ -134,6 +152,19 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
                                             {menuVisible[post._id] && (
                                                 <div className="absolute right-4 top-12 bg-white shadow-lg rounded-lg border w-32 z-10 text-xs">
                                                     <button onClick={() => handleEdit(post)} className="w-full px-4 py-2 hover:bg-gray-100 text-left">Edit</button>
+                                                    <button onClick={() => toggleStatusMenu(post._id)} className="w-full px-4 py-2 hover:bg-gray-100 text-left">Change Status</button>
+                                                </div>
+                                            )}
+
+                                            {/* Status Change Menu */}
+                                            {statusMenuVisible[post._id] && (
+                                                <div className="absolute right-16 top-20 bg-white shadow-lg rounded-lg border w-50 z-20 text-xs">
+                                                    {Object.keys(STATUS_COLORS).map((status) => (
+                                                        <button key={status} onClick={() => updateStatus(post._id, status)} className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                            <span className={`w-3 h-3 rounded-full border border-black ${STATUS_COLORS[status].split(" ")[0]}`}></span>
+                                                            {status}
+                                                        </button>
+                                                    ))}
                                                 </div>
                                             )}
                                         </div>

@@ -42,6 +42,31 @@ const PedientePage: React.FC = () => {
         setShowForm(true);
     };
 
+    const handleStatusUpdate = async (id: string, newStatus: string) => {
+        try {
+            const response = await fetch("/api/Pediente/UpdateStatus", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, Status: newStatus }),
+            });
+
+            if (response.ok) {
+                setPosts((prevPosts) =>
+                    prevPosts.map((post) =>
+                        post._id === id ? { ...post, Status: newStatus } : post
+                    )
+                );
+                toast.success("Status updated successfully.");
+            } else {
+                const errorData = await response.json();
+                toast.error(errorData.error || "Failed to update status.");
+            }
+        } catch (error) {
+            toast.error("Failed to update status.");
+            console.error("Error updating status:", error);
+        }
+    };
+
     // Pagination logic
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -74,6 +99,7 @@ const PedientePage: React.FC = () => {
                                                 Role={user ? user.Role : ""}
                                                 Location={user ? user.Location : ""}
                                                 handleEdit={handleEdit}
+                                                handleStatusUpdate={handleStatusUpdate}
                                             />
                                         </div>
                                     </>
