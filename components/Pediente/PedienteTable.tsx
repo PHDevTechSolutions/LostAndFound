@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import Form from "./Form";
 import { BsThreeDotsVertical } from "react-icons/bs"; // For the 3 dots icon
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 interface Post {
     _id: string;
@@ -100,17 +102,122 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
     grandTotalPayment = isNaN(grandTotalPayment) ? 0 : grandTotalPayment;
     grandTotalBalance = isNaN(grandTotalBalance) ? 0 : grandTotalBalance;
 
+    const exportToExcel = async () => {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Pendiente");
+    
+        // Define columns
+        worksheet.columns = [
+            { header: "Date Order", key: "DateOrder", width: 15 },
+            { header: "Buyer Name", key: "BuyersName", width: 20 },
+            { header: "Place of Sales", key: "PlaceSales", width: 20 },
+            { header: "Container No", key: "ContainerNo", width: 15 },
+            { header: "Commodity", key: "Commodity", width: 20 },
+            { header: "Size", key: "Size", width: 10 },
+            { header: "Box Sales", key: "BoxSales", width: 10 },
+            { header: "Price", key: "Price", width: 15 },
+            { header: "Gross Sales", key: "GrossSales", width: 15 },
+            { header: "Payment Amount", key: "PayAmount", width: 15 },
+            { header: "Balance Amount", key: "BalanceAmount", width: 15 },
+            { header: "Status", key: "Status", width: 15 },
+            { header: "Location", key: "Location", width: 15 },
+            { header: "Payment Mode", key: "PaymentMode", width: 15 }
+        ];
+    
+        // Initialize grand total counters
+        let grandTotalDebt = 0;
+        let grandTotalPayment = 0;
+        let grandTotalBalance = 0;
+    
+        // Group data by BuyersName
+        Object.entries(groupByBuyer(updatedPosts)).forEach(([buyer, buyerPosts]) => {
+            let totalDebt = 0;
+            let totalPayment = 0;
+            let totalBalance = 0;
+    
+            buyerPosts.forEach(post => {
+                const grossSales = parseFloat(post.GrossSales) || 0;
+                const payAmount = parseFloat(post.PayAmount) || 0;
+                const balance = grossSales - payAmount;
+    
+                totalDebt += grossSales;
+                totalPayment += payAmount;
+                totalBalance += balance;
+    
+                worksheet.addRow(post);
+            });
+    
+            // Update grand totals
+            grandTotalDebt += totalDebt;
+            grandTotalPayment += totalPayment;
+            grandTotalBalance += totalBalance;
+    
+            // Add subtotal row for each buyer
+            worksheet.addRow({
+                BuyersName: `${buyer} (Subtotal)`,
+                GrossSales: totalDebt,
+                PayAmount: totalPayment,
+                BalanceAmount: totalBalance
+            });
+    
+            // Style subtotal row
+            const lastRow = worksheet.lastRow;
+            if (lastRow) {
+                lastRow.eachCell(cell => {
+                    cell.font = { bold: true };
+                    cell.alignment = { horizontal: "right" };
+                });
+            }
+    
+            // Add an empty row for spacing
+            worksheet.addRow({});
+        });
+    
+        // Add Grand Total row at the end
+        worksheet.addRow({
+            BuyersName: "GRAND TOTAL",
+            GrossSales: grandTotalDebt,
+            PayAmount: grandTotalPayment,
+            BalanceAmount: grandTotalBalance
+        });
+    
+        // Style the Grand Total row
+        const grandTotalRow = worksheet.lastRow;
+        if (grandTotalRow) {
+            grandTotalRow.eachCell(cell => {
+                cell.font = { bold: true, size: 12 };
+                cell.alignment = { horizontal: "right" };
+                cell.fill = {
+                    type: "pattern",
+                    pattern: "solid",
+                    fgColor: { argb: "FFFF00" } // Yellow background
+                };
+            });
+        }
+    
+        // Save the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const today = new Date();
+        const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        const fileName = `JJ-Ventures-Frozen-Pendiente-${formattedDate}.xlsx`;
+    
+        saveAs(new Blob([buffer]), fileName);
+    };
+    
+    
     return (
         <div>
             {/* Pass the grand totals as props to the Form component */}
+            <button onClick={exportToExcel} className="bg-green-800 text-white px-4 py-2 rounded mb-4 text-xs">Export to Excel</button>
             <Form beginningBalance={0} totalAmount={grandTotalDebt} totalPayment={grandTotalPayment} totalBalance={grandTotalBalance} />
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
                 {Object.entries(groupedPosts).map(([buyer, buyerPosts]) => {
                     const totalQty = buyerPosts.reduce((acc, post) => acc + (Number(post.BoxSales) || 0), 0);
                     const totalDebt = buyerPosts.reduce((acc, post) => acc + parseFloat(post.GrossSales), 0);
                     const totalPayment = buyerPosts.reduce((acc, post) => acc + parseFloat(post.PayAmount), 0);
                     const totalBalance = buyerPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) - parseFloat(post.PayAmount)), 0);
-                    
+
                     return (
                         <div key={buyer} className="relative border-b-2 rounded-md shadow-md p-4 flex flex-col mb-2">
                             <div className="flex justify-between items-center">
