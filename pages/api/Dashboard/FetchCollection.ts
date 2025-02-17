@@ -15,56 +15,59 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to start of the day
 
-    const matchCondition: any = { createdAt: { $gte: today } };
+    const matchCondition: any = {
+      createdAt: { $gte: today }, // Filter by today's date
+      PaymentMode: "PDC", // Only sum records with PaymentMode "PDC"
+    };
 
+    // Location-based filtering
     if (location === "Philippines") {
       // No location filter applied, showing data from all locations
-      // Do nothing in terms of filtering Location here
     } else if (location && location !== "All") {
       // Apply location filter if specified and not "All"
       matchCondition.Location = location;
     }
 
-    // Check if user is Super Admin or Director
+    // Role-based location filtering
     if (role === "Super Admin" || role === "Directors") {
-      // Super Admin and Directors can see all locations if "All" is selected
       if (location && location !== "All" && location !== "Philippines") {
-        // Apply location filter if a location other than 'Philippines' is specified
-        matchCondition.Location = location;
+        matchCondition.Location = location; // Apply location filter if not Philippines
       }
     } else {
-      // For other roles (Admin, Staff, etc.), restrict by location if not "All"
       if (location && location === "All") {
         // Show all locations if "All" is selected for other roles
-        // No additional filter is added, so all locations will be included
       } else if (location && location !== "Philippines") {
-        // Apply location filter for other roles if a specific location is selected
-        matchCondition.Location = location;
+        matchCondition.Location = location; // Apply location filter for other roles
       }
     }
 
-    // Fetch total GrossSales for today based on DatePediente
+    // Fetch total PayAmount for today where PaymentMode is "PDC"
     const result = await pedienteCollection
       .aggregate([
         {
           $addFields: {
-            createdAt: { $toDate: "$createdAt" }, // Ensure DatePediente field is treated as Date
-            PayAmount: { $ifNull: [{ $toDouble: { $cond: { if: { $eq: ["$PayAmount", ""] }, then: 0, else: "$PayAmount" } } }, 0] }, // Provide a default value of 0 if PayAmount is null or empty
+            createdAt: { $toDate: "$createdAt" }, // Ensure createdAt field is treated as Date
+            PayAmount: {
+              $ifNull: [
+                { $toDouble: { $cond: { if: { $eq: ["$PayAmount", ""] }, then: 0, else: "$PayAmount" } } },
+                0,
+              ], // Ensure PayAmount is treated as number, default to 0 if empty
+            },
           },
         },
-        { $match: matchCondition },
+        { $match: matchCondition }, // Apply match condition (date, location, and PaymentMode)
         {
           $group: {
-            _id: null, // Sum the GrossSales
-            totalCollectionToday: { $sum: "$PayAmount" },
+            _id: null, // Group all records to calculate the sum
+            totalCollectionToday: { $sum: "$PayAmount" }, // Sum of PayAmount
           },
         },
       ])
       .toArray();
 
-    const CollectionToday = result.length > 0 ? result[0].totalCollectionToday : 0;
+    const totalCollectionToday = result.length > 0 ? result[0].totalCollectionToday : 0;
 
-    res.status(200).json({ totalCollectionToday: CollectionToday });
+    res.status(200).json({ totalCollectionToday });
   } catch (error) {
     console.error("Error fetching receivable data:", error);
     res.status(500).json({ success: false, message: "Error fetching receivable data", error });

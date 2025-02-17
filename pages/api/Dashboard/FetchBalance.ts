@@ -20,11 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const endOfDay = new Date(today);
     endOfDay.setHours(23, 59, 59, 999); // End of today (end of day)
 
-    console.log("Date Range: ", today, endOfDay); // Log date range for debugging
-
     // Define the match condition for the date range
     const matchCondition: any = {
       createdAt: { $gte: today, $lte: endOfDay }, // Match records within today's date range
+      PaymentMode: "PDC", // Filter for "PDC" PaymentMode
     };
 
     // Location filter logic
@@ -34,22 +33,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       matchCondition.Location = location; // Apply location filter if specified
     }
 
-    // Check if user is Super Admin or Director
+    // Role-based location filtering
     if (role === "Super Admin" || role === "Directors") {
       if (location && location !== "All" && location !== "Philippines") {
-        matchCondition.Location = location; // Apply location filter
+        matchCondition.Location = location; // Apply location filter for Super Admin and Directors
       }
     } else {
       if (location && location === "All") {
         // No additional filter added for "All"
       } else if (location && location !== "Philippines") {
-        matchCondition.Location = location; // Apply location filter
+        matchCondition.Location = location; // Apply location filter for other roles
       }
     }
 
-    console.log("Match Condition: ", matchCondition); // Log match condition for debugging
-
-    // Fetch total BalanceAmount for today based on createdAt
+    // Fetch total BalanceAmount for today based on createdAt and PaymentMode
     const result = await pedienteCollection
       .aggregate([
         {
@@ -58,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             BalanceAmount: { $toDouble: "$BalanceAmount" }, // Convert BalanceAmount to number
           },
         },
-        { $match: matchCondition }, // Match documents based on the condition
+        { $match: matchCondition }, // Apply match condition (date, location, and PaymentMode)
         {
           $group: {
             _id: null, // Group all records to calculate the sum
@@ -67,8 +64,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ])
       .toArray();
-
-    console.log("Query Result: ", result); // Log query result for debugging
 
     const BalanceToday = result.length > 0 ? result[0].totalBalanceToday : 0;
 

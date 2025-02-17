@@ -15,11 +15,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to start of the day
 
-    const matchCondition: any = { createdAt: { $gte: today } };
+    // Define the base match condition for the date range
+    const matchCondition: any = {
+      createdAt: { $gte: today },
+      PaymentMode: "PDC", // Add condition to filter by PaymentMode "PDC"
+    };
 
+    // Apply location filter based on role and location
     if (location === "Philippines") {
       // No location filter applied, showing data from all locations
-      // Do nothing in terms of filtering Location here
     } else if (location && location !== "All") {
       // Apply location filter if specified and not "All"
       matchCondition.Location = location;
@@ -29,34 +33,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (role === "Super Admin" || role === "Directors") {
       // Super Admin and Directors can see all locations if "All" is selected
       if (location && location !== "All" && location !== "Philippines") {
-        // Apply location filter if a location other than 'Philippines' is specified
-        matchCondition.Location = location;
+        matchCondition.Location = location; // Apply location filter
       }
     } else {
       // For other roles (Admin, Staff, etc.), restrict by location if not "All"
       if (location && location === "All") {
         // Show all locations if "All" is selected for other roles
-        // No additional filter is added, so all locations will be included
       } else if (location && location !== "Philippines") {
-        // Apply location filter for other roles if a specific location is selected
-        matchCondition.Location = location;
+        matchCondition.Location = location; // Apply location filter
       }
     }
 
-    // Fetch total GrossSales for today based on DatePediente
+    // Fetch total GrossSales for today with PaymentMode "PDC"
     const result = await pedienteCollection
       .aggregate([
         {
           $addFields: {
-            createdAt: { $toDate: "$createdAt" }, // Ensure DatePediente field is treated as Date
+            createdAt: { $toDate: "$createdAt" }, // Ensure createdAt field is treated as Date
             GrossSales: { $toDouble: "$GrossSales" }, // Convert GrossSales to number
           },
         },
-        { $match: matchCondition },
+        { $match: matchCondition }, // Match records based on the condition
         {
           $group: {
-            _id: null, // Sum the GrossSales
-            totalGrossSalesToday: { $sum: "$GrossSales" },
+            _id: null, // Group all records to calculate the sum
+            totalGrossSalesToday: { $sum: "$GrossSales" }, // Sum of GrossSales
           },
         },
       ])
