@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     today.setHours(0, 0, 0, 0); // Set to start of the day
 
     const matchCondition: any = {
-      createdAt: { $gte: today }, // Filter by today's date
+      DateOrder: { $gte: today }, // Filter by today's date
       PaymentMode: "PDC", // Only sum records with PaymentMode "PDC"
     };
 
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .aggregate([
         {
           $addFields: {
-            createdAt: { $toDate: "$createdAt" }, // Ensure createdAt field is treated as Date
+            DateOrder: { $toDate: "$DateOrder" }, // Ensure createdAt field is treated as Date
             PayAmount: {
               $ifNull: [
                 { $toDouble: { $cond: { if: { $eq: ["$PayAmount", ""] }, then: 0, else: "$PayAmount" } } },

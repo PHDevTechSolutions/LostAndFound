@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Define the match condition for the date range
     const matchCondition: any = {
-      createdAt: { $gte: today, $lte: endOfDay }, // Match records within today's date range
+      DateOrder: { $gte: today, $lte: endOfDay }, // Match records within today's date range
       PaymentMode: "PDC", // Filter for "PDC" PaymentMode
     };
 
@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .aggregate([
         {
           $addFields: {
-            createdAt: { $toDate: "$createdAt" }, // Ensure createdAt field is treated as Date
+            DateOrder: { $toDate: "$DateOrder" }, // Ensure createdAt field is treated as Date
             BalanceAmount: { $toDouble: "$BalanceAmount" }, // Convert BalanceAmount to number
           },
         },

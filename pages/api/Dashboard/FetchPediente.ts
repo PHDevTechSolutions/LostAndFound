@@ -25,20 +25,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const endDate = new Date(startDate);
       endDate.setMonth(endDate.getMonth() + 1);
 
-      dateFilter.createdAt = { $gte: startDate, $lt: endDate };
+      dateFilter.DateOrder = { $gte: startDate, $lt: endDate };
     } else if (year !== "All") {
       const startDate = new Date(`${year}-01-01`);
       const endDate = new Date(`${parseInt(year as string) + 1}-01-01`);
 
-      dateFilter.createdAt = { $gte: startDate, $lt: endDate };
+      dateFilter.DateOrder = { $gte: startDate, $lt: endDate };
     } else if (month !== "All") {
       const startDate = new Date(`2000-${month}-01`);
       const endDate = new Date(startDate);
       endDate.setMonth(endDate.getMonth() + 1);
 
-      dateFilter.createdAt = { $gte: startDate, $lt: endDate };
+      dateFilter.DateOrder = { $gte: startDate, $lt: endDate };
     } else {
-      dateFilter.createdAt = { $gte: yesterday, $lt: today }; // Default filter (kahapon)
+      dateFilter.DateOrder = { $gte: yesterday, $lt: today }; // Default filter (kahapon)
     }
 
     const matchCondition: any = { ...dateFilter };
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .aggregate([
         {
           $addFields: {
-            createdAt: { $toDate: "$createdAt" },
+            DateOrder: { $toDate: "$DateOrder" },
             BalanceAmount: { $toDouble: "$BalanceAmount" },
           },
         },
@@ -89,15 +89,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (result.length === 0) {
       const lastAvailableData = await pedienteCollection
-        .find({ createdAt: { $lt: today } })
-        .sort({ createdAt: -1 })
+        .find({ DateOrder: { $lt: today } })
+        .sort({ DateOrder: -1 })
         .limit(1)
         .toArray();
 
       if (lastAvailableData.length > 0) {
         return res.status(200).json({
           previousBalance: parseFloat(lastAvailableData[0].BalanceAmount) || 0,
-          message: `No data for yesterday. Using last available data from ${lastAvailableData[0].createdAt}.`,
+          message: `No data for yesterday. Using last available data from ${lastAvailableData[0].DateOrder}.`,
         });
       }
 
