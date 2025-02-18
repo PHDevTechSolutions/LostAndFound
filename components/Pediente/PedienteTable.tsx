@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Form from "./Form";
 import { BsThreeDotsVertical } from "react-icons/bs"; // For the 3 dots icon
 import ExcelJS from "exceljs";
@@ -64,6 +64,7 @@ const formatCurrency = (amount: number): string => {
     return `₱${parseFloat(amount.toString()).toLocaleString()}`;
 };
 
+
 const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Location, handleEdit, handleStatusUpdate }) => {
     const [menuVisible, setMenuVisible] = useState<{ [key: string]: boolean }>({});
     const [statusMenuVisible, setStatusMenuVisible] = useState<{ [key: string]: boolean }>({});
@@ -89,77 +90,6 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
         handleStatusUpdate(postId, newStatus);
         setStatusMenuVisible({});
     };
-
-    const filteredPosts = useMemo(() => {
-        return posts.filter(post => {
-            const postDate = new Date(post.DateOrder).toISOString().split('T')[0]; // Format post date as YYYY-MM-DD
-            return (
-                post.PaymentMode === "PDC" &&
-                post.Location === Location &&
-                post.BuyersName.toUpperCase().includes(searchTerm) &&
-                (dateRange.start ? postDate >= dateRange.start : true) &&
-                (dateRange.end ? postDate <= dateRange.end : true)
-            );
-        });
-    }, [posts, Location, searchTerm, dateRange]);
-
-    const groupedPosts = groupByBuyer(filteredPosts);
-    const sortedGroupedPosts = sortByLatestDate(groupedPosts);
-
-    const getBeginningBalance = (posts: Post[], currentDate: string) => {
-        // Convert currentDate to a Date object
-        let selectedDate = new Date(currentDate);
-        
-        // Set to the previous day
-        selectedDate.setDate(selectedDate.getDate() - 1); 
-        const previousDateStr = selectedDate.toISOString().split('T')[0]; // Get the previous day in YYYY-MM-DD format
-        
-        // Filter posts for the previous day where PaymentMode is "PDC"
-        const previousDayPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === previousDateStr);
-      
-        // If there are no posts for the previous day, return 0 or some default value
-        if (previousDayPosts.length === 0) {
-          return 0; // Or return null, depending on how you want to handle this case
-        }
-      
-        // Sum up the GrossSales for the found previous day's posts and return it
-        return previousDayPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) || 0), 0);
-      };
-      
-      // Get the current date dynamically
-      const currentDate = new Date().toISOString().split('T')[0]; // This will use today's date in YYYY-MM-DD format
-      
-      // Get beginning balance for the selected date dynamically
-      const beginningBalance = getBeginningBalance(posts, currentDate);
-      
-      // Output the result (for example purposes)
-      console.log(`Beginning Balance for ${currentDate}:`, beginningBalance);
-      
-
-    // Calculate Grand Totals
-    let grandTotalQty = 0;
-    let grandTotalDebt = 0;
-    let grandTotalPayment = 0;
-    let grandTotalBalance = 0;
-
-    Object.entries(groupedPosts).forEach(([buyer, buyerPosts]) => {
-        buyerPosts.forEach(post => {
-            const boxSales = Number(post.BoxSales) || 0;
-            const grossSales = parseFloat(post.GrossSales) || 0;
-            const payAmount = parseFloat(post.PayAmount) || 0;
-
-            grandTotalQty += boxSales;
-            grandTotalDebt += grossSales;
-            grandTotalPayment += payAmount;
-            grandTotalBalance += grossSales - payAmount;
-        });
-    });
-
-    // Ensure that NaN values are replaced with 0
-    grandTotalQty = isNaN(grandTotalQty) ? 0 : grandTotalQty;
-    grandTotalDebt = isNaN(grandTotalDebt) ? 0 : grandTotalDebt;
-    grandTotalPayment = isNaN(grandTotalPayment) ? 0 : grandTotalPayment;
-    grandTotalBalance = isNaN(grandTotalBalance) ? 0 : grandTotalBalance;
 
     const exportToExcel = async () => {
         const workbook = new ExcelJS.Workbook();
@@ -269,6 +199,86 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
             [buyer]: !prev[buyer],
         }));
     };
+    
+
+    const filteredPosts = useMemo(() => {
+        return posts.filter(post => {
+            const postDate = new Date(post.DateOrder).toISOString().split('T')[0]; // Format post date as YYYY-MM-DD
+            return (
+                post.PaymentMode === "PDC" &&
+                post.Location === Location &&
+                post.BuyersName.toUpperCase().includes(searchTerm) &&
+                (dateRange.start ? postDate >= dateRange.start : true) &&
+                (dateRange.end ? postDate <= dateRange.end : true)
+            );
+        });
+    }, [posts, Location, searchTerm, dateRange]);
+
+    const groupedPosts = groupByBuyer(filteredPosts);
+    const sortedGroupedPosts = sortByLatestDate(groupedPosts);
+
+    const getBeginningBalance = (posts: Post[], selectedDate: string) => {
+        // Check if the selectedDate is empty or invalid
+        const dateObj = new Date(selectedDate);
+        if (isNaN(dateObj.getTime())) {
+            return 0; // Return 0 if invalid date
+        }
+    
+        // Adjust the date by subtracting 1 day
+        dateObj.setDate(dateObj.getDate() - 1);
+        const previousDateStr = dateObj.toISOString().split('T')[0]; // Get the previous day in YYYY-MM-DD format
+        
+        // Filter posts for the previous day where PaymentMode is "PDC"
+        const previousDayPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === previousDateStr);
+      
+        // If no posts found for the previous day, return 0
+        if (previousDayPosts.length === 0) {
+            return 0; // Or handle differently
+        }
+    
+        // Sum up the GrossSales for the found posts from the previous day
+        return previousDayPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) || 0), 0);
+    };
+    
+    
+    // Get the current date dynamically
+    const currentDate = new Date().toISOString().split('T')[0]; // This will use today's date in YYYY-MM-DD format
+
+    useEffect(() => {
+        // Set the initial date range to today
+        setDateRange({
+            start: currentDate,
+            end: currentDate
+        });
+    }, []);
+    
+    // Get beginning balance for the selected date dynamically
+    const beginningBalance = getBeginningBalance(posts, dateRange.start);
+
+    // Calculate Grand Totals
+    let grandTotalQty = 0;
+    let grandTotalDebt = 0;
+    let grandTotalPayment = 0;
+    let grandTotalBalance = 0;
+
+    Object.entries(groupedPosts).forEach(([buyer, buyerPosts]) => {
+        buyerPosts.forEach(post => {
+            const boxSales = Number(post.BoxSales) || 0;
+            const grossSales = parseFloat(post.GrossSales) || 0;
+            const payAmount = parseFloat(post.PayAmount) || 0;
+
+            grandTotalQty += boxSales;
+            grandTotalDebt += grossSales;
+            grandTotalPayment += payAmount;
+            grandTotalBalance += grossSales - payAmount;
+        });
+    });
+
+    // Ensure that NaN values are replaced with 0
+    grandTotalQty = isNaN(grandTotalQty) ? 0 : grandTotalQty;
+    grandTotalDebt = isNaN(grandTotalDebt) ? 0 : grandTotalDebt;
+    grandTotalPayment = isNaN(grandTotalPayment) ? 0 : grandTotalPayment;
+    grandTotalBalance = isNaN(grandTotalBalance) ? 0 : grandTotalBalance;
 
     return (
         <div>
