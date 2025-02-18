@@ -217,7 +217,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
     const groupedPosts = groupByBuyer(filteredPosts);
     const sortedGroupedPosts = sortByLatestDate(groupedPosts);
 
-    const getBeginningBalance = (posts: Post[], selectedDate: string) => {
+    const getBeginningBalance = (posts: Post[], selectedDate: string, Location: string) => {
         // Check if the selectedDate is empty or invalid
         const dateObj = new Date(selectedDate);
         if (isNaN(dateObj.getTime())) {
@@ -229,7 +229,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
         const previousDateStr = dateObj.toISOString().split('T')[0]; // Get the previous day in YYYY-MM-DD format
         
         // Filter posts for the previous day where PaymentMode is "PDC"
-        const previousDayPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === previousDateStr);
+        const previousDayPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === previousDateStr && post.Location === Location);
       
         // If no posts found for the previous day, return 0
         if (previousDayPosts.length === 0) {
@@ -253,7 +253,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
     }, []);
     
     // Get beginning balance for the selected date dynamically
-    const beginningBalance = getBeginningBalance(posts, dateRange.start);
+    const beginningBalance = getBeginningBalance(posts, dateRange.start, Location);
 
     // Calculate Grand Totals
     let grandTotalQty = 0;
