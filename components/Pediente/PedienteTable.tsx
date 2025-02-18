@@ -106,27 +106,32 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
     const groupedPosts = groupByBuyer(filteredPosts);
     const sortedGroupedPosts = sortByLatestDate(groupedPosts);
 
-    const currentDate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
 
     const getBeginningBalance = (posts: Post[], currentDate: string) => {
-        let selectedDate = new Date(currentDate);
-        let previousDateStr = selectedDate.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+        const previousDay = new Date(currentDate);
+        previousDay.setDate(previousDay.getDate() - 1);
+        const previousDateStr = previousDay.toISOString().split('T')[0];
 
-        // Keep going back until we find data for a previous day
-        let previousDayPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === previousDateStr);
+        // Fetch posts from the previous day
+        const previousDayPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === previousDateStr);
 
-        while (previousDayPosts.length === 0) {
-            selectedDate.setDate(selectedDate.getDate() - 1); // Go back one more day
-            previousDateStr = selectedDate.toISOString().split('T')[0]; // Update date
-            previousDayPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === previousDateStr); // Filter posts for the updated date
+        if (previousDayPosts.length > 0) {
+            // If data exists for the previous day, sum up the GrossSales
+            return previousDayPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) || 0), 0);
+        } else {
+            // If no data for the previous day, try the day before that
+            previousDay.setDate(previousDay.getDate() - 1);
+            const twoDaysAgoStr = previousDay.toISOString().split('T')[0];
+
+            const twoDaysAgoPosts = posts.filter(post => post.PaymentMode === "PDC" && post.DateOrder === twoDaysAgoStr);
+            return twoDaysAgoPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) || 0), 0);
         }
-
-        // Sum up the GrossSales for the found previous day's posts
-        return previousDayPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) || 0), 0);
     };
 
-    // Get beginning balance using filtered posts and selected date
-    const beginningBalance = getBeginningBalance(filteredPosts, currentDate);
+    const beginningBalance = getBeginningBalance(posts, yesterdayStr);
 
     // Calculate Grand Totals
     let grandTotalQty = 0;
