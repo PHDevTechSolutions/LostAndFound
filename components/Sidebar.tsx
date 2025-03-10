@@ -6,7 +6,7 @@ import { FaUsersGear, FaPlus, FaMinus } from "react-icons/fa6";
 import { IoCogSharp } from "react-icons/io5";
 import { FaRegCircle, FaSnowflake  } from "react-icons/fa";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
-
+import { BiSolidPurchaseTagAlt } from "react-icons/bi";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -89,6 +89,18 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
           href: `/Container/FrozenBoxes${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
         },
       ],
+
+    },
+    {
+      title: "Purchasing",
+      icon: BiSolidPurchaseTagAlt,
+      subItems: [
+        {
+          title: "Records",
+          href: `/Purchasing/Records${userId ? `?id=${encodeURIComponent(userId)}` : ""}`,
+        },
+      ],
+
     },
     {
       title: "Users",
@@ -121,7 +133,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
     if (userDetails.Role === "Directors") {
       // Directors can only see Dashboard, Containers, and Pendiente
       return (
-        item.title === "Containers" || item.title === "Pendiente" || item.title === "Dashboard" || item.title === "Settings"
+        item.title === "Containers" || item.title === "Frozen" || item.title === "Dashboard" || item.title === "Settings"
       );
     }
     // Admin and Super Admin can see all items

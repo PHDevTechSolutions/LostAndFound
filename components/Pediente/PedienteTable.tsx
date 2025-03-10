@@ -310,7 +310,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
                                 <h3 className="text-xs font-semibold text-gray-800 text-center uppercase">{buyer}</h3>
                             </div>
 
-                            <div className="mt-4 text-xs capitalize flex-grow grid grid-cols-4 gap-2">
+                            <div className="mt-4 text-xs capitalize flex-grow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
                                 {visiblePosts.map((post) => {
                                     const balance = parseFloat(post.GrossSales) - parseFloat(post.PayAmount); // Calculate balance for each post
                                     const cardClasses = STATUS_COLORS[post.Status] || "bg-white border-gray-200";
