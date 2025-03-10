@@ -3,7 +3,6 @@ import io from "socket.io-client";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlineLeft, AiOutlineRight, AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 
-const socket = io("http://localhost:3001");
 
 interface Post {
   _id: string;
@@ -60,10 +59,6 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
       });
     };
 
-    socket.on("newPost", newPostListener);
-    return () => {
-      socket.off("newPost", newPostListener);
-    };
   }, []);
 
   const toggleMenu = (postId: string) => {

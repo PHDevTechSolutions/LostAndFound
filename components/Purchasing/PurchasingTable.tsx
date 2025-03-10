@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 interface Post {
@@ -22,6 +22,7 @@ interface Post {
   DateApproval: string;
   Status: string;
   Remarks: string;
+  Location: string;
 }
 
 const STATUS_COLORS: { [key: string]: string } = {
@@ -34,15 +35,33 @@ interface ContainerTableProps {
   handleEdit: (post: Post) => void;
   handleDelete: (postId: string) => void;
   Role: string;
+  Location: string;
 }
 
-const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, handleDelete, Role }) => {
+const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, handleDelete, Role, Location }) => {
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    // I-filter ang posts depende sa role at location
+    const updatedPosts = posts.filter((post) => {
+      if (Role === "Staff") {
+        return post.Location === Location;
+      }
+      if (Role === "Admin") {
+        return post.Location === Location;
+      }
+      return true;
+    });
+
+    setFilteredPosts(updatedPosts);
+  }, [posts, Role, Location]);
+
   // Compute totals
-  const totalInvoiceAmount = posts.reduce((sum, post) => sum + (post.InvoiceAmount || 0), 0);
-  const totalFirstPayment = posts.reduce((sum, post) => sum + (Number(post.FirstPayment) || 0), 0);
-  const totalSecondPayment = posts.reduce((sum, post) => sum + (Number(post.SecondPayment) || 0), 0);
-  const totalThirdPayment = posts.reduce((sum, post) => sum + (Number(post.ThirdPayment) || 0), 0);
-  const totalFinalPayment = posts.reduce((sum, post) => sum + (post.FinalPayment || 0), 0);
+  const totalInvoiceAmount = filteredPosts.reduce((sum, post) => sum + (post.InvoiceAmount || 0), 0);
+  const totalFirstPayment = filteredPosts.reduce((sum, post) => sum + (Number(post.FirstPayment) || 0), 0);
+  const totalSecondPayment = filteredPosts.reduce((sum, post) => sum + (Number(post.SecondPayment) || 0), 0);
+  const totalThirdPayment = filteredPosts.reduce((sum, post) => sum + (Number(post.ThirdPayment) || 0), 0);
+  const totalFinalPayment = filteredPosts.reduce((sum, post) => sum + (post.FinalPayment || 0), 0);
   const totalPayments = totalFirstPayment + totalSecondPayment + totalThirdPayment + totalFinalPayment;
   const totalBalance = totalInvoiceAmount - totalPayments;
 
@@ -61,8 +80,8 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
           </tr>
         </thead>
         <tbody>
-          {posts.length > 0 ? (
-            posts.map((post) => {
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post) => {
               const totalPayment =
                 (Number(post.FirstPayment) || 0) +
                 (Number(post.SecondPayment) || 0) +

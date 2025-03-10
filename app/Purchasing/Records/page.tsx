@@ -199,7 +199,7 @@ const ContainerList: React.FC = () => {
                                                 handleEdit={handleEdit}
                                                 handleDelete={confirmDelete}
                                                 Role={user ? user.Role : ""}
-                                                
+                                                Location={user ? user.Location : ""}
                                             />
 
                                             <Pagination
