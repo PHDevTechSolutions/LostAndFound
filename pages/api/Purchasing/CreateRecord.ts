@@ -4,7 +4,7 @@ import { connectToDatabase } from "../../../lib/mongodb";
 // Function to add an account directly in this file
 async function addPurchasing({ 
     ReferenceNumber, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice, InvoiceAmount,
-    FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks }: {
+    FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action }: {
 
   ReferenceNumber: string;
   Location: string;
@@ -27,7 +27,7 @@ async function addPurchasing({
   DateApproval: string;
   Status: string;
   Remarks: string;
-
+  Action: string;
 
 }) {
   const db = await connectToDatabase();
@@ -35,7 +35,7 @@ async function addPurchasing({
 
   // Create container data
   const newData = { ReferenceNumber, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice,
-                    InvoiceAmount, FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, createdAt: new Date() };
+                    InvoiceAmount, FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action, createdAt: new Date() };
 
   // Insert new container data into the container collection
   await containerCollection.insertOne(newData);
@@ -51,7 +51,7 @@ async function addPurchasing({
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const { ReferenceNumber, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice, InvoiceAmount, FirstPayment, SecondPayment,
-            ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks
+            ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action
      } = req.body;
 
     // Validate required fields
@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const result = await addPurchasing({ ReferenceNumber, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice, InvoiceAmount,
-                                          FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks,
+                                          FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action
       });
       res.status(200).json(result);
     } catch (error) {

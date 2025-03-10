@@ -46,6 +46,8 @@ interface FormFieldsProps {
   setStatus: (value: string) => void;
   Remarks: string;
   setRemarks: (value: string) => void;
+  Action: string;
+  setAction: (value: string) => void;
 
   editData?: any;
 }
@@ -74,7 +76,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
   DateApproval, setDateApproval,
   Status, setStatus,
   Remarks, setRemarks,
-  
+  Action, setAction,
   editData,
 }) => {
 
@@ -198,12 +200,21 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
           <input type="date" id="DateApproval" value={DateApproval || ""} onChange={(e) => setDateApproval(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
         </div>
 
-        <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+        <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="Status">Status</label>
           <select id="Status" value={Status || ""} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
             <option value="">Select Status</option>
             <option value="With IP">With IP</option>
             <option value="TBA">TBA</option>
+          </select>
+        </div>
+
+        <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
+          <label className="block text-xs font-bold mb-2" htmlFor="Action">Action</label>
+          <select id="Action" value={Action || ""} onChange={(e) => setAction(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required>
+            <option value="">Select</option>
+            <option value="Paid">Paid</option>
+            <option value="Unpaid">Unpaid</option>
           </select>
         </div>
       </div>

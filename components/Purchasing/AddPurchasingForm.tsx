@@ -36,6 +36,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
   const [DateApproval, setDateApproval] = useState(editData?.DateApproval || "");
   const [Status, setStatus] = useState(editData?.Status || "");
   const [Remarks, setRemarks] = useState(editData?.Remarks || "");
+  const [Action, setAction] = useState(editData?.Action || "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +51,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       },
       body: JSON.stringify({
         ReferenceNumber, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice, 
-        InvoiceAmount, FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks,
+        InvoiceAmount, FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action,
         userName, 
         id: editData?._id, 
       }),
@@ -98,6 +99,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           DateApproval={DateApproval} setDateApproval={setDateApproval}
           Status={Status} setStatus={setStatus}
           Remarks={Remarks} setRemarks={setRemarks}
+          Action={Action} setAction={setAction}
 
           editData={editData}
         />

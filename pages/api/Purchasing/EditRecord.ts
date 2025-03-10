@@ -10,7 +10,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
     }
 
     const { id, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice, InvoiceAmount, FirstPayment,
-            SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks,
+            SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action,
      } = req.body;
 
     try {
@@ -18,7 +18,7 @@ export default async function editAccount(req: NextApiRequest, res: NextApiRespo
         const containerCollection = db.collection('purchasing');
         const updatedAccount = {
            Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice, InvoiceAmount, FirstPayment, SecondPayment, 
-           ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, updatedAt: new Date(),
+           ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action, updatedAt: new Date(),
         };
 
         // Update container data
