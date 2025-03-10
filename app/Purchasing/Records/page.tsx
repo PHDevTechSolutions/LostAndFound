@@ -20,19 +20,24 @@ const ContainerList: React.FC = () => {
     const [editData, setEditData] = useState<any>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState<string>("");
 
     const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
         start: "",
         end: "",
     });
 
+    const [userDetails, setUserDetails] = useState({
+        UserId: "", Firstname: "", Lastname: "", Email: "", Role: "", Location: "",
+    });
+
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(5);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const [showCreateForm, setShowCreateForm] = useState(false);
-    const [postForCreate, setPostForCreate] = useState<any>(null);
 
     // Fetch Data from the API
     const fetchDatabase = async () => {
@@ -41,6 +46,7 @@ const ContainerList: React.FC = () => {
             const data = await response.json();
             setPosts(data);
         } catch (error) {
+            setError("Error fetching accounts.");
             toast.error("Error fetching accounts.");
             console.error("Error fetching accounts:", error);
         }
@@ -50,22 +56,62 @@ const ContainerList: React.FC = () => {
         fetchDatabase();
     }, []);
 
+    useEffect(() => {
+        fetchDatabase();
+    }, []);
+
+    // Fetch user data based on query parameters (user ID)
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get("id");
+
+            if (userId) {
+                try {
+                    const response = await fetch(`/api/user?id=${encodeURIComponent(userId)}`);
+                    if (!response.ok) throw new Error("Failed to fetch user data");
+                    const data = await response.json();
+                    setUserDetails({
+                        UserId: data._id, 
+                        Firstname: data.Firstname || "",
+                        Lastname: data.Lastname || "",
+                        Email: data.Email || "",
+                        Role: data.Role || "",
+                        Location: data.Location || "",
+                    });
+                } catch (err) {
+                    console.error("Error fetching user data:", err);
+                    setError("Failed to load user data.");
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setError("User ID is missing.");
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     // Filter Data based on search term and city address
     const filteredAccounts = posts.filter((post) => {
         const inSearchTerm =
-            post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase());
-
-        const InvoiceDate = new Date(post.InvoiceDate).getTime();
-        const dateSoldout = new Date(post.DateSoldout).getTime();
+            post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.InvoiceNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    
+        const inLocation =
+            !selectedLocation || post.Location.toLowerCase() === selectedLocation.toLowerCase();
+    
+        const invoiceDate = new Date(post.InvoiceDate).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-
+    
         const inDateRange =
-            (!rangeStart || InvoiceDate >= rangeStart) &&
-            (!rangeEnd || dateSoldout <= rangeEnd);
-
-        return inSearchTerm && inDateRange;
+            (!rangeStart || invoiceDate >= rangeStart) &&
+            (!rangeEnd || invoiceDate <= rangeEnd);
+    
+        return inSearchTerm && inLocation && inDateRange;
     });
 
     // Pagination logic
@@ -111,13 +157,6 @@ const ContainerList: React.FC = () => {
             setShowDeleteModal(false);
             setPostToDelete(null);
         }
-    };
-
-    const handleCreateData = (postId: string) => {
-        const selectedPost = posts.find((post) => post._id === postId);
-        setPostForCreate(selectedPost); // Pass the selected post details
-        setShowCreateForm(true);
-        setShowForm(false); // Ensure other forms are closed
     };
 
     return (
