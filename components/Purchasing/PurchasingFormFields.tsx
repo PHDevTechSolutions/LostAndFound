@@ -89,6 +89,11 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
     setReferenceNumber(generateReferenceNumber());
   }, []);
 
+  useEffect(() => {
+    setInvoiceAmount(parseFloat((Weight * UnitPrice).toFixed(2)));
+  }, [Weight, UnitPrice, setInvoiceAmount]);
+  
+
   return (
     <>
       <div className="flex flex-wrap -mx-4">
@@ -150,7 +155,7 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
 
         <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">
           <label className="block text-xs font-bold mb-2" htmlFor="InvoiceAmount">Invoice Amount in (USD)</label>
-          <input type="number" id="InvoiceAmount" value={InvoiceAmount || ""} onChange={(e) => setInvoiceAmount(parseFloat(e.target.value) || 0)} className="w-full px-3 py-2 border rounded text-xs" />
+          <input type="number" id="InvoiceAmount" value={InvoiceAmount || 0}  className="w-full px-3 py-2 border rounded text-xs" readOnly />
         </div>
 
         <div className="w-full sm:w-1/2 md:w-1/4 px-4 mb-4">

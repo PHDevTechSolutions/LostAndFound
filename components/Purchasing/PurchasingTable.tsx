@@ -57,7 +57,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
   }, [posts, Role, Location]);
 
   // Compute totals
-  const totalInvoiceAmount = filteredPosts.reduce((sum, post) => sum + (post.InvoiceAmount || 0), 0);
+  const totalInvoiceAmount = filteredPosts.reduce((sum, post) => sum + post.InvoiceAmount, 0);
   const totalFirstPayment = filteredPosts.reduce((sum, post) => sum + (Number(post.FirstPayment) || 0), 0);
   const totalSecondPayment = filteredPosts.reduce((sum, post) => sum + (Number(post.SecondPayment) || 0), 0);
   const totalThirdPayment = filteredPosts.reduce((sum, post) => sum + (Number(post.ThirdPayment) || 0), 0);
@@ -82,13 +82,9 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
         <tbody>
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post) => {
-              const totalPayment =
-                (Number(post.FirstPayment) || 0) +
-                (Number(post.SecondPayment) || 0) +
-                (Number(post.ThirdPayment) || 0) +
-                (Number(post.FinalPayment) || 0);
-
-              const balance = (post.InvoiceAmount || 0) - totalPayment;
+              const invoiceAmount = parseFloat(post.Weight) * post.UnitPrice;
+              const totalPayment = (Number(post.FirstPayment) || 0) + (Number(post.SecondPayment) || 0) + (Number(post.ThirdPayment) || 0) + (Number(post.FinalPayment) || 0);
+              const balance = invoiceAmount - totalPayment;
 
               return (
                 <tr key={post._id} className="text-center border-b">
@@ -100,7 +96,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                   <td className="p-2 border whitespace-nowrap">{post.Freezing}</td>
                   <td className="p-2 border whitespace-nowrap">{post.Weight}</td>
                   <td className="p-2 border whitespace-nowrap">₱{post.UnitPrice.toLocaleString()}</td>
-                  <td className="p-2 border whitespace-nowrap">₱{post.InvoiceAmount.toLocaleString()}</td>
+                  <td className="p-2 border whitespace-nowrap">₱{invoiceAmount.toLocaleString()}</td>
                   <td className="p-2 border whitespace-nowrap">₱{post.FirstPayment}</td>
                   <td className="p-2 border whitespace-nowrap">₱{post.SecondPayment}</td>
                   <td className="p-2 border whitespace-nowrap">₱{post.ThirdPayment}</td>
@@ -108,7 +104,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({ posts, handleEdit, hand
                   <td className="p-2 border whitespace-nowrap font-semibold text-green-600">₱{totalPayment.toLocaleString()}</td>
                   <td className="p-2 border whitespace-nowrap">₱{post.Discount.toLocaleString()}</td>
                   <td className="p-2 border whitespace-nowrap font-semibold text-red-600">₱{balance.toLocaleString()}</td>
-                  <td className="p-2 border whitespace-nowrap">₱{post.Commission.toLocaleString()}</td>
+                  <td className="p-2 border whitespace-nowrap">₱{post.Commission}</td>
                   <td className="p-2 border whitespace-nowrap">{post.CableFee}</td>
                   <td className="p-2 border whitespace-nowrap">{post.DateApproval}</td>
                   <td className={`p-2 border whitespace-nowrap ${STATUS_COLORS[post.Status] || "text-gray-600"}`}>
