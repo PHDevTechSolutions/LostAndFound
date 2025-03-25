@@ -103,6 +103,19 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
 
     },
     {
+      title: "Company Assets",
+      icon: BiSolidPurchaseTagAlt,
+      subItems: [
+        { title: "Tools & Equipment", href: `/CompanyAssets/Assets${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "List of Assets", href: `/CompanyAssets/ListAssets${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "Sales", href: `/CompanyAssets/Sales${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "Profit & Loss", href: `/CompanyAssets/ProfitLoss${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "Production", href: `/CompanyAssets/Production${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "Daily Sales Inventory", href: `/CompanyAssets/SalesInventory${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "Summary of Tools & Equipment", href: `/CompanyAssets/ToolEquipment${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+      ],
+    },
+    {
       title: "Users",
       icon: FaUsersGear,
       subItems: [
