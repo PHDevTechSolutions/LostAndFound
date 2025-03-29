@@ -428,7 +428,7 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
 
             {activeTab === "History" ? (
                 <>
-                    <h3 className="text-sm font-bold mb-2">Transaction History</h3>
+                    <h3 className="text-sm font-bold mb-2">Transaction History's</h3>
                     {renderHistoryTable()}
                 </>
             ) : (
