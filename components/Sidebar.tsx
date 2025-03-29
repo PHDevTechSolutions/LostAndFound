@@ -113,6 +113,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
         { title: "Production", href: `/CompanyAssets/Production${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
         { title: "Daily Sales Inventory", href: `/CompanyAssets/SalesInventory${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
         { title: "Summary of Tools & Equipment", href: `/CompanyAssets/ToolEquipment${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "Petty Cash Replenishment", href: `/CompanyAssets/PettyCashReplenishment${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
       ],
     },
     {
