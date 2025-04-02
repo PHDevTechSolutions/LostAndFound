@@ -34,21 +34,90 @@ const ContainerFormFields: React.FC<FormFieldsProps> = ({
         setReferenceNumber(generateReferenceNumber());
     }, []);
 
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+
+    // Generate year range dynamically
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+
+    // Split DateRecord into month and year
+    const [selectedMonth, setSelectedMonth] = useState<string>(
+        DateRecord?.split("-")[1] || "01"
+    );
+    const [selectedYear, setSelectedYear] = useState<string>(
+        DateRecord?.split("-")[0] || currentYear.toString()
+    );
+
+    // Update DateRecord on month/year change
+    useEffect(() => {
+        const formattedDate = `${selectedYear}-${selectedMonth.padStart(2, "0")}`;
+        setDateRecord(formattedDate);
+    }, [selectedMonth, selectedYear, setDateRecord]);
+
+
 
     return (
         <>
             <div className="flex flex-wrap -mx-4">
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                    <label className="block text-xs font-bold mb-2" htmlFor="DateRecord">Date</label>
-                    <input type="date" id="DateRecord" value={DateRecord || ""} onChange={(e) => setDateRecord(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
                     <input type="hidden" id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
                     <input type="hidden" id="ReferenceNumber" value={ReferenceNumber} onChange={(e) => setReferenceNumber(e.target.value)} className="w-full px-3 py-2 border rounded text-xs uppercase" required />
+                    <label className="block text-xs font-bold mb-2" htmlFor="DateRecord">
+                        Month & Year
+                    </label>
+                    <div className="flex space-x-2">
+                        {/* Month Dropdown */}
+                        <select
+                            value={selectedMonth}
+                            onChange={(e) => setSelectedMonth(e.target.value)}
+                            className="w-1/2 px-3 py-2 border rounded text-xs"
+                        >
+                            {months.map((month, index) => (
+                                <option key={index} value={(index + 1).toString().padStart(2, "0")}>
+                                    {month}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* Year Dropdown */}
+                        <select
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(e.target.value)}
+                            className="w-1/2 px-3 py-2 border rounded text-xs"
+                        >
+                            {years.map((year) => (
+                                <option key={year} value={year.toString()}>
+                                    {year}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <input
+                        type="hidden"
+                        id="DateRecord"
+                        value={DateRecord}
+                        onChange={(e) => setDateRecord(e.target.value)}
+                    />
                 </div>
 
                 <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
                     <label className="block text-xs font-bold mb-2" htmlFor="ModeType">Type</label>
                     <select value={ModeType || ""} onChange={(e) => setModeType(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required>
                         <option value="">Select Type</option>
+                        <option value="Sales">Sales</option>
                         <option value="Purchases - Supplies">Purchases - Supplies</option>
                         <option value="Purchases - Packaging">Purchases - Packaging</option>
                         <option value="Salaries & Wages">Salaries & Wages</option>

@@ -314,8 +314,6 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
     // Assign calculated Profit (Loss) for the Period to groupedData
     groupedData["Others"]["Profit (Loss) for the Period"] = profitLossForPeriod;
 
-
-
     // ✅ Render table based on months and group with Grand Total
     const renderTableForMonths = (group: string) => {
         const dataGroup = groupedData[group];
