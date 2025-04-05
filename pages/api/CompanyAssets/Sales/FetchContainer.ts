@@ -41,6 +41,9 @@ export default async function fetchAccounts(req: NextApiRequest, res: NextApiRes
           Country: "$containerDetails.Country", // Extract the 'Country' field from the containerDetails
           BoxType: "$containerDetails.BoxType", // Extract the 'Boxes' field from the containerDetails
           Boxes: "$containerDetails.Boxes",
+          DateArrived: "$containerDetails.DateArrived",
+          DateSoldout: "$containerDetails.DateSoldout",
+          SupplierName: "$containerDetails.SupplierName",
         },
       },
     ]).toArray();

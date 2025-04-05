@@ -5,6 +5,9 @@ interface Post {
     ReferenceNumber: string;
     ContainerNo: string;
     Country: string;
+    DateArrived: string;
+    DateSoldout: string;
+    SupplierName: string;
     Commodity: string;
     BoxType: string;
     Boxes: string;
@@ -48,6 +51,9 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
             acc[groupKey] = {
                 ContainerNo: post.ContainerNo,
                 Country: post.Country,
+                DateArrived: post.DateArrived,
+                DateSoldout: post.DateSoldout,
+                SupplierName: post.SupplierName,
                 Boxes: post.Boxes,
                 Commodity: post.Commodity,
                 Size: post.Size,
@@ -128,6 +134,9 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
                     <tr>
                         {[
                             "Container No",
+                            "Date Arrived",
+                            "Date Soldout",
+                            "Supplier",
                             "Country",
                             "Boxes",
                             "Commodity",
@@ -163,6 +172,9 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
                             className="text-left border-b capitalize whitespace-nowrap"
                         >
                             <td className="p-2 border">{post.ContainerNo}</td>
+                            <td className="p-2 border">{post.DateArrived}</td>
+                            <td className="p-2 border">{post.DateSoldout}</td>
+                            <td className="p-2 border">{post.SupplierName}</td>
                             <td className="p-2 border">{post.Country}</td>
                             <td className="p-2 border">{post.BoxType}</td>
                             <td className="p-2 border">{post.Commodity}</td>
@@ -192,10 +204,9 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
                 {/* FOOTER (TOTALS) */}
                 <tfoot className="bg-gray-100 font-semibold">
                     <tr>
-                        <td colSpan={3} className="p-2 border text-right">
+                        <td colSpan={9} className="p-2 border text-right">
                             Total:
                         </td>
-                        <td colSpan={3} className="p-2 border"></td>
                         {totals.monthly.map((val: number, index: number) => (
                             <td key={index} className="p-2 border text-right">
                                 {formatCurrency(val)}
