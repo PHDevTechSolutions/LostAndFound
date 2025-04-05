@@ -4,14 +4,18 @@ interface Post {
     _id: string;
     ReferenceNumber: string;
     ContainerNo: string;
+    Country: string;
     Commodity: string;
+    BoxType: string;
+    Boxes: string;
     Size: string;
     Freezing: string;
     GrossSales: string;
     DateOrder: string;
     Location: string;
+    Price: string;
     createdAt: string;
-    PaymentMode: string; // Added PaymentMode field
+    PaymentMode: string;
 }
 
 interface ContainerTableProps {
@@ -29,49 +33,74 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
 }) => {
     const [selectedYear, setSelectedYear] = useState<string>("");
 
-    // Filter posts based on selected year, location, and PaymentMode
     const filteredPosts = posts.filter((post) => {
         const postYear = new Date(post.createdAt).getFullYear().toString();
         const isYearMatched = selectedYear ? postYear === selectedYear : true;
         const isLocationMatched =
             Role === "Staff" || Role === "Admin" ? post.Location === Location : true;
-        const isPaymentModeCash = post.PaymentMode === "Cash"; // Filter by PaymentMode
-
+        const isPaymentModeCash = post.PaymentMode === "Cash";
         return isYearMatched && isLocationMatched && isPaymentModeCash;
     });
 
-    // Group posts by ContainerNo and calculate total sales for each month
     const groupedPosts = filteredPosts.reduce((acc, post) => {
-        if (!acc[post.ContainerNo]) {
-            acc[post.ContainerNo] = {
+        const groupKey = `${post.ContainerNo}-${post.Commodity}-${post.Size}-${post.Freezing}-${post.BoxType}`;
+        if (!acc[groupKey]) {
+            acc[groupKey] = {
                 ContainerNo: post.ContainerNo,
+                Country: post.Country,
+                Boxes: post.Boxes,
                 Commodity: post.Commodity,
                 Size: post.Size,
                 Freezing: post.Freezing,
+                BoxType: post.BoxType,
+                Price: post.Price,
                 GrossSales: 0,
-                monthlySales: Array(12).fill(0), // Initialize sales array for each month (Jan-Dec)
+                monthlySales: Array(12).fill(0),
             };
         }
-
-        // Add GrossSales to the corresponding month based on DateOrder
-        const monthIndex = new Date(post.DateOrder).getMonth(); // 0 = January, 11 = December
+        const monthIndex = new Date(post.DateOrder).getMonth();
         const grossSales = parseFloat(post.GrossSales);
-
         if (!isNaN(grossSales)) {
-            acc[post.ContainerNo].monthlySales[monthIndex] += grossSales;
-            acc[post.ContainerNo].GrossSales += grossSales;
+            acc[groupKey].monthlySales[monthIndex] += grossSales;
+            acc[groupKey].GrossSales += grossSales;
         }
-
         return acc;
     }, {} as Record<string, any>);
 
-    // Convert the grouped data into an array for rendering
     const groupedPostsArray = Object.values(groupedPosts);
 
-    // Get unique years from the posts
     const years = Array.from(
-        new Set(posts.map((post) => new Date(post.createdAt).getFullYear().toString()))
+        new Set(posts.map((post) => new Date(post.DateOrder).getFullYear().toString()))
     );
+
+    const formatCurrency = (value: string | number): string => {
+        const num = typeof value === "string" ? parseFloat(value) : value;
+        return !isNaN(num)
+            ? num.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            })
+            : "-";
+    };
+
+    // Total calculation for tfoot
+    const totals = {
+        monthly: Array(12).fill(0),
+        grossSales: 0,
+        endingInventory: 0,
+        price: 0,
+        boxes: 0,
+    };
+
+    groupedPostsArray.forEach((post) => {
+        post.monthlySales.forEach((sale: number, idx: number) => {
+            totals.monthly[idx] += sale;
+        });
+        totals.grossSales += post.GrossSales;
+        totals.price += parseFloat(post.Price);
+        totals.boxes += parseFloat(post.Boxes);
+        totals.endingInventory += parseFloat(post.Price) * parseFloat(post.Boxes);
+    });
 
     return (
         <div className="overflow-x-auto">
@@ -87,17 +116,20 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
                 >
                     <option value="">All</option>
                     {years.map((year) => (
-                        <option key={year} value={year}>
+                        <option key={`year-${year}`} value={year}>
                             {year}
                         </option>
                     ))}
                 </select>
             </div>
+
             <table className="w-full bg-white border border-gray-300 shadow-md text-xs">
                 <thead className="bg-gray-100 text-gray-700 text-left whitespace-nowrap">
                     <tr>
                         {[
                             "Container No",
+                            "Country",
+                            "Boxes",
                             "Commodity",
                             "Size",
                             "Type of Freezing",
@@ -114,8 +146,11 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
                             "November",
                             "December",
                             "Total Sales",
-                        ].map((header, i) => (
-                            <th key={i} className="p-2 border">
+                            "Ending Inventory",
+                            "Price",
+                            "Ending Inventory as of Dec",
+                        ].map((header, index) => (
+                            <th key={`header-${index}`} className="p-2 border">
                                 {header}
                             </th>
                         ))}
@@ -124,22 +159,62 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
                 <tbody>
                     {groupedPostsArray.map((post) => (
                         <tr
-                            key={post._id} // Using _id as the unique key for each row
+                            key={`row-${post.ContainerNo}-${post.Commodity}-${post.Size}-${post.Freezing}-${post.BoxType}`}
                             className="text-left border-b capitalize whitespace-nowrap"
                         >
                             <td className="p-2 border">{post.ContainerNo}</td>
+                            <td className="p-2 border">{post.Country}</td>
+                            <td className="p-2 border">{post.BoxType}</td>
                             <td className="p-2 border">{post.Commodity}</td>
                             <td className="p-2 border">{post.Size}</td>
                             <td className="p-2 border">{post.Freezing}</td>
                             {post.monthlySales.map((sales: number, index: number) => (
-                                <td key={`sales-${post._id}-${index}`} className="p-2 border text-right">
-                                    {sales.toFixed(2)} {/* Displaying the sales for the specific month */}
+                                <td key={index} className="p-2 border text-right">
+                                    {formatCurrency(sales)}
                                 </td>
                             ))}
-                            <td className="p-2 border text-right font-semibold">{post.GrossSales.toFixed(2)}</td>
+                            <td className="p-2 border text-right font-semibold">
+                                {formatCurrency(post.GrossSales)}
+                            </td>
+                            <td className="p-2 border text-right">
+                                {formatCurrency(post.Boxes)}
+                            </td>
+                            <td className="p-2 border text-right">
+                                {formatCurrency(post.Price)}
+                            </td>
+                            <td className="p-2 border text-right font-semibold">
+                                {formatCurrency(parseFloat(post.Price) * parseFloat(post.Boxes))}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
+
+                {/* FOOTER (TOTALS) */}
+                <tfoot className="bg-gray-100 font-semibold">
+                    <tr>
+                        <td colSpan={3} className="p-2 border text-right">
+                            Total:
+                        </td>
+                        <td colSpan={3} className="p-2 border"></td>
+                        {totals.monthly.map((val: number, index: number) => (
+                            <td key={index} className="p-2 border text-right">
+                                {formatCurrency(val)}
+                            </td>
+                        ))}
+                        <td className="p-2 border text-right">
+                            {formatCurrency(totals.grossSales)}
+                        </td>
+                        <td className="p-2 border text-right">
+                            {formatCurrency(totals.boxes)} {/* ✅ Boxes Total */}
+                        </td>
+                        <td className="p-2 border text-right">
+                            {formatCurrency(totals.price)}
+                        </td>
+                        <td className="p-2 border text-right">
+                            {formatCurrency(totals.endingInventory)}
+                        </td>
+                    </tr>
+                </tfoot>
 
             </table>
         </div>
