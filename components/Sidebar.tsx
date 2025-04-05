@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { PiShippingContainer, PiWarehouse } from "react-icons/pi";
 import { FaUsersGear, FaPlus, FaMinus } from "react-icons/fa6";
+import { RxCaretDown, RxCaretLeft } from "react-icons/rx";
 import { IoCogSharp } from "react-icons/io5";
 import { FaRegCircle, FaSnowflake  } from "react-icons/fa";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
@@ -108,7 +109,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
       subItems: [
         { title: "Tools & Equipment", href: `/CompanyAssets/Assets${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
         { title: "List of Assets", href: `/CompanyAssets/ListAssets${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
-        { title: "Sales", href: `/CompanyAssets/Sales${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
+        { title: "Container", href: `/CompanyAssets/Container${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
         { title: "Profit & Loss", href: `/CompanyAssets/ProfitLoss${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
         { title: "Production", href: `/CompanyAssets/Production${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
         { title: "Daily Sales Inventory", href: `/CompanyAssets/SalesInventory${userId ? `?id=${encodeURIComponent(userId)}` : ""}`, },
@@ -205,7 +206,7 @@ const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, o
                 {!collapsed && <span className="ml-2">{item.title}</span>}
                 {!collapsed && (
                   <span className="ml-auto">
-                    {openSections[item.title] ? <FaMinus size={10} /> : <FaPlus size={10} />}
+                    {openSections[item.title] ? <RxCaretDown size={15} /> : <RxCaretLeft size={15} />}
                   </span>
                 )}
               </button>
