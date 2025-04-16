@@ -107,7 +107,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PlaceSales">Place of Sales</label>
-                <input id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                <input id="PlaceSales" value={PlaceSales} onChange={(e) => setPlaceSales(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="PaymentMode">Mode of Payment</label>
