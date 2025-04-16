@@ -1,5 +1,5 @@
 import React from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 
 interface Post {
     _id: string;
@@ -111,16 +111,16 @@ const ContainerTable: React.FC<ContainerTableProps> = ({
                             <td className="p-2 border flex justify-start space-x-2">
                                 <button
                                     onClick={() => handleEdit(post)}
-                                    className="px-2 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center"
+                                    className="px-2 py-1 text-xs bg-[#143c66] hover:bg-blue-900 text-white rounded-md hover:bg-blue-600 flex items-center"
                                 >
-                                    <FaEdit className="mr-1" /> Edit
+                                    <HiOutlinePencil size={15} className="mr-1" /> Edit
                                 </button>
                                 {Role !== "Staff" && (
                                     <button
                                         onClick={() => handleDelete(post._id)}
-                                        className="px-2 py-1 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
+                                        className="px-2 py-1 text-xs bg-red-700 hover:bg-red-800 text-white rounded-md hover:bg-red-600 flex items-center"
                                     >
-                                        <FaTrash className="mr-1" /> Delete
+                                        <HiOutlineTrash size={15} className="mr-1" /> Delete
                                     </button>
                                 )}
                             </td>

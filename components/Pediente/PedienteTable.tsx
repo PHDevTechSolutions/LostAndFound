@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import Form from "./Form";
-import { BsThreeDotsVertical } from "react-icons/bs"; // For the 3 dots icon
+import { HiOutlineClipboardCheck, HiOutlineDotsVertical, HiMail } from "react-icons/hi";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
@@ -199,7 +199,6 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
             [buyer]: !prev[buyer],
         }));
     };
-    
 
     const filteredPosts = useMemo(() => {
         return posts.filter(post => {
@@ -239,7 +238,6 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
         // Sum up the GrossSales for the found posts from the previous day
         return previousDayPosts.reduce((acc, post) => acc + (parseFloat(post.GrossSales) || 0), 0);
     };
-    
     
     // Get the current date dynamically
     const currentDate = new Date().toISOString().split('T')[0]; // This will use today's date in YYYY-MM-DD format
@@ -291,7 +289,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
                     <input type="date" value={dateRange.start} onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })} className="border px-3 py-2 rounded text-xs" />
                     <input type="date" value={dateRange.end} onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })} className="border px-3 py-2 rounded text-xs" />
                 </div>
-                <button onClick={exportToExcel} className="bg-green-800 text-white px-4 py-2 rounded text-xs">Export to Excel</button>
+                <button onClick={exportToExcel} className="bg-green-800 text-white px-4 py-2 rounded text-xs flex gap-1"><HiOutlineClipboardCheck size={15} />Export to Excel</button>
             </div>
             {/* Display Filtered and Grouped Posts */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
@@ -319,7 +317,7 @@ const PedienteTable: React.FC<PedienteTableProps> = React.memo(({ posts, Locatio
                                             <div className="flex justify-between items-center mb-2">
                                                 <h4 className="text-xs font-semibold text-gray-800 text-left">Container No. {post.ContainerNo}</h4>
                                                 <button className="text-gray-500 hover:text-gray-800" onClick={() => toggleMenu(post._id)}>
-                                                    <BsThreeDotsVertical size={12} />
+                                                    <HiOutlineDotsVertical size={15} />
                                                 </button>
                                             </div>
 

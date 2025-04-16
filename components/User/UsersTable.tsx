@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import { Menu } from "@headlessui/react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 const socket = io("http://localhost:3001");
 
@@ -70,7 +70,7 @@ const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, h
                 <h3 className="text-xs font-semibold text-gray-800 capitalize">{post.Lastname}, {post.Firstname}</h3>
                 <Menu as="div" className="relative">
                   <Menu.Button className="text-gray-500 hover:text-gray-800">
-                    <BsThreeDotsVertical size={20} />
+                    <HiOutlineDotsVertical size={15} />
                   </Menu.Button>
                   <Menu.Items className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-lg border z-10 text-xs">
                     <Menu.Item>

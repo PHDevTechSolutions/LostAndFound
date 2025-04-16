@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosMenu } from 'react-icons/io';
+import { GoSignOut } from "react-icons/go";
 
 const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) => {
   const [userName, setUserName] = useState("");
@@ -44,8 +45,8 @@ const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) 
       </div>
       <div className="flex items-center text-xs">
         <span className="mr-4 capitalize">Hello, {userName}</span>
-        <button className="bg-red-500 px-2 py-2 text-white rounded" onClick={() => setShowLogoutModal(true)}>
-          Logout
+        <button className="bg-red-700 px-2 py-2 text-white rounded flex gap-1" onClick={() => setShowLogoutModal(true)}>
+          <GoSignOut size={15} />Logout
         </button>
       </div>
 

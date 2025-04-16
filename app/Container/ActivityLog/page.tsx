@@ -107,6 +107,9 @@ const ActivityLog: React.FC = () => {
                   </div>
                 </div>
               </div>
+              <p className="text-sm text-gray-600 mb-4">
+                The "Activity Logs" section serves as a comprehensive record of all actions and changes made within the system. It tracks every data update, including who created or modified each entry, and provides information on the location where the activity took place. This feature is essential for auditing purposes, ensuring transparency and accountability for all user actions within the platform. By reviewing the activity logs, users can easily track updates, identify changes, and maintain a clear history of system interactions.
+              </p>
 
               {/* Table */}
               <div className="bg-white overflow-auto max-h-[600px]">

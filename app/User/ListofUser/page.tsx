@@ -15,6 +15,8 @@ import Pagination from "../../../components/User/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { HiMiniPlus } from "react-icons/hi2";
+
 const ListofUser: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [editPost, setEditPost] = useState<any>(null);
@@ -109,10 +111,10 @@ const ListofUser: React.FC = () => {
                   <>
                     <div className="flex justify-between items-center mb-4">
                       <button
-                        className="bg-blue-800 text-white px-4 text-xs py-2 rounded"
+                        className="hover:bg-blue-900 bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1"
                         onClick={() => setShowForm(true)}
                       >
-                        Create User
+                        <HiMiniPlus size={15}/>Create User
                       </button>
                     </div>
 

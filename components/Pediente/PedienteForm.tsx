@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import UserFields from "./PedienteFormFields";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
+import { HiOutlineCheck, HiXMark, HiOutlinePencil } from "react-icons/hi2";
 
 // Not For Creating Data
 interface PedienteFormProps {
@@ -86,7 +86,7 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
                 <h2 className="text-xs font-bold mb-4">{editPost ? "Edit Buyer's Information" : "Add User"}</h2>
                 <UserFields
-                    Location={Location} setLocation={setLocation} 
+                    Location={Location} setLocation={setLocation}
                     userName={userName} setuserName={setuserName}
                     DateOrder={DateOrder} setDateOrder={setDateOrder}
                     BuyersName={BuyersName} setBuyersName={setBuyersName}
@@ -104,10 +104,20 @@ const PedienteForm: React.FC<PedienteFormProps> = ({ onCancel, refreshUser, edit
                     editPost={editPost}
                 />
                 <div className="flex justify-between">
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">
-                        {editPost ? "Update" : "Submit"}
+                    <button type="submit" className="bg-[#143c66] hover:bg-blue-900 text-white px-4 py-2 rounded text-xs flex gap-1">
+                        {editPost ? (
+                            <>
+                                <HiOutlinePencil size={14} />
+                                Update
+                            </>
+                        ) : (
+                            <>
+                                <HiOutlineCheck size={14} />
+                                Submit
+                            </>
+                        )}
                     </button>
-                    <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>Cancel</button>
+                    <button type="button" className="bg-white hover:bg-gray-100 border px-4 py-2 rounded text-xs flex gap-1" onClick={onCancel}><HiXMark size={15} />Cancel</button>
                 </div>
 
                 <ToastContainer className="text-xs" autoClose={900} />

@@ -5,18 +5,20 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import FormFields from "./PurchasingFormFields";
 
-interface AddContainerProps { 
-  onCancel: () => void; 
-  refreshPosts: () => void;  
-  userName: string;  
-  editData?: any; 
+import { HiOutlineCheck, HiXMark, HiOutlinePencil } from "react-icons/hi2";
+
+interface AddContainerProps {
+  onCancel: () => void;
+  refreshPosts: () => void;
+  userName: string;
+  editData?: any;
   Location: string;
 }
 
 const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, userName, editData, Location: propLocation }) => {
   const [Location, setLocation] = useState(editData?.Location || propLocation || "");
   const [ReferenceNumber, setReferenceNumber] = useState(editData?.ReferenceNumber || "");
-  
+
   const [InvoiceDate, setInvoiceDate] = useState(editData?.InvoiceDate || "");
   const [SupplierName, setSupplierName] = useState(editData?.SupplierName || "");
   const [InvoiceNumber, setInvoiceNumber] = useState(editData?.InvoiceNumber || "");
@@ -50,10 +52,10 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        ReferenceNumber, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice, 
+        ReferenceNumber, Location, InvoiceDate, SupplierName, InvoiceNumber, Description, TypeFish, Freezing, Weight, UnitPrice,
         InvoiceAmount, FirstPayment, SecondPayment, ThirdPayment, FinalPayment, Discount, Commission, CableFee, DateApproval, Status, Remarks, Action,
-        userName, 
-        id: editData?._id, 
+        userName,
+        id: editData?._id,
       }),
     });
 
@@ -104,11 +106,21 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           editData={editData}
         />
         <div className="flex justify-between">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">
-            {editData ? "Update" : "Submit"}
+          <button type="submit" className="bg-[#143c66] text-white px-4 py-2 rounded text-xs flex gap-1">
+            {editData ? (
+              <>
+                <HiOutlinePencil size={14} />
+                Update
+              </>
+            ) : (
+              <>
+                <HiOutlineCheck size={14} />
+                Submit
+              </>
+            )}
           </button>
-          <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>
-            Cancel
+          <button type="button" className="bg-white border px-4 py-2 rounded text-xs flex gap-1" onClick={onCancel}>
+            <HiXMark size={15} />Cancel
           </button>
         </div>
       </form>

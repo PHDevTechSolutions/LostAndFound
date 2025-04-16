@@ -5,11 +5,13 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import FormFields from "./ContainerFormFields";
 
-interface AddContainerProps { 
-  onCancel: () => void; 
-  refreshPosts: () => void;  
-  userName: string;  
-  editData?: any; 
+import { HiOutlineCheck, HiXMark, HiOutlinePencil } from "react-icons/hi2";
+
+interface AddContainerProps {
+  onCancel: () => void;
+  refreshPosts: () => void;
+  userName: string;
+  editData?: any;
   Location: string;
 }
 
@@ -52,8 +54,8 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       body: JSON.stringify({
         ReferenceNumber, Location, SpsicNo, DateArrived, DateSoldout, SupplierName, ContainerNo, ContainerType, Country, Boxes,
         TotalQuantity, TotalGrossSales, Commodity, Size, Freezing, Status, BoxType, Remarks, PlaceSales,
-        userName, 
-        id: editData?._id, 
+        userName,
+        id: editData?._id,
       }),
     });
 
@@ -77,7 +79,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 text-xs">
         <h2 className="text-xs font-bold mb-4">{editData ? "Edit Container" : "Add Container"}</h2>
         <FormFields
-          Location={Location} setLocation={setLocation} 
+          Location={Location} setLocation={setLocation}
 
           ReferenceNumber={ReferenceNumber} setReferenceNumber={setReferenceNumber}
           SpsicNo={SpsicNo} setSpsicNo={setSpsicNo}
@@ -87,7 +89,7 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
 
           ContainerNo={ContainerNo} setContainerNo={setContainerNo}
           ContainerType={ContainerType} setContainerType={setContainerType}
-          
+
           setCountry={setCountry} Country={Country}
           setTotalQuantity={setTotalQuantity} TotalQuantity={TotalQuantity}
           setTotalGrossSales={setTotalGrossSales} TotalGrossSales={TotalGrossSales}
@@ -104,11 +106,21 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           editData={editData}
         />
         <div className="flex justify-between">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">
-            {editData ? "Update" : "Submit"}
+          <button type="submit" className="bg-[#143c66] text-white px-4 py-2 rounded text-xs flex items-center gap-1">
+            {editData ? (
+              <>
+                <HiOutlinePencil size={15} />
+                Update
+              </>
+            ) : (
+              <>
+                <HiOutlineCheck size={15} />
+                Submit
+              </>
+            )}
           </button>
-          <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>
-            Cancel
+          <button type="button" className="bg-white text-dark border px-4 py-2 rounded text-xs flex gap-1" onClick={onCancel}>
+            <HiXMark size={15} />Cancel
           </button>
         </div>
       </form>

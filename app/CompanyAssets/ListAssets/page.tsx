@@ -15,6 +15,8 @@ import Pagination from "../../../components/Container/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+import { HiMiniPlus } from "react-icons/hi2";
+
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
@@ -68,7 +70,7 @@ const ContainerList: React.FC = () => {
                     if (!response.ok) throw new Error("Failed to fetch user data");
                     const data = await response.json();
                     setUserDetails({
-                        UserId: data._id, 
+                        UserId: data._id,
                         Firstname: data.Firstname || "",
                         Lastname: data.Lastname || "",
                         Email: data.Email || "",
@@ -96,18 +98,18 @@ const ContainerList: React.FC = () => {
             post.ReferenceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.ItemPurchased.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.Type.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
         const inLocation =
             !selectedLocation || post.Location.toLowerCase() === selectedLocation.toLowerCase();
-    
+
         const DatePurchased = new Date(post.DatePurchased).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-    
+
         const inDateRange =
             (!rangeStart || DatePurchased >= rangeStart) &&
             (!rangeEnd || DatePurchased <= rangeEnd);
-    
+
         return inSearchTerm && inLocation && inDateRange;
     });
 
@@ -177,13 +179,17 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add
+                                            <button className="bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1" onClick={() => setShowForm(true)}>
+                                                <HiMiniPlus size={15} /> Add Record
                                             </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">List of Assets</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "List of Assets" section provides a detailed record of all assets, including equipment, tools, and resources, along with their corresponding monthly computations. Each asset is tracked not only for its current status but also for its usage, depreciation, or cost allocation over time. By including monthly computations, this section enables users to analyze asset performance, track costs, and make informed decisions regarding maintenance or replacement. This feature is essential for managing the overall value of assets, ensuring their proper allocation, and optimizing their use for business operations.
+                                        </p>
+
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}

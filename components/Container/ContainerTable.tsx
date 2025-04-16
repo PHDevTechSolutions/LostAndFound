@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { AiOutlineLeft, AiOutlineRight, AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
-
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 interface Post {
   _id: string;
@@ -105,7 +103,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({ posts, handleEdit, hand
                 </h3>
                 <div className="flex items-center space-x-1">
                   <button onClick={() => toggleMenu(post._id)} className="text-gray-500 hover:text-gray-800">
-                    <BsThreeDotsVertical size={12} />
+                    <HiOutlineDotsVertical size={15} />
                   </button>
                 </div>
               </div>

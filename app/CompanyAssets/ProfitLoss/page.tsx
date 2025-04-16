@@ -14,6 +14,8 @@ import ContainerTable from "../../../components/CompanyAssets/ProfitLoss/ProfitL
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+import { HiMiniPlus } from "react-icons/hi2";
+
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
@@ -65,7 +67,7 @@ const ContainerList: React.FC = () => {
                     if (!response.ok) throw new Error("Failed to fetch user data");
                     const data = await response.json();
                     setUserDetails({
-                        UserId: data._id, 
+                        UserId: data._id,
                         Firstname: data.Firstname || "",
                         Lastname: data.Lastname || "",
                         Email: data.Email || "",
@@ -92,18 +94,18 @@ const ContainerList: React.FC = () => {
         const inSearchTerm =
             post.ReferenceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.ModeType.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
         const inLocation =
             !selectedLocation || post.Location.toLowerCase() === selectedLocation.toLowerCase();
-    
+
         const DatePurchased = new Date(post.DatePurchased).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-    
+
         const inDateRange =
             (!rangeStart || DatePurchased >= rangeStart) &&
             (!rangeEnd || DatePurchased <= rangeEnd);
-    
+
         return inSearchTerm && inLocation && inDateRange;
     });
 
@@ -167,13 +169,17 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add
+                                            <button className="hover:bg-blue-900 bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1" onClick={() => setShowForm(true)}>
+                                                <HiMiniPlus size={15} />Add Record
                                             </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">Profit & Loss</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "Profit & Loss" section provides a detailed analysis of the company's financial performance, tracking profits and losses on a monthly and yearly basis. This section allows users to view how revenue and expenses fluctuate over time, providing insights into the financial health of the business. Additionally, it includes historical data to help users analyze trends, identify patterns, and make informed decisions for future financial planning. By tracking both short-term and long-term financial data, this feature ensures comprehensive visibility into the company’s profitability, supporting better decision-making and strategic planning.
+                                        </p>
+
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 dateRange={dateRange}

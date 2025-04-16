@@ -34,7 +34,7 @@ const ContainerList: React.FC = () => {
 
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [postForCreate, setPostForCreate] = useState<any>(null);
-    
+
 
     // Fetch Data from the API
     const fetchDatabase = async () => {
@@ -51,7 +51,7 @@ const ContainerList: React.FC = () => {
     useEffect(() => {
         fetchDatabase();
     }, []);
-    
+
 
     // Filter Data based on search term and city address
     const filteredAccounts = posts.containerData.filter((post: any) => {
@@ -150,8 +150,11 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <h2 className="text-lg font-bold mb-2">List of Remaining Frozen Boxes</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "List of Remaining Frozen Boxes" displays the inventory of frozen goods that are still available for distribution or processing. It provides an up-to-date record of all frozen items that have not yet been fully utilized or shipped out. This list allows users to monitor the remaining stock of frozen products, ensuring that they can manage the supply efficiently and track which items are still in storage. It serves as a key tool for inventory management and helps in making informed decisions about stock replenishment and order fulfillment.
+                                        </p>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}

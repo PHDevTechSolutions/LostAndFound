@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
 import SessionChecker from "../../../components/SessionChecker";
 import UserFetcher from "../../../components/UserFetcher";
+import { HiMiniPlus } from "react-icons/hi2";
+
 
 // Pages
 import AddAccountForm from "../../../components/CompanyAssets/Container/AddContainerForm";
@@ -60,7 +62,7 @@ const ContainerList: React.FC = () => {
                     if (!response.ok) throw new Error("Failed to fetch user data");
                     const data = await response.json();
                     setUserDetails({
-                        UserId: data._id, 
+                        UserId: data._id,
                         Firstname: data.Firstname || "",
                         Lastname: data.Lastname || "",
                         Email: data.Email || "",
@@ -87,18 +89,18 @@ const ContainerList: React.FC = () => {
         const inSearchTerm =
             post.ContainerNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
         const inLocation =
             !selectedLocation || post.Location.toLowerCase() === selectedLocation.toLowerCase();
-    
+
         const DateArrived = new Date(post.DateArrived).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-    
+
         const inDateRange =
             (!rangeStart || DateArrived >= rangeStart) &&
             (!rangeEnd || DateArrived <= rangeEnd);
-    
+
         return inSearchTerm && inLocation && inDateRange;
     });
 
@@ -129,11 +131,15 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add
+                                            <button className="bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1" onClick={() => setShowForm(true)}>
+                                                <HiMiniPlus size={15} /> Add Record
                                             </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">Container JJV</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "Container JJV" section tracks all expenses related to the purchase and acquisition of containers, providing a comprehensive breakdown of the costs involved. This includes not only the container's base price but also additional charges such as shipping fees, line handling costs, bank charges, and brokerage fees. By consolidating all these expenses in one place, this section ensures full transparency and helps users track the total investment required for each container. This detailed record allows for more accurate financial planning and cost analysis, ensuring that all associated costs are accounted for and managed effectively.
+                                        </p>
+
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <ContainerTable
                                                 posts={filteredAccounts}  // Show all filtered posts without pagination

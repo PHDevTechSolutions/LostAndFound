@@ -16,6 +16,8 @@ import Pagination from "../../../components/Container/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+import { HiMiniPlus } from "react-icons/hi2";
+
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
@@ -58,7 +60,7 @@ const ContainerList: React.FC = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, Status: newStatus }),
             });
-    
+
             if (response.ok) {
                 setPosts((prevPosts) =>
                     prevPosts.map((post) =>
@@ -75,7 +77,7 @@ const ContainerList: React.FC = () => {
             console.error("Error updating status:", error);
         }
     };
-    
+
 
     // Filter Data based on search term and city address
     const filteredAccounts = posts.filter((post) => {
@@ -174,13 +176,16 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add Fishing Container
+                                            <button className="bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1" onClick={() => setShowForm(true)}>
+                                                <HiMiniPlus size={15} /> Add Fishing Container
                                             </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">List of Containers</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            These containers serve as secure and temperature-controlled storage units for both fresh and frozen fish products. Each container is carefully monitored to ensure proper preservation of the seafood during handling, transport, and storage. Whether it's freshly caught fish or frozen stock, these fishing containers are essential for maintaining quality and safety from the sea to distribution points.
+                                        </p>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}

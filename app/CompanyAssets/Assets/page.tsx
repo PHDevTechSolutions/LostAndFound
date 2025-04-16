@@ -15,6 +15,8 @@ import Pagination from "../../../components/Container/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+import { HiMiniPlus } from "react-icons/hi2";
+
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
@@ -68,7 +70,7 @@ const ContainerList: React.FC = () => {
                     if (!response.ok) throw new Error("Failed to fetch user data");
                     const data = await response.json();
                     setUserDetails({
-                        UserId: data._id, 
+                        UserId: data._id,
                         Firstname: data.Firstname || "",
                         Lastname: data.Lastname || "",
                         Email: data.Email || "",
@@ -96,18 +98,18 @@ const ContainerList: React.FC = () => {
             post.SupplierBrand.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.ItemPurchased.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.Type.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
         const inLocation =
             !selectedLocation || post.Location.toLowerCase() === selectedLocation.toLowerCase();
-    
+
         const DatePurchased = new Date(post.DatePurchased).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-    
+
         const inDateRange =
             (!rangeStart || DatePurchased >= rangeStart) &&
             (!rangeEnd || DatePurchased <= rangeEnd);
-    
+
         return inSearchTerm && inLocation && inDateRange;
     });
 
@@ -177,13 +179,17 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add
+                                            <button className="bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1" onClick={() => setShowForm(true)}>
+                                                <HiMiniPlus size={15} />Add Equipment
                                             </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">Summary of Tools and Equipment</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "Summary of Tools and Equipment" section provides an overview of all tools and equipment available for use within the system. It serves as a central repository for tracking the condition, availability, and usage of various tools and equipment, ensuring that everything is properly accounted for. This summary helps users manage inventory, schedule maintenance, and allocate resources efficiently. By keeping a detailed record of all tools and equipment, the system supports smoother operations and reduces downtime, ensuring that all tasks can be performed with the necessary resources.
+                                        </p>
+
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}

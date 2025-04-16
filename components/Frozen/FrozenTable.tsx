@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 const socket = io("http://localhost:3001");
 
@@ -140,7 +140,7 @@ const ContainerCards: React.FC<ContainerCardsProps> = ({
                                                     onClick={() => toggleMenu(post._id)}
                                                     className="text-gray-500 hover:text-gray-800"
                                                 >
-                                                    <BsThreeDotsVertical size={18} />
+                                                    <HiOutlineDotsVertical size={15} />
                                                 </button>
                                             </div>
                                             <div className="text-xs capitalize mt-2">

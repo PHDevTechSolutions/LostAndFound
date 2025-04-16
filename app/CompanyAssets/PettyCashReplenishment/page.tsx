@@ -15,6 +15,8 @@ import Pagination from "../../../components/Container/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+import { HiMiniPlus } from "react-icons/hi2";
+
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
@@ -72,7 +74,7 @@ const ContainerList: React.FC = () => {
                     if (!response.ok) throw new Error("Failed to fetch user data");
                     const data = await response.json();
                     setUserDetails({
-                        UserId: data._id, 
+                        UserId: data._id,
                         Firstname: data.Firstname || "",
                         Lastname: data.Lastname || "",
                         Email: data.Email || "",
@@ -99,18 +101,18 @@ const ContainerList: React.FC = () => {
         const inSearchTerm =
             post.Payee.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.Particular.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
         const inLocation =
             !selectedLocation || post.Location.toLowerCase() === selectedLocation.toLowerCase();
-    
+
         const PettyCashDate = new Date(post.PettyCashDate).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-    
+
         const inDateRange =
             (!rangeStart || PettyCashDate >= rangeStart) &&
             (!rangeEnd || PettyCashDate <= rangeEnd);
-    
+
         return inSearchTerm && inLocation && inDateRange;
     });
 
@@ -180,13 +182,17 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add
+                                            <button className="hover:bg-blue-900 bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1" onClick={() => setShowForm(true)}>
+                                                <HiMiniPlus size={15} />Add Record
                                             </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">Petty Cash Replenishment</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "Petty Cash Replenishment" section tracks the process of refilling petty cash reserves within the organization. Petty cash is used for small, day-to-day expenses that don’t require formal purchasing procedures. This section helps monitor when and how petty cash is replenished, ensuring there is always enough cash available to cover small operational costs. It provides transparency into the flow of funds, helping users keep track of cash usage and the frequency of replenishment. By maintaining an organized record, this feature supports better cash flow management and prevents shortages in operational funds.
+                                        </p>
+
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}

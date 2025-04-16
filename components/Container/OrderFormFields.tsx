@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { HiOutlineCheck, HiXMark, HiOutlinePencil } from "react-icons/hi2";
+import { HiOutlineRefresh } from "react-icons/hi";
+
 
 interface OrderFormFieldsProps {
     ContainerNo: string;
@@ -34,7 +37,7 @@ interface OrderFormFieldsProps {
 
     GrossSales: string;
     setGrossSales: React.Dispatch<React.SetStateAction<string>>;
-    
+
     PlaceSales: string;
     setPlaceSales: React.Dispatch<React.SetStateAction<string>>;
     PaymentMode: string;
@@ -53,7 +56,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
     userName, setuserName, Location, setLocation,
     DateOrder, setDateOrder, BuyersName, setBuyersName,
     BoxSales, setBoxSales, handleBoxSalesChange, Price, setPrice,
-    handlePriceChange, Boxes, setBoxes, GrossSales, setGrossSales, 
+    handlePriceChange, Boxes, setBoxes, GrossSales, setGrossSales,
     PlaceSales, setPlaceSales, PaymentMode, setPaymentMode, Freezing, setFreezing,
     editData, onCancel, handleSubmit,
 }) => {
@@ -69,15 +72,15 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
 
     return (
         <form onSubmit={handleSubmit}>
-            <input type="hidden" id="ReferenceNumber" value={ReferenceNumber} onChange={(e) => setReferenceNumber(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
-            <input type="hidden" id="containerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
-            <input type="hidden" id="ContainerType" value={ContainerType} onChange={(e) => setContainerType(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4"/>
-            <input type="hidden" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled/>
+            <input type="hidden" id="ReferenceNumber" value={ReferenceNumber} onChange={(e) => setReferenceNumber(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4" />
+            <input type="hidden" id="containerNo" value={ContainerNo} onChange={(e) => setContainerNo(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4" />
+            <input type="hidden" id="ContainerType" value={ContainerType} onChange={(e) => setContainerType(e.target.value)} disabled={!!editData} className="w-full px-3 py-2 border rounded text-xs mb-4" />
+            <input type="hidden" id="Size" value={Size} onChange={(e) => setSize(e.target.value)} className="w-full px-3 py-2 border rounded text-xs mb-4" disabled />
             <input type="hidden" id="Commodity" value={Commodity} onChange={(e) => setCommodity(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             <input type="hidden" id="Username" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" disabled />
             <input type="hidden" id="Location" value={Location} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
             <input type="hidden" id="Freezing" value={Freezing} onChange={(e) => setFreezing(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" disabled />
-        
+
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="DateOrder">Date</label>
                 <input type="date" id="DateOrder" value={DateOrder} onChange={(e) => setDateOrder(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
@@ -96,7 +99,7 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="Remaining">Remaining Boxes</label>
-                <input type="number" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs"  />
+                <input type="number" id="Boxes" value={Boxes} onChange={(e) => setBoxes(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" />
             </div>
             <div className="mb-4">
                 <label className="block text-xs font-bold mb-2" htmlFor="GrossSales">Gross Sales Per Day</label>
@@ -115,10 +118,22 @@ const OrderFormFields: React.FC<OrderFormFieldsProps> = ({
                 </select>
             </div>
             <div className="flex justify-between">
-                <button type="button" onClick={onCancel} className="text-xs text-white bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md">Cancel</button>
+                <button type="button" onClick={onCancel} className="text-xs border bg-white hover:bg-gray-100 px-4 py-2 rounded-md flex gap-1"><HiXMark size={15} />Cancel</button>
                 <div className="flex gap-2">
-                    <button type="button" onClick={handleReset} className="text-xs text-white bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-md">Reset</button>
-                    <button type="submit" className="text-xs text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">{editData ? "Update" : "Save"}</button>
+                    <button type="button" onClick={handleReset} className="text-xs text-white bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-md flex gap-1"><HiOutlineRefresh size={15} />Reset</button>
+                    <button type="submit" className="text-xs text-white bg-[#143c66] hover:bg-blue-900 px-4 py-2 rounded-md flex gap-1">
+                        {editData ? (
+                            <>
+                                <HiOutlinePencil size={14} />
+                                Update
+                            </>
+                        ) : (
+                            <>
+                                <HiOutlineCheck size={14} />
+                                Save
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
         </form>

@@ -50,7 +50,7 @@ const Branches: React.FC = () => {
     useEffect(() => {
         fetchDatabase();
     }, []);
-    
+
 
     // Filter Data based on search term and city address
     const filteredAccounts = posts.filter((post) => {
@@ -58,7 +58,7 @@ const Branches: React.FC = () => {
             post.SpsicNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.ContainerNo.toUpperCase().includes(searchTerm.toUpperCase()) ||
             post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase());
-            
+
         const matchesLocation = selectedLocation ? post.Location.includes(selectedLocation) : true;
         const dateArrive = new Date(post.DateArrived).getTime();
         const dateSoldout = new Date(post.DateSoldout).getTime();
@@ -150,8 +150,11 @@ const Branches: React.FC = () => {
                                 ) : (
                                     <>
                                         <h2 className="text-lg font-bold mb-2">Branches</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The system manages three main branches: Navotas, Minalin, and Sambat. Each branch is responsible for handling and organizing its own set of fishing containers, which are used to store both fresh and frozen fish products. These branches serve as key distribution and storage hubs, ensuring that seafood products are properly maintained and transported from source to market.
+                                        </p>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 selectedLocation={selectedLocation}

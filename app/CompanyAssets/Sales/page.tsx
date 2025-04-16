@@ -117,6 +117,10 @@ const ContainerList: React.FC = () => {
                             <div className="grid grid-cols-1 md:grid-cols-1">
                                 <>
                                     <h2 className="text-lg font-bold mb-2">Sales</h2>
+                                    <p className="text-sm text-gray-600 mb-4">
+                                        The "Sales" section provides a comprehensive view of the company’s sales performance, tracking both monthly and yearly earnings. This section allows users to monitor the total sales revenue generated each month and year, offering valuable insights into business growth and performance trends. By analyzing the data, users can evaluate how sales fluctuate over time and identify peak periods. The section also aggregates total earnings, helping users understand the overall financial health of the business. With this feature, users can make data-driven decisions to optimize sales strategies and enhance profitability.
+                                    </p>
+
                                     <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                         <ContainerTable
                                             posts={filteredAccounts}  // Show all filtered posts without pagination

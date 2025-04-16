@@ -5,18 +5,20 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import FormFields from "./ProductionFormFields";
 
-interface AddContainerProps { 
-  onCancel: () => void; 
-  refreshPosts: () => void;  
-  userName: string;  
-  editData?: any; 
+import { HiOutlineCheck, HiXMark, HiOutlinePencil } from "react-icons/hi2";
+
+interface AddContainerProps {
+  onCancel: () => void;
+  refreshPosts: () => void;
+  userName: string;
+  editData?: any;
   Location: string;
 }
 
 const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts, userName, editData, Location: propLocation }) => {
   const [Location, setLocation] = useState(editData?.Location || propLocation || "");
   const [ReferenceNumber, setReferenceNumber] = useState(editData?.ReferenceNumber || "");
-  
+
   const [DateRecord, setDateRecord] = useState(editData?.DateRecord || "");
   const [ModeType, setModeType] = useState(editData?.ModeType || "");
   const [Amount, setAmount] = useState(editData?.Amount || "");
@@ -34,8 +36,8 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
       },
       body: JSON.stringify({
         ReferenceNumber, Location, DateRecord, ModeType, Amount,
-        userName, 
-        id: editData?._id, 
+        userName,
+        id: editData?._id,
       }),
     });
 
@@ -65,15 +67,25 @@ const AddContainerForm: React.FC<AddContainerProps> = ({ onCancel, refreshPosts,
           DateRecord={DateRecord} setDateRecord={setDateRecord}
           ModeType={ModeType} setModeType={setModeType}
           Amount={Amount} setAmount={setAmount}
-    
+
           editData={editData}
         />
         <div className="flex justify-between">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">
-            {editData ? "Update" : "Submit"}
+          <button type="submit" className="hover:bg-blue-900 bg-[#143c66] text-white px-4 py-2 rounded text-xs flex gap-1">
+            {editData ? (
+              <>
+                <HiOutlinePencil size={14} />
+                Update
+              </>
+            ) : (
+              <>
+                <HiOutlineCheck size={14} />
+                Submit
+              </>
+            )}
           </button>
-          <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded text-xs" onClick={onCancel}>
-            Cancel
+          <button type="button" className="hover:bg-gray-100 bg-white border px-4 py-2 rounded text-xs flex gap-1" onClick={onCancel}>
+            <HiXMark size={15} /> Cancel
           </button>
         </div>
       </form>

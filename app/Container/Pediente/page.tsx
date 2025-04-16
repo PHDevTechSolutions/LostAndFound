@@ -93,6 +93,9 @@ const PedientePage: React.FC = () => {
                                 ) : (
                                     <>
                                         <h2 className="text-lg font-bold mb-2">Pendiente Frozen</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "Pendiente Frozen" section showcases items that are still pending or in process within the frozen goods inventory. These are products that have not yet been fully processed, shipped, or finalized for distribution. It allows users to track and manage the status of these frozen items, ensuring that everything is accounted for and ready for the next steps in the supply chain. Below is a detailed list of these frozen items that are awaiting finalization, categorized based on their location and role for better organization.
+                                        </p>
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
                                             <PedienteTable
                                                 posts={currentPosts} // Pass paginated posts here

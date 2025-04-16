@@ -15,6 +15,8 @@ import Pagination from "../../../components/Container/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+import { HiMiniPlus } from "react-icons/hi2";
+
 const ContainerList: React.FC = () => {
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState<any>(null);
@@ -72,7 +74,7 @@ const ContainerList: React.FC = () => {
                     if (!response.ok) throw new Error("Failed to fetch user data");
                     const data = await response.json();
                     setUserDetails({
-                        UserId: data._id, 
+                        UserId: data._id,
                         Firstname: data.Firstname || "",
                         Lastname: data.Lastname || "",
                         Email: data.Email || "",
@@ -99,18 +101,18 @@ const ContainerList: React.FC = () => {
         const inSearchTerm =
             post.SupplierName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.InvoiceNumber.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
         const inLocation =
             !selectedLocation || post.Location.toLowerCase() === selectedLocation.toLowerCase();
-    
+
         const invoiceDate = new Date(post.InvoiceDate).getTime();
         const rangeStart = dateRange.start ? new Date(dateRange.start).getTime() : null;
         const rangeEnd = dateRange.end ? new Date(dateRange.end).getTime() : null;
-    
+
         const inDateRange =
             (!rangeStart || invoiceDate >= rangeStart) &&
             (!rangeEnd || invoiceDate <= rangeEnd);
-    
+
         return inSearchTerm && inLocation && inDateRange;
     });
 
@@ -180,13 +182,17 @@ const ContainerList: React.FC = () => {
                                 ) : (
                                     <>
                                         <div className="flex justify-between items-center mb-4">
-                                            <button className="bg-blue-800 text-white px-4 text-xs py-2 rounded" onClick={() => setShowForm(true)}>
-                                                Add
+                                            <button className="bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1" onClick={() => setShowForm(true)}>
+                                                <HiMiniPlus size={15} />Add Record
                                             </button>
                                         </div>
                                         <h2 className="text-lg font-bold mb-2">Proforma Invoice Record</h2>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            The "Proforma Invoice Record" section stores and displays a detailed list of all proforma invoices generated within the system. A proforma invoice is a preliminary bill of sale that outlines the goods or services being provided, their quantities, and the estimated cost. This section allows users to track the status of these invoices, view important transaction details, and maintain an organized record of all proforma invoices issued. It is an essential tool for financial tracking, order processing, and ensuring smooth business operations.
+                                        </p>
+
                                         <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                                        <SearchFilters
+                                            <SearchFilters
                                                 searchTerm={searchTerm}
                                                 setSearchTerm={setSearchTerm}
                                                 postsPerPage={postsPerPage}

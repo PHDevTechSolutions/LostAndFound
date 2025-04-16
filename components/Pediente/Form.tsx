@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { HiMail } from "react-icons/hi";
 
 interface FormProps {
     beginningBalance: number;
@@ -74,7 +75,7 @@ const Form: React.FC<FormProps> = ({ beginningBalance, totalAmount, totalPayment
                         <input type="datetime-local" id="DateToday" className="w-full px-3 py-2 border rounded text-xs" onChange={(e) => setDateToday(e.target.value)} />
                     </div>
                     <div className="flex justify-between p-4 pt-0">
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded text-xs">Send to Email</button>
+                        <button type="submit" className="bg-[#143c66] text-white px-4 py-2 rounded text-xs flex gap-1"><HiMail size={15} /> Send to Email</button>
                     </div>
                 </div>
             </form>
