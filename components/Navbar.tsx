@@ -53,7 +53,7 @@ const Navbar: React.FC<{ onToggleSidebar: () => void }> = ({ onToggleSidebar }) 
       {showLogoutModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800">
-            <p className="mb-4 text-xs">Are you sure you want to logout?</p>
+            <p className="mb-4 text-xs">Are you sure you want to logout?.</p>
             <div className="flex justify-center space-x-4">
               <button className="bg-gray-300 px-4 py-2 rounded text-gray-800 text-xs" onClick={() => setShowLogoutModal(false)}>
                 Cancel
