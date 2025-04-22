@@ -31,7 +31,7 @@ export default clientPromise;
 // Connect to the database
 export async function connectToDatabase() {
   const client = await clientPromise;
-  return client.db("jjv"); // Return the 'ecoshift' database
+  return client.db("lostfound"); // Return the 'ecoshift' database
 }
 
 // Function to broadcast new posts
@@ -41,7 +41,7 @@ export function setSocketServer(server: Server) {
 }
 
 // Register a new user
-export async function registerUser({ userName, Email, Password, }: { userName: string; Email: string; Password: string; }) {
+export async function registerUser({ userName, Email, Password, Firstname, Lastname, Role }: { userName: string; Email: string; Password: string; Firstname: string; Lastname: string; Role: string;}) {
   const db = await connectToDatabase();
   const usersCollection = db.collection("users");
 
@@ -58,6 +58,9 @@ export async function registerUser({ userName, Email, Password, }: { userName: s
   await usersCollection.insertOne({
     userName,
     Email,
+    Firstname,
+    Lastname,
+    Role,
     Password: hashedPassword,
     createdAt: new Date(),
   });

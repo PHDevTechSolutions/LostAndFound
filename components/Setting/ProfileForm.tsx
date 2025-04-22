@@ -21,7 +21,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   handleSelectChange,
 }) => {
   // Determine which roles should be available in the dropdown
-  const availableRoles = ["Super Admin", "Admin", "Directors", "Staff"];
+  const availableRoles = ["Super Admin", "Admin", "Subscribers"];
   const filteredRoles = availableRoles.filter((role) => role === userDetails.Role);
 
   return (
@@ -68,26 +68,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md text-xs"
         />
       </div>
-      <div>
-        <label htmlFor="Location" className="block text-xs font-medium text-gray-700">
-          Location
-        </label>
-        <select
-          id="Location"
-          name="Location"
-          value={userDetails.Location}
-          onChange={handleSelectChange}
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md text-xs capitalize"
-        >
-          <option value="">Select Location</option>
-          <option value="Navotas">Navotas</option>
-          <option value="Sambat">Sambat</option>
-          <option value="Minalin">Minalin</option>
-          <option value="Philippines">Philippines</option>
-        </select>
-      </div>
       {/* Show role dropdown only if the role is not Admin or Staff */}
-      {userDetails.Role !== "Admin" && userDetails.Role !== "Staff" && (
+      {userDetails.Role !== "Admin" && userDetails.Role !== "Subscribers" && (
         <div>
           <label htmlFor="Role" className="block text-xs font-medium text-gray-700">
             Role

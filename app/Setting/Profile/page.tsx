@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
-import SessionChecker from "../../../components/SessionChecker";
+import SessionChecker from "../../../components/Session/SessionChecker";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProfileForm from "../../../components/Setting/ProfileForm";

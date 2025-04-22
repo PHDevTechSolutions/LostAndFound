@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, ReactNode } from "react";
-import Sidebar from "../Sidebar";  // Ensure the correct import path
-import Navbar from "../Navbar";    // Ensure the correct import path
+import Sidebar from "../Sidebar/Sidebar";  // Ensure the correct import path
+import Navbar from "../Navbar/Navbar";    // Ensure the correct import path
 
 interface ParentLayoutProps {
   children: ReactNode;

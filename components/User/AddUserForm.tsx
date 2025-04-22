@@ -79,7 +79,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onCancel, refreshUser, editPo
                     editPost={editPost}
                 />
                 <div className="flex justify-between">
-                    <button type="submit" className="hover:bg-blue-900 bg-[#143c66] text-white px-4 py-2 rounded text-xs flex gap-1">
+                    <button type="submit" className="hover:bg-blue-900 bg-[#2563EB] text-white px-4 py-2 rounded text-xs flex gap-1">
                         {editPost ? (
                             <>
                                 <HiOutlinePencil size={15} />

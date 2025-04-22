@@ -1,6 +1,6 @@
 import React from "react";
 
-interface UserFieldsProps{ 
+interface UserFieldsProps {
     Firstname: string;
     setFirstname: (value: string) => void;
     Lastname: string;
@@ -18,68 +18,55 @@ interface UserFieldsProps{
     editPost?: any;
 }
 
-const UserFields: React.FC<UserFieldsProps> = ({ 
-    Firstname, setFirstname, 
-    Lastname, setLastname, 
-    Email, setEmail, 
-    Location, setLocation, 
-    userName, setuserName, 
-    Password, setPassword, 
+const UserFields: React.FC<UserFieldsProps> = ({
+    Firstname, setFirstname,
+    Lastname, setLastname,
+    Email, setEmail,
+    Location, setLocation,
+    userName, setuserName,
+    Password, setPassword,
     Role, setRole,
     editPost,
 }) => {
 
     return (
         <>
-        <div className="flex flex-wrap -mx-4">
-            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="Firstname">Firstname</label>
-                <input type="text" id="Firstname" value={Firstname} onChange={(e) => setFirstname(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required/>
-            </div> 
-            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="Lastname">Lastname</label>
-                <input type="text" id="Lastname" value={Lastname} onChange={(e) => setLastname(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required/>
-            </div> 
-        </div> 
+            <div className="flex flex-wrap -mx-4">
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="Firstname">Firstname</label>
+                    <input type="text" id="Firstname" value={Firstname} onChange={(e) => setFirstname(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required />
+                </div>
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="Lastname">Lastname</label>
+                    <input type="text" id="Lastname" value={Lastname} onChange={(e) => setLastname(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required />
+                </div>
+            </div>
 
-        <div className="flex flex-wrap -mx-4">
-            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                 <label className="block text-xs font-bold mb-2" htmlFor="email">Email</label>
-                <input type="email" id="Email" value={Email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
-            </div> 
-            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="Location">Location</label>
-                <select id="Location" value={Location || ""} onChange={(e) => setLocation(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
-                <option>Select Location</option>
-                <option value="Navotas">Navotas</option>
-                <option value="Sambat">Sambat</option>
-                 <option value="Minalin">Minalin</option>
-                 </select>
-             </div> 
-        </div> 
+            <div className="flex flex-wrap -mx-4">
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="email">Email</label>
+                    <input type="email" id="Email" value={Email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                </div>
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="userName">Username</label>
+                    <input type="text" id="userName" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required />
+                </div>
+            </div>
 
-        <div className="flex flex-wrap -mx-4">
-            <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="userName">Username</label>
-                 <input type="text" id="userName" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full px-3 py-2 border rounded text-xs capitalize" required/>
-             </div> 
-             <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                <label className="block text-xs font-bold mb-2" htmlFor="Password">Password</label>
-                 <input type="password" id="Password" value={Password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required/>
-            </div> 
-        </div> 
-
-        <div className="flex flex-wrap -mx-4">
-             <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
-                 <label className="block text-xs font-bold mb-2" htmlFor="Role">Role</label>
-                 <select id="Role" value={Role || ""} onChange={(e) => setRole(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
-                 <option>Select Role</option>   
-                 <option value="Admin">Admin</option>
-                 <option value="Staff">Staff</option>
-                 <option value="Directors">Directors</option>
-            </select>
-          </div> 
-        </div> 
+            <div className="flex flex-wrap -mx-4">
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="Password">Password</label>
+                    <input type="password" id="Password" value={Password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required />
+                </div>
+                <div className="w-full sm:w-1/2 md:w-1/2 px-4 mb-4">
+                    <label className="block text-xs font-bold mb-2" htmlFor="Role">Role</label>
+                    <select id="Role" value={Role || ""} onChange={(e) => setRole(e.target.value)} className="w-full px-3 py-2 border rounded text-xs" required >
+                        <option>Select Role</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Subscribers">Subscribers</option>
+                    </select>
+                </div>
+            </div>
         </>
     )
 

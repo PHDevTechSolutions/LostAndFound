@@ -52,18 +52,14 @@ const Login: React.FC = () => {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-cover bg-center relative p-4"
-      style={{ backgroundImage: "url('/shipping.jpg')" }}
+      className="flex min-h-screen items-center justify-center bg-white bg-center relative p-4"
     >
-      <div className="absolute inset-0 bg-black bg-opacity-50 shadow-lg"></div>
+      <div className="absolute inset-0 bg-gray-100 shadow-lg"></div>
       <ToastContainer className="text-xs" />
-      <div className="relative z-10 w-full max-w-md p-8 bg-white bg-opacity-20 backdrop-blur-lg rounded-lg shadow-xl text-center">
-      <Image src="/jjventure.png" alt="JJ Venture Logo" width={100} height={100} className="mx-auto mb-4 bg-gray-100 rounded-full shadow-xl"/>
-
-        <h2 className="text-2xl font-bold text-white mb-6">Login</h2>
+      <div className="relative z-10 w-full max-w-md p-8 bg-white bg-opacity-20 backdrop-blur-lg rounded-lg shadow-xl text-center text-black">
         <form onSubmit={handleSubmit} className="text-left">
           <div className="mb-4">
-            <label className="block text-xs font-medium text-white mb-1">Email</label>
+            <label className="block text-xs font-medium mb-1">Email</label>
             <input
               type="email"
               placeholder="Enter your email"
@@ -73,7 +69,7 @@ const Login: React.FC = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-xs font-medium text-white mb-1">Password</label>
+            <label className="block text-xs font-medium mb-1">Password</label>
             <input
               type="password"
               placeholder="6+ Characters, 1 Capital letter"
@@ -85,15 +81,19 @@ const Login: React.FC = () => {
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full text-xs py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 shadow-lg"
+              className="w-full text-xs py-3 bg-[#2563EB] text-white font-medium rounded-md hover:bg-blue-700 shadow-lg"
               disabled={loading}
             >
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </div>
+          <div className="text-center text-xs">
+            Don’t have an account?{" "}
+            <Link href="/register" className="text-blue-600 hover:underline">Sign Up</Link>
+          </div>
         </form>
-        <footer className="mt-4 text-center text-xs text-white">
-          <p>JJ Venture Sources, Inc 2025 - PHDev-Tech Solutions</p>
+        <footer className="mt-4 text-center text-xs">
+          <p>Lost and Found Software - PHDev-Tech Solutions</p>
         </footer>
       </div>
     </div>

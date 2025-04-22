@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import ParentLayout from "../../../components/Layouts/ParentLayout";
-import SessionChecker from "../../../components/SessionChecker";
-import UserFetcher from "../../../components/UserFetcher";
+import SessionChecker from "../../../components/Session/SessionChecker";
+import UserFetcher from "../../../components/UserFetcher/UserFetcher";
 
 // Components
 import AddUserForm from "../../../components/User/AddUserForm";
 import UsersTable from "../../../components/User/UsersTable";
 import SearchFilters from "../../../components/User/SearchFilters";
-import Pagination from "../../../components/User/Pagination";
 
 // Toast Notifications
 import { ToastContainer, toast } from "react-toastify";
@@ -111,7 +110,7 @@ const ListofUser: React.FC = () => {
                   <>
                     <div className="flex justify-between items-center mb-4">
                       <button
-                        className="hover:bg-blue-900 bg-[#143c66] text-white px-4 text-xs py-2 rounded flex gap-1"
+                        className="hover:bg-blue-900 bg-[#2563EB] text-white px-4 text-xs py-2 rounded flex gap-1"
                         onClick={() => setShowForm(true)}
                       >
                         <HiMiniPlus size={15}/>Create User
@@ -119,7 +118,7 @@ const ListofUser: React.FC = () => {
                     </div>
 
                     <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
-                      <h2 className="text-lg font-bold mb-2">List of Users</h2>
+                      <h2 className="text-lg font-bold mb-2">List of Subscribers</h2>
                       <SearchFilters
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -132,11 +131,6 @@ const ListofUser: React.FC = () => {
                         handleDelete={confirmDelete}
                         Role={user ? user.Role : ""}
                         Location={user ? user.Location : ""}
-                      />
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        setCurrentPage={setCurrentPage}
                       />
                       <div className="text-xs mt-2">
                         Showing {indexOfFirstPost + 1} to{" "}

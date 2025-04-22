@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../lib/mongodb";
 import bcrypt from "bcrypt";
 
-async function AddUser({ Firstname, Lastname, Email, Location, userName, Password, Role,
+async function Add({ Firstname, Lastname, Email, Location, userName, Password, Role,
 }: {
   Firstname: string;
   Lastname: string;
@@ -65,7 +65,7 @@ export default async function handler(
     }
 
     try {
-      const result = await AddUser({
+      const result = await Add({
         Firstname,
         Lastname,
         Email,

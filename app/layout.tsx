@@ -17,10 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JJ Venture Sources, Inc",
+  title: "Lost and Found Software",
   description: "Created in NextJs Developed By PH Dev-Tech Solutions",
   icons: {
-    icon: "/jjventure.png", // Favicon for the tab bar
+    icon: "/lostfound-logo.png", // Favicon for the tab bar
   },
 };
 
@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Favicon for the browser tab */}
-        <link rel="icon" href="/jjv.png" type="image/png" />
+        <link rel="icon" href="/lostfound.png" type="image/png" className="rounded-full" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

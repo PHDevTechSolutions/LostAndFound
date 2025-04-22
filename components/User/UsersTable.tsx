@@ -1,119 +1,131 @@
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
-import { Menu } from "@headlessui/react";
-import { HiOutlineDotsVertical } from "react-icons/hi";
+import React, { useMemo, useState } from "react";
+import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 
-const socket = io("http://localhost:3001");
-
-interface UsersTableProps {
-  posts: any[];
-  handleEdit: (post: any) => void;
-  handleDelete: (postId: string) => void;
-  Role: string;
-  Location: string;
+interface Post {
+    _id: string;
+    Firstname: string;
+    Lastname: string;
+    Email: string;
+    Role: string;
 }
 
-const UsersTable: React.FC<UsersTableProps> = React.memo(({ posts, handleEdit, handleDelete, Role, Location }) => {
-  const [updatedPosts, setUpdatedPosts] = useState<any[]>(posts);
+interface ContainerTableProps {
+    posts: Post[];
+    handleEdit: (post: Post) => void;
+    handleDelete: (postId: string) => void;
+    Role: string;
+    Location: string;
+}
 
-  useEffect(() => {
-    setUpdatedPosts(posts);
-  }, [posts]);
+const getStatusBadgeColor = (status: string) => {
+    switch (status.toLowerCase()) {
+        case "subscribers":
+            return "bg-[#2563EB] text-white";
+        default:
+            return "bg-gray-100 text-gray-800";
+    }
+};
 
-  useEffect(() => {
-    const newPostListener = (newPost: any) => {
-      setUpdatedPosts((prevPosts) => {
-        if (prevPosts.find((post) => post._id === newPost._id)) return prevPosts;
-        return [newPost, ...prevPosts];
-      });
+const ITEMS_PER_PAGE = 10;
+
+const ReportItemTable: React.FC<ContainerTableProps> = ({
+    posts,
+    handleEdit,
+    handleDelete,
+    Role,
+    Location,
+}) => {
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const paginatedPosts = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return posts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [posts, currentPage]);
+
+    const totalPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
+
+    const changePage = (page: number) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
-    socket.on("newPost", newPostListener);
-    return () => {
-      socket.off("newPost", newPostListener);
-    };
-  }, [posts]);
+    return (
+        <div className="overflow-x-auto w-full">
+            <table className="w-full bg-white border border-gray-300 text-xs">
+                <thead className="bg-gray-100 text-gray-700">
+                    <tr>
+                        {[  
+                            "Fullname",
+                            "Email",
+                            "Role",
+                            "Actions",
+                        ].map((header) => (
+                            <th key={header} className="p-2 border text-left whitespace-nowrap">
+                                {header}
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {paginatedPosts.map((post) => (
+                        <tr key={post._id} className="text-left border-b">
+                            <td className="p-2 border capitalize">{post.Lastname}, {post.Firstname}</td>
+                            <td className="p-2 border">{post.Email}</td>
+                            <td className="p-2 border">
+                                <span
+                                    className={`px-2 py-1 rounded-full text-[10px] font-semibold ${getStatusBadgeColor(
+                                        post.Role
+                                    )}`}
+                                >
+                                    {post.Role}
+                                </span>
+                            </td>
+                            <td className="p-2 border">
+                                <div className="flex space-x-2">
+                                    <button
+                                        onClick={() => handleEdit(post)}
+                                        className="px-2 py-1 text-xs bg-[#2563EB] hover:bg-blue-800 text-white rounded-md flex items-center"
+                                    >
+                                        <HiOutlinePencil size={15} className="mr-1" /> Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(post._id)}
+                                        className="px-2 py-1 text-xs bg-red-600 hover:bg-red-800 text-white rounded-md flex items-center"
+                                    >
+                                        <HiOutlineTrash size={15} className="mr-1" /> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
 
-  // Filter posts based on location and role
-  const filteredPosts = updatedPosts.filter((post) => {
-    // If Role is Staff, they can only see posts with the same location
-    if (Role === "Staff") {
-      return post.Location === Location;
-    }
-    // If Role is Admin, they can see all posts regardless of location
-    if (Role === "Admin") {
-      return post.Location === Location;
-    }
-    return true;
-  });
-
-  // Sort posts by DateArrived in descending order
-  const sortedPosts = filteredPosts.sort((a, b) => {
-    return new Date(b.DateArrived).getTime() - new Date(a.DateArrived).getTime();
-  });
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-      {sortedPosts.length > 0 ? (
-        sortedPosts
-          .filter(post => !(Role === "Admin" && post.Role === "Super Admin"))
-          .map((post) => (
-            <div
-              key={post._id}
-              className={`relative border border-gray-200 rounded-lg shadow-lg p-4 overflow-hidden `}
-            >
-              {/* Animated Border */}
-              <div className="absolute inset-0 border-2 border-transparent rounded-lg animate-border" />
-              
-              {/* Card Header */}
-              <div className="bg-gray-100 p-3 rounded-t-lg flex justify-between items-center">
-                <h3 className="text-xs font-semibold text-gray-800 capitalize">{post.Lastname}, {post.Firstname}</h3>
-                <Menu as="div" className="relative">
-                  <Menu.Button className="text-gray-500 hover:text-gray-800">
-                    <HiOutlineDotsVertical size={15} />
-                  </Menu.Button>
-                  <Menu.Items className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-lg border z-10 text-xs">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          onClick={() => handleEdit(post)}
-                          className={`block w-full text-left px-4 py-2 ${active ? "bg-gray-100" : ""}`}
-                        >
-                          Edit
-                        </button>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          onClick={() => handleDelete(post._id)}
-                          className={`block w-full text-left px-4 py-2 text-red-500 ${active ? "bg-gray-100" : ""}`}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </Menu.Item>
-                  </Menu.Items>
-                </Menu>
-              </div>
-
-              {/* Card Body */}
-              <div className="p-3 text-xs">
-                <p><strong>Email:</strong> {post.Email}</p>
-                <p><strong>Location:</strong> {post.Location}</p>
-              </div>
-
-              {/* Status Indicator */}
-              <div className="bg-gray-100 p-3 rounded-b-lg text-xs text-left font-semibold">
-                <p><strong>{post.Role}</strong></p>
-              </div>
+            {/* Pagination Controls */}
+            <div className="flex justify-between items-center mt-4 text-xs">
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
+                <div className="space-x-2">
+                    <button
+                        onClick={() => changePage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-3 py-2 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                    >
+                        Prev
+                    </button>
+                    <button
+                        onClick={() => changePage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-2 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
-          ))
-      ) : (
-        <p className="text-center col-span-full">No records found</p>
-      )}
-    </div>
-  );
-});
+        </div>
+    );
+};
 
-export default UsersTable;
+export default ReportItemTable;

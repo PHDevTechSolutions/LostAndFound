@@ -11,14 +11,18 @@ import { FcGoogle } from "react-icons/fc";
 const Register: React.FC = () => {
   const [userName, setuserName] = useState("");
   const [Email, setEmail] = useState("");
+  const [Firstname, setFirstname] = useState("");
+  const [Lastname, setLastname] = useState("");
   const [Password, setPassword] = useState("");
   const router = useRouter();
+
+  const Role = "Subscribers"; // Hidden default role
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!userName || !Email || !Password) {
-      toast.error("All fields are required!"); // Show error toast if fields are empty
+    if (!userName || !Email || !Password || !Firstname || !Lastname) {
+      toast.error("All fields are required!");
       return;
     }
 
@@ -28,27 +32,27 @@ const Register: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userName, Email, Password }),
+        body: JSON.stringify({ userName, Email, Password, Firstname, Lastname, Role }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        toast.success("Registration successful!"); // Show success toast
-        setTimeout(() => { 
-            router.push("/login"); 
-        }, 1200); // 1.5 seconds delay
+        toast.success("Registration successful!");
+        setTimeout(() => {
+          router.push("/login");
+        }, 1200);
       } else {
-        toast.error(result.message || "Registration failed!"); // Show error toast
+        toast.error(result.message || "Registration failed!");
       }
     } catch (error) {
-      toast.error("An error occurred while registering!"); // Show general error toast
+      toast.error("An error occurred while registering!");
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      <ToastContainer className="text-xs"/>
+      <ToastContainer className="text-xs" />
       <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-md">
         <div className="hidden md:block md:w-1/2 p-8">
           <Image src="/images/illustration/illustration.svg" alt="Illustration" width={350} height={350} className="object-cover h-full w-full rounded-l-lg" />
@@ -58,11 +62,19 @@ const Register: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-700 mb-1">Username</label>
-              <input type="text" id="name" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" />
+              <input type="text" value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize" placeholder="Enter your Username" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 mb-1">Firstname</label>
+              <input type="text" value={Firstname} onChange={(e) => setFirstname(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize" placeholder="Enter your Firstname" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-700 mb-1">Lastname</label>
+              <input type="text" value={Lastname} onChange={(e) => setLastname(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize" placeholder="Enter your Lastname" />
             </div>
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" id="email" value={Email} onChange={(e) => setEmail(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" />
+              <input type="email" value={Email} onChange={(e) => setEmail(e.target.value)} className="w-full text-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your Email" />
             </div>
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
@@ -72,17 +84,12 @@ const Register: React.FC = () => {
               <button type="submit" className="w-full text-xs py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 shadow-lg">Create Account</button>
             </div>
           </form>
-          <div className="flex justify-center mb-4">
-            <button className="w-full py-3 bg-red-700 text-xs text-white font-medium rounded-md hover:bg-red-800 shadow-lg flex items-center justify-center">
-              <FcGoogle className="mr-2" /> Sign in with Google
-            </button>
-          </div>
           <div className="text-center text-xs">
             Don’t have an account?{" "}
             <Link href="/login" className="text-blue-600 hover:underline">Sign In</Link>
           </div>
           <footer className="absolute bottom-4 right-4 text-xs text-gray-600">
-          <p>JJ Venture Sources, Inc 2025 - PHDev-Tech Solutions</p>
+            <p>Lost and Found Software - PHDev-Tech Solutions</p>
           </footer>
         </div>
       </div>

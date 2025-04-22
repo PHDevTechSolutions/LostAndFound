@@ -3,7 +3,7 @@ import { connectToDatabase } from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 
-export default async function editAccount(req: NextApiRequest, res: NextApiResponse) {
+export default async function Edit(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "PUT") {
     res.setHeader("Allow", ["PUT"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);

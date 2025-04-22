@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-export default async function DeleteUser(req: NextApiRequest, res: NextApiResponse) {
+export default async function Delete(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'DELETE') {
         res.setHeader('Allow', ['DELETE']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
