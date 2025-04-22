@@ -27,7 +27,7 @@ const ReportItem: React.FC = () => {
     });
 
     const [userDetails, setUserDetails] = useState({
-        UserId: "", Firstname: "", Lastname: "", Email: "", Role: "", Location: "",
+        UserId: "", Firstname: "", Lastname: "", Email: "", Role: "", Location: "", userName: "", ItemFinder: "",
     });
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -73,6 +73,8 @@ const ReportItem: React.FC = () => {
                         Email: data.Email || "",
                         Role: data.Role || "",
                         Location: data.Location || "",
+                        userName: data.userName || "",
+                        ItemFinder: `${data.Firstname} ${data.Lastname}`
                     });
                 } catch (err) {
                     console.error("Error fetching user data:", err);
@@ -166,6 +168,7 @@ const ReportItem: React.FC = () => {
                                         }}
                                         refreshPosts={fetchDatabase}  // Pass the refreshPosts callback
                                         userName={user ? user.userName : ""}
+                                        ItemFinder={userDetails.ItemFinder}
                                         editData={editData}
                                     />
                                 ) : (
